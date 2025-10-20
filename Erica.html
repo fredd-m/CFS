@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Questionário de Ética — Autocorreção</title>
+  <style>
+    :root{
+      --bg:#0b0f14;--card:#111826;--muted:#8aa0b2;--text:#e6eef5;--accent:#7cc6ff;--ok:#3bd671;--bad:#ff6b6b;--warn:#ffd166;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b0f14,#0c121a 30%,#0b0f14 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;color:var(--text);}
+    .wrap{max-width:900px;margin:3rem auto;padding:0 1rem}
+    .card{background:var(--card);border:1px solid rgba(124,198,255,.15);border-radius:20px;padding:1.25rem 1.25rem 1.5rem;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    h1{font-size:1.5rem;margin:0 0 .75rem;letter-spacing:.2px}
+    p.lead{margin:.25rem 0 1rem;color:var(--muted)}
+    .q{padding:1rem;border:1px solid rgba(124,198,255,.15);border-radius:16px;margin:.9rem 0;position:relative;background:rgba(255,255,255,.02)}
+    .q h3{font-size:1rem;margin:0 0 .8rem;}
+    .opts{display:grid;gap:.5rem}
+    label.opt{display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .65rem;border:1px solid rgba(124,198,255,.12);border-radius:12px;cursor:pointer;background:rgba(255,255,255,.02);}
+    label.opt:hover{border-color:rgba(124,198,255,.35)}
+    .opt input{accent-color:var(--accent);margin-top:.15rem}
+    .badge{position:absolute;right:.75rem;top:.75rem;font-size:.8rem;padding:.25rem .5rem;border-radius:999px;border:1px solid transparent}
+    .badge.ok{background:rgba(59,214,113,.12);border-color:rgba(59,214,113,.35);color:var(--ok)}
+    .badge.bad{background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.35);color:var(--bad)}
+    .hint{font-size:.92rem;margin-top:.6rem;color:var(--muted)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.2rem 0}
+    button{border:1px solid rgba(124,198,255,.35);background:transparent;color:var(--text);padding:.6rem .9rem;border-radius:12px;cursor:pointer}
+    button:hover{background:rgba(124,198,255,.08)}
+    .score{font-weight:600}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(124,198,255,.35);border-radius:999px;padding:.35rem .65rem;font-size:.9rem}
+    .key{display:none;margin-top:.8rem;border-top:1px dashed rgba(124,198,255,.25);padding-top:.7rem;color:var(--muted)}
+    .key b{color:var(--text)}
+    .footer{margin-top:1.25rem;color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Questionário de Ética — Autocorreção</h1>
+      <p class="lead">Seleciona as opções. O resultado aparece automaticamente; podes também usar <em>Corrigir</em> para ver todos os acertos/erros e a pontuação final.</p><form id="quiz" aria-label="Questionário de Ética">
+    <!-- Q1 -->
+    <fieldset class="q" data-q="q1">
+      <legend class="sr" aria-hidden="true"></legend>
+      <span class="badge" id="bq1"></span>
+      <h3>1) O que estuda a Ética?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q1" value="a">A) Apenas as leis e normas jurídicas que regulam a sociedade.</label>
+        <label class="opt"><input type="radio" name="q1" value="b" data-correct> B) Os princípios e valores que orientam o comportamento humano, distinguindo o certo do errado.</label>
+        <label class="opt"><input type="radio" name="q1" value="c">C) As tradições religiosas e seus rituais.</label>
+        <label class="opt"><input type="radio" name="q1" value="d">D) As formas de governação política.</label>
+      </div>
+      <div class="hint" id="hq1" hidden></div>
+    </fieldset>
+
+    <!-- Q2 -->
+    <fieldset class="q" data-q="q2">
+      <span class="badge" id="bq2"></span>
+      <h3>2) Qual é a principal diferença entre ética e moral?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q2" value="a">A) Não existe diferença, são exatamente a mesma coisa.</label>
+        <label class="opt"><input type="radio" name="q2" value="b">B) A moral é teórica e a ética é prática.</label>
+        <label class="opt"><input type="radio" name="q2" value="c" data-correct> C) A moral são regras sociais práticas; a ética é a reflexão filosófica sobre essas regras.</label>
+        <label class="opt"><input type="radio" name="q2" value="d">D) A ética muda conforme a cultura e a moral é universal.</label>
+      </div>
+      <div class="hint" id="hq2" hidden></div>
+    </fieldset>
+
+    <!-- Q3 -->
+    <fieldset class="q" data-q="q3">
+      <span class="badge" id="bq3"></span>
+      <h3>3) O que significa “Ethos”, origem da palavra ética?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q3" value="a">A) Justiça.</label>
+        <label class="opt"><input type="radio" name="q3" value="b">B) Honra e coragem.</label>
+        <label class="opt"><input type="radio" name="q3" value="c" data-correct> C) Usos e costumes.</label>
+        <label class="opt"><input type="radio" name="q3" value="d">D) Verdade absoluta.</label>
+      </div>
+      <div class="hint" id="hq3" hidden></div>
+    </fieldset>
+
+    <!-- Q4 -->
+    <fieldset class="q" data-q="q4">
+      <span class="badge" id="bq4"></span>
+      <h3>4) Qual das seguintes opções descreve corretamente o papel da ética?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q4" value="a">A) Impõe regras obrigatórias a todos os cidadãos.</label>
+        <label class="opt"><input type="radio" name="q4" value="b" data-correct> B) Reflete sobre valores, normas e deveres, orientando o ser humano para o bem.</label>
+        <label class="opt"><input type="radio" name="q4" value="c">C) Define leis penais e criminais.</label>
+        <label class="opt"><input type="radio" name="q4" value="d">D) Limita-se a ensinar o que é moralmente certo segundo a religião.</label>
+      </div>
+      <div class="hint" id="hq4" hidden></div>
+    </fieldset>
+
+    <!-- Q5 -->
+    <fieldset class="q" data-q="q5">
+      <span class="badge" id="bq5"></span>
+      <h3>5) A ética ajuda o ser humano a:</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q5" value="a">A) Memorizar regras sociais sem questionar.</label>
+        <label class="opt"><input type="radio" name="q5" value="b" data-correct> B) Agir de forma responsável e justa, usando a consciência para aplicar valores no dia a dia.</label>
+        <label class="opt"><input type="radio" name="q5" value="c">C) Seguir a tradição sem reflexão.</label>
+        <label class="opt"><input type="radio" name="q5" value="d">D) Cumprir ordens superiores independentemente de serem justas ou injustas.</label>
+      </div>
+      <div class="hint" id="hq5" hidden></div>
+    </fieldset>
+          <!-- Q6 -->
+    <fieldset class="q" data-q="q6">
+      <span class="badge" id="bq6"></span>
+      <h3>6) Qual das seguintes é uma virtude-chave do militar?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q6" value="a" data-correct> A) Disciplina.</label>
+        <label class="opt"><input type="radio" name="q6" value="b">B) Ambição pessoal.</label>
+        <label class="opt"><input type="radio" name="q6" value="c">C) Competitividade excessiva.</label>
+        <label class="opt"><input type="radio" name="q6" value="d">D) Isolamento.</label>
+      </div>
+    </fieldset>
+
+    <!-- Q7 -->
+    <fieldset class="q" data-q="q7">
+      <span class="badge" id="bq7"></span>
+      <h3>7) Quais são os elementos da obediência consciente?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q7" value="a">A) Rapidez, silêncio e segredo.</label>
+        <label class="opt"><input type="radio" name="q7" value="b" data-correct> B) Legalidade, legitimidade e prudência.</label>
+        <label class="opt"><input type="radio" name="q7" value="c">C) Força, autoridade e lealdade.</label>
+        <label class="opt"><input type="radio" name="q7" value="d">D) Disciplina, ambição e coragem.</label>
+      </div>
+    </fieldset>
+
+    <!-- Q8 -->
+    <fieldset class="q" data-q="q8">
+      <span class="badge" id="bq8"></span>
+      <h3>8) Qual destes é um risco da profissão militar?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q8" value="a">A) Sentido de missão.</label>
+        <label class="opt"><input type="radio" name="q8" value="b" data-correct> B) Abuso de autoridade.</label>
+        <label class="opt"><input type="radio" name="q8" value="c">C) Disciplina exemplar.</label>
+        <label class="opt"><input type="radio" name="q8" value="d">D) Responsabilidade ética.</label>
+      </div>
+    </fieldset>
+
+    <!-- Q9 -->
+    <fieldset class="q" data-q="q9">
+      <span class="badge" id="bq9"></span>
+      <h3>9) Em caso de conflito de interesses, o militar deve:</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q9" value="a">A) Ignorar para proteger a hierarquia.</label>
+        <label class="opt"><input type="radio" name="q9" value="b" data-correct> B) Identificar, declarar e mitigar o conflito.</label>
+        <label class="opt"><input type="radio" name="q9" value="c">C) Resolver sozinho, sem comunicar.</label>
+        <label class="opt"><input type="radio" name="q9" value="d">D) Pedir dispensa de serviço.</label>
+      </div>
+    </fieldset>
+
+    <!-- Q10 -->
+    <fieldset class="q" data-q="q10">
+      <span class="badge" id="bq10"></span>
+      <h3>10) Qual das opções NÃO é uma virtude militar?</h3>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q10" value="a">A) Coragem.</label>
+        <label class="opt"><input type="radio" name="q10" value="b">B) Responsabilidade.</label>
+        <label class="opt"><input type="radio" name="q10" value="c">C) Sentido de missão.</label>
+        <label class="opt"><input type="radio" name="q10" value="d" data-correct> D) Favoritismo.</label>
+      </div>
+    </fieldset>
+
+  </form>
+
+  <div class="toolbar">
+    <button type="button" id="check">Corrigir</button>
+    <button type="button" id="reset">Repor</button>
+    <span class="pill">Pontuação: <span class="score" id="score">0/5</span></span>
+    <button type="button" id="toggleKey" aria-expanded="false" aria-controls="gabarito">Mostrar gabarito</button>
+  </div>
+
+  <div id="gabarito" class="key" aria-live="polite">
+    <b>Gabarito:</b> 1-B, 2-C, 3-C, 4-B, 5-B
+  </div>
+
+  <div class="footer">Dica: podes editar o ficheiro e acrescentar mais perguntas duplicando um bloco <code>&lt;fieldset class="q" ...&gt;</code> e marcando a opção certa com <code>data-correct</code>.</div>
+</section>
+
+  </main>  <script>
+    const form = document.getElementById('quiz');
+    const scoreEl = document.getElementById('score');
+    const checkBtn = document.getElementById('check');
+    const resetBtn = document.getElementById('reset');
+    const toggleKeyBtn = document.getElementById('toggleKey');
+    const keyBox = document.getElementById('gabarito');
+
+    function isCorrect(input){
+      return input.hasAttribute('data-correct');
+    }
+
+    function updateBadge(qId, correct){
+      const badge = document.getElementById('b'+qId);
+      if(!badge) return;
+      badge.className = 'badge ' + (correct ? 'ok' : 'bad');
+      badge.textContent = correct ? '✔ Correto' : '✖ Errado';
+    }
+
+    function clearBadge(qId){
+      const badge = document.getElementById('b'+qId);
+      if(!badge) return;
+      badge.className = 'badge';
+      badge.textContent = '';
+    }
+
+    function calcScore(){
+      let total = 0, correct = 0;
+      document.querySelectorAll('fieldset.q').forEach(fs => {
+        total++;
+        const chosen = fs.querySelector('input[type="radio"]:checked');
+        if(chosen && isCorrect(chosen)) correct++;
+      });
+      scoreEl.textContent = `${correct}/${total}`;
+      return {correct,total};
+    }
+
+    // Feedback imediato ao selecionar
+    form.addEventListener('change', (e) => {
+      if(e.target.matches('input[type="radio"]')){
+        const fs = e.target.closest('fieldset.q');
+        const qId = fs.dataset.q;
+        updateBadge(qId, isCorrect(e.target));
+        calcScore();
+      }
+    });
+
+    // Corrigir tudo (marca badges para não respondidas também)
+    checkBtn.addEventListener('click', () => {
+      document.querySelectorAll('fieldset.q').forEach(fs => {
+        const qId = fs.dataset.q;
+        const checked = fs.querySelector('input[type="radio"]:checked');
+        if(!checked){
+          const badge = document.getElementById('b'+qId);
+          badge.className = 'badge bad';
+          badge.textContent = '• Por responder';
+        } else {
+          updateBadge(qId, isCorrect(checked));
+        }
+      });
+      calcScore();
+    });
+
+    // Reset
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      document.querySelectorAll('fieldset.q').forEach(fs => clearBadge(fs.dataset.q));
+      calcScore();
+    });
+
+    // Mostrar/ocultar gabarito
+    toggleKeyBtn.addEventListener('click', () => {
+      const open = keyBox.style.display === 'block';
+      keyBox.style.display = open ? 'none' : 'block';
+      toggleKeyBtn.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Estado inicial
+    calcScore();
+  </script></body>
+</html>
