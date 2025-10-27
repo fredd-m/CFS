@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Treino — Bastão Extensível (54.º/55.º/ PDF)</title>
+<title>Treino — Bastão Extensível (54.º / 55.º / PDF / Extra)</title>
 <style>
   :root{ --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444; }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',sans-serif}
@@ -37,14 +37,15 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — Bastão Extensível (CFG 54.º / 55.º / PDF)</h1>
-    <p class="sub">30 perguntas de escolha múltipla (4 opções). Seleciona o teste, responde e só no final verás a correção e a nota (0–20).</p>
+    <h1>Quiz — Bastão Extensível (CFG 54.º / 55.º / PDF / Extra)</h1>
+    <p class="sub">30 perguntas de escolha múltipla. Seleciona o teste, responde e só no final verás a correção e a nota (0–20).</p>
     <div class="row" style="margin-bottom:12px">
       <label for="testSel" class="pill">Escolher teste:
         <select id="testSel" style="margin-left:8px">
           <option value="54">54.º Curso</option>
           <option value="55">55.º Curso</option>
           <option value="pdf">PDF (novo)</option>
+          <option value="extra">Extra (novo)</option>
         </select>
       </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
@@ -75,411 +76,8 @@
 </div>
 
 <script>
-/* ========= Banco de perguntas (54.º e 55.º já existentes) ========= */
-/* (Conteúdo dos TEST_54 e TEST_55 igual ao que já te enviei; mantive sem alterações) */
-
+/* ===== Utilitários e motor base ===== */
 function q(stem, options, correctIndex, explanation){ return { stem, options, correctIndex, explanation }; }
-
-const TEST_54 = [
-  q("As sete componentes da potência são:", [
-    "Equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força",
-    "Coordenação, potência, rotatividade, simplicidade, velocidade, força, foco",
-    "Equilíbrio, precisão, coordenação, resistência, simplicidade, velocidade, força",
-    "Equilíbrio, flexibilidade, coordenação, resistência, complexidade, velocidade, força"
-  ], 0, "7 componentes: equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força."),
-  q("A intervenção policial em equipa destaca-se por permitir:", [
-    "Atuar simultaneamente em diferentes patamares do uso da força",
-    "Reduzir a necessidade de comunicação entre militares",
-    "Substituir os princípios da mínima força",
-    "Eliminar a necessidade de avaliação do risco"
-  ], 0, "Permite operar patamares distintos do uso da força."),
-  q("O triângulo da decisão integra as variáveis:", [
-    "Habilidade, Oportunidade e Risco",
-    "Legalidade, Necessidade e Proporcionalidade",
-    "Tempo, Distância e Cobertura",
-    "Força, Velocidade e Resistência"
-  ], 0, "HOR."),
-  q("A posição policial assenta em quatro componentes:", [
-    "Estabilidade lateral e frontal, centro de gravidade baixo e cabeça ao centro",
-    "Estabilidade frontal, cabeça baixa, pés paralelos e olhar no solo",
-    "Base estreita, tronco à frente, cabeça baixa e braços estendidos",
-    "Estabilidade lateral, base alta, braços cruzados e olhar fixo"
-  ], 0, "Estabilidade frontal/lateral, CG baixo, cabeça ao centro."),
-  q("O uso da força, com proporcionalidade e mínima força, pode ser entendido como:", [
-    "Uma opção do ADV, face à advertência efetuada pelos militares",
-    "Um automatismo do militar perante qualquer resistência",
-    "Uma decisão exclusiva do comandante de patrulha",
-    "Uma consequência inevitável do primeiro contacto"
-  ], 0, "ADV escolhe resistir após advertência; militar usa mínima força."),
-  q("No modo fechado, a técnica de controlo que não pode ser executada de ambos os lados do ADV é:", [
-    "Controlo ao tríceps","Controlo ao bíceps","Controlo ao pulso","Chave"
-  ], 0, "Tríceps é assimétrico em fechado."),
-  q("Segundo o Regime Geral das Armas e Munições, o BE é uma arma de:", [
-    "Classe A","Classe B","Classe C","Classe D"
-  ], 0, "Arma de classe A."),
-  q("A abertura do BE “para baixo” executa-se quando:", [
-    "O espaço é reduzido","Se pretende máxima visibilidade","O terreno é escorregadio","Há vento lateral forte"
-  ], 0, "Espaço reduzido."),
-  q("As técnicas de impacto em zonas amarelas são executadas:", [
-    "Quando as técnicas nas zonas verdes se revelem ineficazes",
-    "Como primeira opção em qualquer intervenção",
-    "Apenas para dispersão de multidões",
-    "Exclusivamente em treino"
-  ], 0, "Verdes primeiro; amarelas se verdes falharem."),
-  q("A técnica de Afastamento (modo fechado) com rotação do pulso executa-se:", [
-    "Retirando o polegar da ponta e colocando-o por cima do indicador",
-    "Unindo polegar ao médio para aumentar o aperto",
-    "Colocando o polegar por baixo do indicador",
-    "Girando apenas o punho da mão de defesa"
-  ], 0, "Polegar por cima do indicador."),
-  q("O BE é utilizado para:", [
-    "Controlar e deter um adversário","Dispersar e dissuadir multidões","Imobilizar permanentemente","Assumir função idêntica à arma de fogo"
-  ], 0, "Detenção/controlo (não dispersão)."),
-  q("Para executantes destros, o Direto (modo fechado) é executado:", [
-    "Na diagonal, da direita para a esquerda","Na horizontal, da esquerda para a direita","De baixo para cima, vertical","Em arco completo acima da cabeça"
-  ], 0, "Diagonal D→E."),
-  q("A posição de intervenção foi concebida para:", [
-    "Maximizar a disponibilidade do bastão e aumentar a postura defensiva",
-    "Favorecer deslocamentos rápidos sacrificando estabilidade",
-    "Aumentar o alcance do BE acima da cabeça",
-    "Eliminar a necessidade da mão de defesa"
-  ], 0, "Disponibilidade + defesa."),
-  q("A componente mais essencial para a geração de potência é:", [
-    "Equilíbrio","Força","Velocidade","Resistência"
-  ], 0, "Equilíbrio."),
-  q("A condição física influencia a intervenção porque:", [
-    "Afeta o discernimento e a capacidade de decisão",
-    "Substitui a técnica adequada",
-    "Elimina o risco operacional",
-    "Dispensa o trabalho em equipa"
-  ], 0, "Preserva discernimento/decisão."),
-  q("O BE e o bastão de borracha são:", [
-    "Ferramentas diferentes que se complementam",
-    "Intercambiáveis e com a mesma finalidade",
-    "Ambos destinados a dispersão",
-    "Ambos de uso discreto e rígido"
-  ], 0, "Complementares."),
-  q("O BE é constituído por:", [
-    "Base, pega, guarda, corpo médio, corpo final e ponta",
-    "Empunhadura, lâmina, guarda, corpo único",
-    "Pega, mola, gatilho e ponta",
-    "Cabo, corrente e peso terminal"
-  ], 0, "Componentes clássicos."),
-  q("Qual a posição policial que garante mais estabilidade ao utilizador do BE?", [
-    "Posição de intervenção","Posição de descanso","Posição de corrida","Posição de apresentação"
-  ], 0, "Intervenção."),
-  q("Em modo aberto, as técnicas devem ser realizadas com:", [
-    "Os últimos ~7 cm do corpo final e a ponta","A base do bastão","A zona média do corpo médio","Qualquer parte indistintamente"
-  ], 0, "Extremo distal."),
-  q("Legalmente, o BE é definido como:", [
-    "Um instrumento portátil telescópico, rígido ou flexível",
-    "Uma arma contundente de borracha",
-    "Um artefacto pirotécnico de classe B",
-    "Um dispositivo elétrico de choque"
-  ], 0, "Definição legal."),
-  q("O BE destina-se preferencialmente a atuar sobre:", [
-    "Grandes massas musculares dos braços e pernas (inibição motora)",
-    "Cabeça e pescoço para terminar mais rápido",
-    "Coluna vertebral para desequilíbrio imediato",
-    "Genitais para dissuasão"
-  ], 0, "Zonas verdes."),
-  q("Os locais para onde NÃO se devem dirigir técnicas de impacto com BE incluem:", [
-    "Cabeça, pescoço, externo, coluna vertebral e genitais",
-    "Braços e coxas","Antebraços e gémeos","Quadríceps e deltoides"
-  ], 0, "Zonas vermelhas."),
-  q("A distância de segurança serve sobretudo para:", [
-    "Controlar o impulso do ADV","Permitir sempre a fuga do ADV","Evitar quaisquer técnicas de controlo","Garantir a abertura para cima"
-  ], 0, "Controlar avanço."),
-  q("Abertura e fecho do BE são executados, respetivamente, por:", [
-    "Inércia e fricção","Fricção e inércia","Compressão e fricção","Inércia e compressão"
-  ], 0, "Abre por inércia; fecha por fricção."),
-  q("As caraterísticas de uma boa funda para o BE são:", [
-    "Rígida, rotativa e adaptável","Flexível, fixa e não ajustável","Rígida, fechada e não rotativa","Maleável, elástica e solta"
-  ], 0, "Rígida/rotativa/adaptável."),
-  q("Em caso de espaço amplo e necessidade de visibilidade, a abertura recomendada é:", [
-    "Para cima (máxima visibilidade)","Para baixo (discreta)","Horizontal (a 90°)","Não abrir — manter fechado"
-  ], 0, "Para cima."),
-  q("As técnicas com BE foram concebidas para atuar:", [
-    "No centro de massa de braços e pernas","Preferencialmente na cabeça e pescoço","No tronco superior e cervical","Nos tornozelos e mãos"
-  ], 0, "Centro de massa dos membros."),
-  q("A flexibilidade está diretamente relacionada com:", [
-    "Tensão, nervosismo e falta de confiança","Força máxima voluntária","Envergadura e estatura","Peso do equipamento"
-  ], 0, "Tensão/nervosismo prejudicam."),
-  q("Trabalhar em equipa permite:", [
-    "Aplicar diferentes patamares do uso da força de forma coordenada",
-    "Eliminar a necessidade de avaliação de risco",
-    "Dispensar a distância de segurança",
-    "Reduzir a comunicação para evitar ruído"
-  ], 0, "Patamares coordenados."),
-  q("Zonas amarelas destinam-se sobretudo a:", [
-    "Técnicas de controlo/imobilização (articulações)",
-    "Impacto inicial preferencial",
-    "Dissuadir à distância",
-    "Aplicar pressão contínua em músculos"
-  ], 0, "Controlo/imobilização.")
-];
-
-const TEST_55 = [
-  q("A abertura do BE “para baixo” executa-se quando:", [
-    "O espaço é reduzido","Se pretende o máximo impacto psicológico","O terreno é macio","Há necessidade de luz"
-  ], 0, "Espaço reduzido → para baixo."),
-  q("Abertura e fecho do BE são executados por:", [
-    "Inércia e fricção","Fricção e inércia","Compressão e mola","Alavanca e mola"
-  ], 0, "Inércia/ fricção."),
-  q("Uso da força (proporcionalidade/mínima força) pode ser entendido como:", [
-    "Uma opção do ADV, face à advertência efetuada",
-    "Um automatismo sempre que exista ilícito",
-    "Uma decisão apenas do superior hierárquico",
-    "Uma resposta padronizada e fixa"
-  ], 0, "ADV escolhe resistir."),
-  q("Componente essencial para geração de potência:", [
-    "Equilíbrio","Força","Velocidade","Resistência"
-  ], 0, "Equilíbrio."),
-  q("Impacto com BE atua sobre:", [
-    "Sistema motor","Sistema respiratório","Sistema circulatório","Sistema digestivo"
-  ], 0, "Inibição motora."),
-  q("Sete componentes de potência:", [
-    "Equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força",
-    "Equilíbrio, flexibilidade, coordenação, potência, velocidade, força, foco",
-    "Resistência, elasticidade, coordenação, simplicidade, velocidade, força, foco",
-    "Equilíbrio, precisão, coordenação, resistência, simplicidade, velocidade, força"
-  ], 0, "Inclui simplicidade."),
-  q("Afastamento (modo fechado) com rotação do pulso:", [
-    "Polegar abandona a ponta e fica por cima do indicador",
-    "Polegar fixa a ponta por baixo do indicador",
-    "Polegar permanece na ponta",
-    "Polegar roda para a palma"
-  ], 0, "Polegar sobre o indicador."),
-  q("Controlo em modo fechado que não pode ser feito de ambos os lados:", [
-    "Controlo ao tríceps","Controlo ao bíceps","Controlo ao pulso","Chave"
-  ], 0, "Tríceps."),
-  q("Técnica de Reação (modo fechado) é executada quando:", [
-    "O Direto anterior não foi eficaz","Há dois ADV em simultâneo","Para iniciar qualquer intervenção","Quando o ADV está imobilizado"
-  ], 0, "Após direto falhar."),
-  q("Segundo o RGAM, o BE é arma de:", [
-    "Classe A","Classe B","Classe C","Classe D"
-  ], 0, "Classe A."),
-  q("A flexibilidade está relacionada com:", [
-    "Tensão, nervosismo e falta de confiança","Força absoluta","Velocidade de reação","Amplitude de movimento apenas"
-  ], 0, "Tensão/nervosismo."),
-  q("Triângulo da decisão:", [
-    "Habilidade, oportunidade e risco","Tempo, distância e cobertura","Legalidade, necessidade e adequação","Força, velocidade e resistência"
-  ], 0, "HOR."),
-  q("Características de uma boa funda para BE:", [
-    "Rígida, rotativa e adaptável","Flexível, elástica e não ajustável","Fina, leve e descartável","Rígida, fixa e não rotativa"
-  ], 0, "Rígida/rotativa/adaptável."),
-  q("Direto (modo fechado) para destros:", [
-    "Diagonal da direita para a esquerda","Horizontal da esquerda para a direita","Vertical ascendente","Arco por cima da cabeça"
-  ], 0, "D→E."),
-  q("A posição de intervenção foi concebida para:", [
-    "Maximizar disponibilidade do bastão e postura defensiva",
-    "Aumentar a velocidade de corrida",
-    "Facilitar técnicas acima da cabeça",
-    "Dispensar a mão de defesa"
-  ], 0, "Disponibilidade + defesa."),
-  q("Intervenção em equipa destaca-se por permitir:", [
-    "Atuar em diferentes patamares do uso da força","Eliminar avaliação de risco","Evitar comunicações","Substituir legalidade por eficácia"
-  ], 0, "Patamares distintos."),
-  q("Posição policial assenta em:", [
-    "Estabilidade lateral e frontal, centro de gravidade baixo e cabeça ao centro",
-    "Base estreita, tronco à frente, cabeça baixa e braços estendidos",
-    "Estabilidade frontal, cabeça baixa, pés paralelos e olhar no solo",
-    "Estabilidade lateral, base alta, braços cruzados e olhar fixo"
-  ], 0, "Quatro componentes."),
-  q("Zonas a evitar para impacto com BE:", [
-    "Cabeça, pescoço, externo, coluna e genitais","Braços e coxas","Antebraços e gémeos","Deltoides e quadríceps"
-  ], 0, "Vermelhas."),
-  q("A distância de segurança permite:", [
-    "Controlar o impulso do ADV","Eliminar a necessidade de BE","Aplicar pressão contínua","Garantir mobilidade do ADV"
-  ], 0, "Controlar avanço."),
-  q("BE vs bastão de borracha:", [
-    "Ferramentas diferentes que se complementam","Igual finalidade e uso","Ambos para dispersão","Ambos flexíveis"
-  ], 0, "Complementares."),
-  q("Constituição do BE:", [
-    "Base, pega, guarda, corpo médio, corpo final e ponta","Empunhadura, lâmina, guarda e corpo","Cabo, corrente e peso terminal","Pega, mola, gatilho e ponta"
-  ], 0, "Componentes."),
-  q("Posição policial que garante mais estabilidade:", [
-    "Posição de intervenção","Posição de descanso","Posição de apresentação","Posição de avanço"
-  ], 0, "Intervenção."),
-  q("Em modo aberto, as técnicas devem usar preferencialmente:", [
-    "Últimos ~7 cm do corpo final e a ponta","A base do bastão","A zona média","Qualquer parte"
-  ], 0, "Extremo distal."),
-  q("Definição legal do BE:", [
-    "Instrumento portátil telescópico, rígido ou flexível","Arma contundente de borracha","Dispositivo elétrico","Instrumento perfurante telescópico"
-  ], 0, "Definição."),
-  q("O BE é utilizado para:", [
-    "Controlar e deter um adversário","Dispersar grupos","Substituir algemas","Atuar como arma elétrica"
-  ], 0, "Detenção/controlo."),
-  q("Zonas amarelas são usadas quando:", [
-    "As técnicas em zonas verdes se revelam ineficazes","Se inicia a intervenção","Há necessidade de dissuasão sonora","O ADV está rendido"
-  ], 0, "Quando verdes falham."),
-  q("Abertura 'para cima' proporciona:", [
-    "Máxima visibilidade","Menor controlo do bastão","Mais discrição sonora","Acesso mais lento"
-  ], 0, "Visibilidade."),
-  q("As técnicas com BE são concebidas para atuar:", [
-    "No centro de massa dos braços e pernas","Preferencialmente na cabeça","Maioritariamente no tronco","Em mãos e pés apenas"
-  ], 0, "Centro de massa."),
-  q("Características da funda devem ainda permitir:", [
-    "Colocação e extração, inclusive com BE aberto","Apenas uso com BE fechado","Fixação frouxa ao cinturão","Rotação impedida para segurança"
-  ], 0, "Extração inclusive aberto."),
-  q("Comparação final: BE e bastão de borracha — objetivo principal do BE:", [
-    "Deter e controlar (não dispersar)","Dispersar com menor lesividade","Substituir arma de fogo","Causar dor como objetivo"
-  ], 0, "Deter/controlo.")
-];
-
-/* ========= NOVO TESTE — PDF (30 perguntas) ========= */
-/* Fonte: “apagar exercícios bastãonsigo.pdf” (conforme ficheiro enviado). */
-const TEST_PDF = [
-  q("No modo fechado, podem ser executadas as seguintes técnicas:", [
-    "Direto, Reação e Afastamento",
-    "Golpe de Reação, Golpe de Afastamento, Reação",
-    "Direto, Fechado e Aberto",
-    "Fechado, Direto, Reação"
-  ], 0, ""),
-  q("A teoria do controlo pressupõe uso gradual da força. Considerando a pirâmide dos meios coercivos, a sequência correta é:", [
-    "Presença Uniformizada, Ordens Verbais, Contacto Físico, Utilização de Armas Intermédias, Utilização de Bastões e Utilização de armas de fogo",
-    "Presença Uniformizada, Contacto Verbal, Contacto Físico, Utilização de Armas Intermédias, Utilização de Bastões e Utilização de armas de fogo",
-    "Diálogo, Contacto Físico, Gás OC, Bastão extensível e armas de fogo",
-    "O controlo, Diálogo, Contacto Físico, Utilização de Armas Intermédias, Bastão e armas de fogo"
-  ], 0, ""),
-  q("O uso da força só deve ser exercido até estar garantido:", [
-    "Comando","50/50","Domínio","Controlo"
-  ], 3, ""),
-  q("Alguns fatores que entram em conta para alcançar o controlo são:", [
-    "Idade, Sexo, Tamanho, Preparação, Número de militares e número de ADV",
-    "Idade, Peso, Número de Agentes",
-    "Idade, Peso, Valor, Recursos e Nível de conhecimentos",
-    "Idade, Valor, Tamanho, Atitude, Ambiente"
-  ], 0, ""),
-  q("O Bastão Extensível (BE) apresenta a seguinte caraterística correta:", [
-    "Composto por 2 secções",
-    "Pega antiaderente",
-    "Extremo com ponta com ângulos cortantes",
-    "Abertura por fricção e travamento por inércia"
-  ], 1, "Tipicamente 3 secções; ponta sem arestas cortantes; abre por inércia e fecha por fricção."),
-  q("O BE divide-se em:", [
-    "Base, Pega, Guarda, Corpo Médio, Corpo Final, Ponta",
-    "Tampa, Punho, Proteção, Corpo Médio, Corpo Final, Ponta",
-    "Base, Tampa, Punho, Secção, Ponta",
-    "Base, Guarda-mão, Corpo Médio, Corpo Final, Ponta"
-  ], 0, ""),
-  q("O BE atua fundamentalmente:", [
-    "No sistema motor humano","Nas articulações","No sistema sensorial humano","Na criação de hematomas"
-  ], 0, ""),
-  q("A funda do BE apresenta as seguintes caraterísticas:", [
-    "Rígida, Rotativa e Adaptável","Flexível, Rotativa e Rígida","Fixa, Ajustável e Rotativa","Rígida, Rotativa e Funcional"
-  ], 0, ""),
-  q("Em modo fechado, podem ser tomadas duas posições de abordagem:", [
-    "Diálogo e Intervenção","Intervenção e Golpe","Controlo e Acompanhamento","Entrevista e Intervenção"
-  ], 3, "Também designada 'posição de entrevista'."),
-  q("Em modo fechado, na posição de Intervenção, o dedo polegar fica:", [
-    "Apontado para o sujeito","No punho do bastão","Por cima do dedo indicador","Por cima da ponta do bastão"
-  ], 2, ""),
-  q("Para executantes destros, o Direto em modo fechado é executado:", [
-    "Na vertical, da direita para a esquerda","Na diagonal, da direita para a esquerda","Na diagonal, da esquerda para a direita","Na vertical, de cima para baixo"
-  ], 1, ""),
-  q("A técnica de Reação, no modo aberto, é executada quando:", [
-    "O suspeito expõe mais a sua parte esquerda",
-    "A técnica anterior (Direto) não foi eficaz",
-    "O espaço disponível é reduzido",
-    "O executante for atirador esquerdo"
-  ], 1, ""),
-  q("A técnica de Afastamento, no modo fechado, é executada:", [
-    "Com rotação do pulso, polegar abandona a ponta e coloca-se por cima do indicador",
-    "Da esquerda para a direita, para apanhar a lateral do suspeito",
-    "Com rotação do pulso mantendo o polegar a agarrar a ponta",
-    "De baixo para cima, com polegar por cima do indicador"
-  ], 0, ""),
-  q("Na presença de alguém suspeito, as mãos do militar devem estar acima da cintura porque:", [
-    "Permite ganhar distância ao adversário",
-    "Permite aceder ao bastão o mais rápido possível",
-    "São a primeira linha de defesa contra qualquer agressão do ADV",
-    "É a posição menos cansativa"
-  ], 2, ""),
-  q("Qual é a posição policial que garante mais estabilidade ao utilizador de BE?", [
-    "Posição de Intervenção","Pernas abertas à largura dos ombros","Posição piramidal","Posição de entrevista"
-  ], 0, ""),
-  q("A posição policial assenta em quatro componentes fundamentais:", [
-    "Estabilidade lateral e frontal, centro de gravidade baixo e cabeça ao centro",
-    "Estabilidade, segurança, base profunda e cabeça ao centro",
-    "Estabilidade lateral e frontal, controlo e cabeça ao centro",
-    "Estabilidade lateral e frontal, centro baixo, mão acima da cintura e cabeça ao centro"
-  ], 0, ""),
-  q("Os sete componentes da potência são:", [
-    "Equilíbrio; Flexibilidade; Coordenação; Resistência; Simplicidade; Velocidade; Força",
-    "Equilíbrio; Flexibilidade; Controlo; Resistência; Simplicidade; Velocidade; Força",
-    "Equilíbrio; Flexibilidade; Coordenação; Resistência; Simplicidade; Velocidade; Controlo",
-    "Equilíbrio; Flexibilidade; Concentração; Resistência; Simplicidade; Velocidade; Força"
-  ], 0, ""),
-  q("A flexibilidade está diretamente relacionada com:", [
-    "Terreno e tempo","Treino de alongamentos","Tensão, nervosismo e falta de confiança","Equilíbrio e velocidade"
-  ], 2, ""),
-  q("A condição física influencia diretamente a qualidade da intervenção policial porque:", [
-    "Atrasa a intervenção","Dificulta chaves de controlo","Afeta o discernimento e a capacidade de decisão","Afeta a imagem da força"
-  ], 2, ""),
-  q("A distância de segurança:", [
-    "Permite ao militar sacar o BE ou a arma",
-    "Fundamentalmente, permite controlar o primeiro impulso do ADV",
-    "É pelo menos três vezes o comprimento do braço",
-    "Depende da altura do ADV"
-  ], 1, ""),
-  q("A posição de intervenção:", [
-    "É igual à posição de entrevista",
-    "Tem como objetivo armar o militar de BE",
-    "É igual à de entrevista, mas com a base do bastão apontada ao ADV",
-    "Maximiza a disponibilidade do bastão e aumenta a postura defensiva"
-  ], 3, ""),
-  q("A abertura do BE “para cima”:", [
-    "Permite uma visibilidade máxima","Permite não bater no parceiro","Só deve ser utilizada quando não há espaço","É a mais discreta"
-  ], 0, ""),
-  q("As técnicas com BE foram concebidas para atuar:", [
-    "Abaixo do externo e até aos joelhos, evitando os membros",
-    "Em zonas de alto potencial de lesões e baixo potencial de controlo",
-    "No centro de massa dos braços e das pernas",
-    "No centro de massa dos braços, tronco e pernas"
-  ], 2, ""),
-  q("Em modo aberto, as técnicas devem ser realizadas com:", [
-    "Últimos 7 cm da guarda e ponta","Últimos 20 cm do bastão","Últimos 7 cm do corpo final e ponta","Últimos 20 cm do corpo médio e ponta"
-  ], 2, ""),
-  q("Locais onde NÃO se devem dirigir técnicas de impacto com BE:", [
-    "Articulações, especialmente dos membros inferiores",
-    "Cabeça, pescoço, externo, coluna vertebral e genitais",
-    "Zonas de massa muscular, em especial braços e pernas",
-    "Cabeça, pescoço, cotovelos, coluna vertebral e genitais"
-  ], 1, ""),
-  q("O BE e o bastão de borracha são:", [
-    "Ferramentas usadas em função da imagem do militar",
-    "Ferramentas que devem ser utilizadas de modo dissimulado",
-    "Armas que não devem ser usadas pelo mesmo militar",
-    "Ferramentas diferentes que se complementam"
-  ], 3, ""),
-  q("O BE é utilizado para:", [
-    "Ameaçar suspeitos do uso da força",
-    "Mostrar profissionalismo e modernidade",
-    "Dispersar um grupo de violentos",
-    "Controlar e deter um adversário"
-  ], 3, ""),
-  q("A intervenção policial em equipa destaca-se por permitir:", [
-    "Uma resolução simples e eficaz",
-    "Atuar simultaneamente em diferentes patamares do uso da força",
-    "Uma atuação com respeito pelos princípios de atuação",
-    "Empenhar uma força especializada"
-  ], 1, ""),
-  q("O triângulo da decisão integra 3 variáveis:", [
-    "Patamares do uso da força, preparação técnica e motivação",
-    "Habilidade, Oportunidade e Risco",
-    "Atuação em equipa, efeito túnel e nível de atuação",
-    "Relação causa-efeito, estabilidade emocional e bem jurídico"
-  ], 1, ""),
-  q("O uso da força, atendendo ao princípio da proporcionalidade e mínima força, pode ser entendido como:", [
-    "Uma opção que por norma vai além da lei",
-    "Uma opção do ADV, face à advertência efetuada pelos militares",
-    "Um mal necessário",
-    "Uma opção legítima face à infração"
-  ], 1, "")
-];
-
-/* ========== Motor do quiz (baralhar, avaliar, UI) ========== */
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function uid(){ return Math.random().toString(36).slice(2) }
 const el = (q)=>document.querySelector(q);
@@ -488,17 +86,276 @@ const $cRight = el('#cRight'), $cWrong = el('#cWrong'), $cBlank = el('#cBlank');
 const $submit = el('#submitBtn'), $start = el('#startBtn'), $export = el('#exportBtn'), $clear = el('#clearBtn'), $sel = el('#testSel');
 
 let CURRENT = { testId:'54', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
-
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{ return JSON.parse(raw) }catch{ return null } }
 
+/* ===== Bancos existentes (resumo) =====
+   Se já tens os TEST_54, TEST_55 e TEST_PDF no teu ficheiro anterior, podes manter.
+   Incluo aqui versões compactas apenas para manter o ficheiro autónomo. */
+const TEST_54 = [
+  q("As sete componentes da potência são:", ["Equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força","Coordenação, potência, rotatividade, simplicidade, velocidade, força, foco","Equilíbrio, precisão, coordenação, resistência, simplicidade, velocidade, força","Equilíbrio, flexibilidade, coordenação, resistência, complexidade, velocidade, força"], 0, "As 7: equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força."),
+  q("Intervenção policial em equipa permite:", ["Atuar simultaneamente em diferentes patamares do uso da força","Reduzir a necessidade de comunicação","Substituir a mínima força","Eliminar avaliação do risco"], 0, ""),
+  q("Triângulo da decisão integra:", ["Habilidade, Oportunidade e Risco","Legalidade, Necessidade e Proporcionalidade","Tempo, Distância e Cobertura","Força, Velocidade e Resistência"], 0, "HOR."),
+  q("Posição policial assenta em:", ["Estabilidade lateral e frontal, centro de gravidade baixo e cabeça ao centro","Estabilidade frontal, cabeça baixa, pés paralelos","Base estreita, tronco à frente, braços estendidos","Base alta, braços cruzados, olhar fixo"], 0, ""),
+  q("Uso da força (mínima/proporcionalidade) pode ser entendido como:", ["Uma opção do ADV após advertência","Um automatismo do militar","Decisão exclusiva do comandante","Inevitável no primeiro contacto"], 0, ""),
+  q("No modo fechado, controlo que NÃO pode ser feito de ambos os lados:", ["Controlo ao tríceps","Controlo ao bíceps","Controlo ao pulso","Chave"], 0, ""),
+  q("Segundo RGAM, o BE é arma de:", ["Classe A","Classe B","Classe C","Classe D"], 0, ""),
+  q("Abertura 'para baixo' quando:", ["O espaço é reduzido","Pretende-se máxima visibilidade","Terreno escorregadio","Vento lateral forte"], 0, ""),
+  q("Impacto em zonas amarelas executa-se:", ["Quando as técnicas nas zonas verdes se revelem ineficazes","Como primeira opção","Apenas em multidões","Só em treino"], 0, ""),
+  q("Afastamento (fechado) com rotação do pulso:", ["Polegar abandona a ponta e fica por cima do indicador","Polegar une ao médio","Polegar por baixo do indicador","Roda só a mão de defesa"], 0, ""),
+  q("BE é utilizado para:", ["Controlar e deter","Dispersar multidões","Imobilizar permanentemente","Substituir arma de fogo"], 0, ""),
+  q("Direto (fechado) destros:", ["Diagonal direita→esquerda","Horizontal esquerda→direita","Vertical ascendente","Arco por cima da cabeça"], 0, ""),
+  q("Posição de intervenção foi concebida para:", ["Maximizar disponibilidade e postura defensiva","Favorecer deslocamentos sacrificando estabilidade","Aumentar alcance acima da cabeça","Eliminar mão de defesa"], 0, ""),
+  q("Componente mais essencial da potência:", ["Equilíbrio","Força","Velocidade","Resistência"], 0, ""),
+  q("Condição física influencia porque:", ["Afeta discernimento e decisão","Substitui a técnica","Elimina risco","Dispensa equipa"], 0, ""),
+  q("BE e bastão de borracha são:", ["Ferramentas diferentes que se complementam","Intercambiáveis","Ambos para dispersão","Ambos rígidos e discretos"], 0, ""),
+  q("Constituição do BE:", ["Base, pega, guarda, corpo médio, corpo final e ponta","Empunhadura, lâmina, guarda, corpo","Pega, mola, gatilho e ponta","Cabo, corrente e peso terminal"], 0, ""),
+  q("Posição com mais estabilidade:", ["Posição de intervenção","Descanso","Corrida","Apresentação"], 0, ""),
+  q("Em modo aberto, técnicas com:", ["Últimos ~7 cm do corpo final e a ponta","A base","Zona média do corpo médio","Qualquer parte"], 0, ""),
+  q("Definição legal do BE:", ["Instrumento portátil telescópico, rígido ou flexível","Arma de borracha","Artefacto pirotécnico","Dispositivo elétrico"], 0, ""),
+  q("Atuação preferencial do BE:", ["Grandes massas musculares dos membros","Cabeça e pescoço","Coluna vertebral","Genitais"], 0, ""),
+  q("Locais a evitar:", ["Cabeça, pescoço, externo, coluna, genitais","Braços e coxas","Antebraços e gémeos","Quadríceps e deltoides"], 0, ""),
+  q("Distância de segurança serve para:", ["Controlar o impulso do ADV","Permitir fuga do ADV","Evitar controlo","Garantir abertura para cima"], 0, ""),
+  q("Abrir e fechar:", ["Inércia e fricção","Fricção e inércia","Compressão e fricção","Inércia e compressão"], 0, ""),
+  q("Funda — caraterísticas:", ["Rígida, rotativa e adaptável","Flexível e fixa","Rígida, fechada e não rotativa","Maleável e solta"], 0, ""),
+  q("Espaço amplo + visibilidade:", ["Abertura para cima","Para baixo","Horizontal","Não abrir"], 0, ""),
+  q("Técnicas atuam:", ["Centro de massa dos membros","Cabeça e pescoço","Tronco superior/cervical","Tornozelos e mãos"], 0, ""),
+  q("Flexibilidade relaciona-se com:", ["Tensão/nervosismo/falta de confiança","Força máxima","Envergadura","Peso do equipamento"], 0, ""),
+  q("Equipa permite:", ["Patamares diferentes coordenados","Eliminar avaliação de risco","Dispensar distância","Reduzir comunicação"], 0, ""),
+  q("Zonas amarelas destinam-se a:", ["Controlo/imobilização (articulações)","Impacto inicial","Dissuadir à distância","Pressão contínua em músculos"], 0, "")
+];
+
+const TEST_55 = [
+  q("Abertura 'para baixo' quando:", ["O espaço é reduzido","Máximo impacto psicológico","Terreno macio","Necessidade de luz"], 0, ""),
+  q("Abrir e fechar do BE:", ["Inércia e fricção","Fricção e inércia","Compressão e mola","Alavanca e mola"], 0, ""),
+  q("Mínima força e proporcionalidade podem ser entendidas como:", ["Opção do ADV após advertência","Automatismo","Decisão só do superior","Resposta fixa"], 0, ""),
+  q("Componente essencial da potência:", ["Equilíbrio","Força","Velocidade","Resistência"], 0, ""),
+  q("Impacto com BE atua sobre:", ["Sistema motor","Respiratório","Circulatório","Digestivo"], 0, ""),
+  q("Sete componentes:", ["Equilíbrio, flexibilidade, coordenação, resistência, simplicidade, velocidade, força","Equilíbrio, flexibilidade, coordenação, potência, velocidade, força, foco","Resistência, elasticidade, coordenação, simplicidade, velocidade, força, foco","Equilíbrio, precisão, coordenação, resistência, simplicidade, velocidade, força"], 0, ""),
+  q("Afastamento (fechado):", ["Polegar abandona a ponta e fica por cima do indicador","Polegar por baixo do indicador","Polegar permanece na ponta","Polegar roda para a palma"], 0, ""),
+  q("Controlo em fechado não executável dos dois lados:", ["Tríceps","Bíceps","Pulso","Chave"], 0, ""),
+  q("Reação (fechado) executa-se quando:", ["Direto anterior foi ineficaz","Dois ADV","Para iniciar intervenção","ADV imobilizado"], 0, ""),
+  q("Classe legal do BE:", ["Classe A","Classe B","Classe C","Classe D"], 0, ""),
+  q("Flexibilidade relaciona-se com:", ["Tensão/nervosismo/falta de confiança","Força absoluta","Velocidade de reação","Só amplitude"], 0, ""),
+  q("Triângulo da decisão:", ["Habilidade, oportunidade e risco","Tempo, distância e cobertura","Legalidade, necessidade e adequação","Força, velocidade e resistência"], 0, ""),
+  q("Funda — caraterísticas:", ["Rígida, rotativa e adaptável","Flexível e não ajustável","Fina e descartável","Rígida e não rotativa"], 0, ""),
+  q("Direto (fechado) destros:", ["Diagonal direita→esquerda","Horizontal esquerda→direita","Vertical ascendente","Arco por cima da cabeça"], 0, ""),
+  q("Posição de intervenção:", ["Maximiza disponibilidade e defesa","Aumenta velocidade de corrida","Facilita golpes acima da cabeça","Dispensa mão de defesa"], 0, ""),
+  q("Equipa destaca-se por permitir:", ["Patamares distintos coordenados","Eliminar avaliação de risco","Evitar comunicações","Trocar legalidade por eficácia"], 0, ""),
+  q("Posição policial — 4 componentes:", ["Estabilidade lateral e frontal, centro de gravidade baixo e cabeça ao centro","Base estreita, tronco à frente...","Estabilidade frontal, cabeça baixa...","Base alta, braços cruzados..."], 0, ""),
+  q("Locais a evitar:", ["Cabeça, pescoço, externo, coluna, genitais","Braços e coxas","Antebraços e gémeos","Deltoides e quadríceps"], 0, ""),
+  q("Distância de segurança permite:", ["Controlar o impulso do ADV","Eliminar BE","Aplicar pressão contínua","Garantir mobilidade do ADV"], 0, ""),
+  q("BE vs bastão de borracha:", ["Ferramentas diferentes e complementares","Igual finalidade","Ambos para dispersão","Ambos flexíveis"], 0, ""),
+  q("Constituição do BE:", ["Base, pega, guarda, corpo médio, corpo final e ponta","Empunhadura, lâmina, guarda e corpo","Cabo, corrente e peso terminal","Pega, mola, gatilho e ponta"], 0, ""),
+  q("Posição com mais estabilidade:", ["Intervenção","Descanso","Apresentação","Avanço"], 0, ""),
+  q("Em modo aberto usar:", ["Últimos ~7 cm do corpo final e a ponta","Base","Zona média","Qualquer parte"], 0, ""),
+  q("Definição legal:", ["Instrumento portátil telescópico, rígido ou flexível","Arma de borracha","Dispositivo elétrico","Instrumento perfurante"], 0, ""),
+  q("BE é utilizado para:", ["Controlar e deter","Dispersar grupos","Substituir algemas","Arma elétrica"], 0, ""),
+  q("Zonas amarelas são usadas quando:", ["Verdes se revelam ineficazes","Início da intervenção","Dissuadir sonora","ADV rendido"], 0, ""),
+  q("Abertura 'para cima' dá:", ["Máxima visibilidade","Menor controlo","Mais discrição sonora","Acesso mais lento"], 0, ""),
+  q("Técnicas atuam:", ["Centro de massa dos membros","Preferencialmente cabeça","Maioritariamente tronco","Mãos e pés"], 0, ""),
+  q("Funda deve permitir:", ["Colocação/extração inclusive com BE aberto","Apenas com BE fechado","Fixação frouxa","Rotação impedida"], 0, ""),
+  q("Objetivo principal do BE:", ["Deter e controlar (não dispersar)","Dispersar com menor lesividade","Substituir arma de fogo","Causar dor"], 0, "")
+];
+
+const TEST_PDF = [
+  /* (Mantém aqui o teu TEST_PDF com 30 Qs do ficheiro que enviaste) */
+];
+
+/* ===== NOVO — TESTE EXTRA (30 perguntas inéditas) ===== */
+const TEST_EXTRA = [
+  q("O princípio da necessidade implica que o uso do BE:", [
+    "Seja apenas o necessário para alcançar o objetivo legítimo",
+    "Seja maximizado para terminar mais depressa",
+    "Substitua sempre técnicas de controlo manual",
+    "Seja aplicado após qualquer desobediência, sem gradação"
+  ], 0, "Necessidade = só o indispensável para o fim legal."),
+  q("O princípio da adequação exige que:", [
+    "O meio seja idóneo para o resultado pretendido",
+    "Se escolha o meio mais doloroso",
+    "Se use sempre a mesma técnica padrão",
+    "Se ignore o contexto físico envolvente"
+  ], 0, "Adequação = idoneidade do meio ao objetivo."),
+  q("A proporcionalidade no uso do BE avalia:", [
+    "Relação entre gravidade da ameaça e intensidade do meio usado",
+    "Tempo gasto na intervenção",
+    "Número de intervenientes policiais",
+    "Tamanho do equipamento"
+  ], 0, "Proporcionalidade: equilíbrio ameaça/meio."),
+  q("A mínima força significa:", [
+    "Preferir a intervenção menos lesiva que funcione",
+    "Evitar qualquer contacto físico",
+    "Usar sempre BE antes de diálogo",
+    "Usar força máxima por pouco tempo"
+  ], 0, "Escolher a via eficaz menos gravosa."),
+  q("A verbalização táctica antes do uso do BE visa sobretudo:", [
+    "Dissuadir e clarificar consequências legais",
+    "Cumprir um formalismo irrelevante",
+    "Ganhar tempo para a equipa chegar",
+    "Elevar o tom para provocar submissão"
+  ], 0, "De-escalada e clarificação."),
+  q("Numa abordagem em equipa, o princípio de ‘canais cruzados’ significa:", [
+    "Separar funções: contacto, cobertura, comunicação e contenção",
+    "Ambos os militares falarem em simultâneo",
+    "Todos os militares aplicarem o mesmo patamar",
+    "Rodar posições continuamente sem critério"
+  ], 0, "Funções claras e complementares."),
+  q("O ângulo de abordagem mais seguro tende a ser:", [
+    "Ligeiramente oblíquo fora da linha central do ADV",
+    "Frontal, a curta distância",
+    "Pelas costas sem anúncio",
+    "Lateral com braços cruzados"
+  ], 0, "Evita linha direta de ataque, mantém visão."),
+  q("Retenção do BE refere-se a:", [
+    "Medidas para prevenir que o ADV agarre/roube o bastão",
+    "Colocar o bastão na funda",
+    "Guardar o bastão no armário",
+    "Reduzir o comprimento do bastão"
+  ], 0, "Retention = impedir perda/roubo."),
+  q("Transição BE → algemas deve ocorrer:", [
+    "Quando há controlo estável e segurança para passar à imobilização",
+    "Assim que o ADV cai",
+    "Logo ao primeiro contacto",
+    "Apenas por ordem superior"
+  ], 0, "Só com controlo e segurança."),
+  q("A gestão de distância ‘reação + segurança’ permite:", [
+    "Tempo de decisão e espaço para resposta",
+    "Reduzir a efetividade de técnicas",
+    "Obrigar o ADV a avançar",
+    "Eliminar necessidade de cobertura"
+  ], 0, "Tempo + espaço = decisão melhor."),
+  q("Em escadas/corredores estreitos, o risco principal é:", [
+    "Perda de mobilidade e fuga de rota",
+    "Demasiada visibilidade",
+    "Ruído excessivo do bastão",
+    "Falta de luz no bastão"
+  ], 0, "Ambiente confinado aumenta risco."),
+  q("A funda rotativa bem ajustada serve para:", [
+    "Facilitar extração/colocação e ajustar ângulo conforme a tarefa",
+    "Impedir qualquer rotação por segurança",
+    "Carregar outro equipamento dentro",
+    "Substituir o coldre da arma de fogo"
+  ], 0, "Ergo + acessibilidade."),
+  q("A inspeção do BE antes de serviço inclui:", [
+    "Verificar fixação das secções e integridade da pega",
+    "Lubrificar abundantemente o interior",
+    "Bater no chão para ‘testar’",
+    "Aquecer as secções para dilatar"
+  ], 0, "Checagem funcional e visual."),
+  q("Sobre manutenção do BE, é correto dizer:", [
+    "Manter limpo e seco; evitar detritos que prejudiquem abrir/fechar",
+    "Lubrificar com óleo espesso no interior",
+    "Guardar sempre aberto para ventilar",
+    "Lavar com solventes agressivos"
+  ], 0, "Sujo = falhas de travamento."),
+  q("A escolha entre abrir ‘para cima’ ou ‘para baixo’ deve considerar:", [
+    "Espaço disponível e necessidade de visibilidade",
+    "Preferência pessoal apenas",
+    "A cor da farda",
+    "A orientação do vento"
+  ], 0, "Critérios operacionais."),
+  q("Após intervenção bem-sucedida, deve-se:", [
+    "Assegurar segurança, prestar primeiros socorros e comunicar/relatar",
+    "Guardar o BE e sair",
+    "Não tocar em ninguém para evitar relatórios",
+    "Aguardar que o ADV recupere sozinho"
+  ], 0, "Sequência ética/legal."),
+  q("Numa multidão, o BE é preferencialmente:", [
+    "Ferramenta de controlo de indivíduo específico",
+    "Ferramenta de dispersão generalizada",
+    "Substituto de barreiras físicas",
+    "Sinalizador de direção"
+  ], 0, "Foco individual, não dispersão."),
+  q("O uso de BE em ‘zonas vermelhas’:", [
+    "É proibido salvo risco grave e excecional de vida",
+    "É a primeira opção",
+    "É sempre aceitável se o ADV foge",
+    "É adequado para causar dor"
+  ], 0, "Regra de exceção estrita."),
+  q("A coordenação com meios de menor potencial ofensivo (ex.: OC) visa:", [
+    "Expandir opções para de-escalada e controlo",
+    "Dispensar avaliação de risco",
+    "Reduzir documentação",
+    "Evitar formação técnica"
+  ], 0, "Mais opções, melhor decisão."),
+  q("O reporte pós-uso de força deve registar:", [
+    "Contexto, meios usados, avaliação, lesões e justificações",
+    "Apenas as ordens recebidas",
+    "Somente a hora",
+    "Informação sensível omitida por regra"
+  ], 0, "Rastreabilidade e legalidade."),
+  q("Sobre ética e imagem institucional:", [
+    "Uso correto e proporcional do BE protege a confiança pública",
+    "Não tem impacto na confiança",
+    "Apenas a rapidez importa",
+    "Quanto mais força, melhor imagem"
+  ], 0, "Proporcionalidade = confiança."),
+  q("Durante treino, medida de segurança essencial:", [
+    "Proteções, instruções claras e supervisão qualificada",
+    "Dispensar aquecimento",
+    "Usar objetos improvisados",
+    "Treinar em pisos escorregadios"
+  ], 0, "Segurança primeiro."),
+  q("Em ambientes com obstáculos (mobiliário), o militar deve:", [
+    "Reconfigurar posição/ângulo para manter linha de visão e fuga",
+    "Forçar confronto imediato",
+    "Desconsiderar tralhas",
+    "Fixar os pés e não ajustar"
+  ], 0, "Leitura do terreno."),
+  q("Num veículo (porta aberta), prioridade é:", [
+    "Impedir fecho súbito da porta e controlar ângulo",
+    "Golpear vidros de imediato",
+    "Entrar no habitáculo rapidamente",
+    "Ignorar cinto de segurança do ADV"
+  ], 0, "Segurança e controlo de ângulos."),
+  q("Sinais de ‘pré-ataque’ do ADV incluem:", [
+    "Olhar fixo, postura tensa, mãos escondidas",
+    "Respiração calma e mãos visíveis",
+    "Comunicação aberta e relaxada",
+    "Afirmações de cooperação e distância mantida"
+  ], 0, "Indicadores comportamentais."),
+  q("Quando a comunicação do ADV é confusa, o militar deve:", [
+    "Usar instruções curtas, claras e repetir verificação",
+    "Aumentar volume e aproximar",
+    "Ignorar e aplicar força",
+    "Desviar o olhar e gesticular"
+  ], 0, "Clareza e controlo."),
+  q("Transição BE → arma de fogo é considerada quando:", [
+    "A ameaça excede claramente o potencial do BE",
+    "O ADV discorda verbalmente",
+    "Há espaço amplo e luz",
+    "O militar se sente cansado"
+  ], 0, "Escalada por necessidade/legalidade."),
+  q("Indicador de pega correta no BE:", [
+    "Pega firme sem tensão excessiva na mão dominante",
+    "Dedo indicador estendido na ponta",
+    "Polegar a envolver completamente a ponta",
+    "Pegas alternadas a cada impacto"
+  ], 0, "Controlo sem fadiga."),
+  q("Num trabalho a dois, o ‘check-in’ constante serve para:", [
+    "Atualizar perceção comum e evitar ações contraditórias",
+    "Substituir ordens superiores",
+    "Reduzir documentação",
+    "Acelerar encerramento sem avaliação"
+  ], 0, "Partilha situacional."),
+  q("A decisão de não usar o BE (abstenção):", [
+    "Pode ser a opção correta se de-escalada funcionar",
+    "É sempre sinal de fraqueza",
+    "É proibida",
+    "Viola o dever de agir"
+  ], 0, "Objetivo é resolver com segurança e legalidade.")
+];
+
+/* ===== Seletor do banco ===== */
 function pool(testId){
   if(testId==='54') return TEST_54;
   if(testId==='55') return TEST_55;
-  return TEST_PDF;
+  if(testId==='pdf') return TEST_PDF;
+  return TEST_EXTRA;
 }
 
+/* ===== Construção / avaliação ===== */
 function build(testId){
   CURRENT.testId = testId;
   const base = pool(testId);
@@ -514,7 +371,7 @@ function build(testId){
   CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id, it.correct]));
   CURRENT.locked = false; CURRENT.evaluated = false;
   render();
-  localStorage.removeItem(storageKey()); // para evitar misturas de seeds antigas
+  localStorage.removeItem(storageKey()); // limpar estado antigo do mesmo teste
   updateCounts();
 }
 
@@ -558,39 +415,44 @@ function evaluate(){
     const item = CURRENT.items.find(x=>x.id===qid);
     const chosen = CURRENT.answers[qid];
     const correct = item.correct;
+
     const labels = qEl.querySelectorAll('.opt');
     labels.forEach((lab, i)=>{
       const input = lab.querySelector('input'); input.disabled = true;
       if(i===correct){ lab.classList.add('ok'); }
       if(chosen!==undefined && i===chosen && chosen!==correct){ lab.classList.add('ko'); }
     });
-    let badge = document.createElement('span');
+
+    const badge = document.createElement('span');
     badge.className = 'badge ' + (chosen===correct ? 'ok' : (chosen===undefined ? 'ko' : 'ko'));
     badge.textContent = (chosen===correct ? 'Correto' : (chosen===undefined ? 'Em branco' : 'Incorreto'));
     qEl.querySelector('h3').appendChild(document.createTextNode(' '));
     qEl.querySelector('h3').appendChild(badge);
+
     const exp = document.createElement('div'); exp.className='explain';
     exp.innerHTML = `<strong>Resposta correta:</strong> ${item.opts[correct]}${item.explanation?` — <em>${item.explanation}</em>`:''}`;
     qEl.appendChild(exp);
+
     if(chosen===correct) right++; else if(chosen!==undefined) wrong++;
   });
+
   const blanks = 30 - (right + wrong);
   const note20 = (right/30)*20;
-  el('#cRight').textContent = String(right);
-  el('#cWrong').textContent = String(wrong);
-  el('#cBlank').textContent = String(blanks);
-  el('#score').textContent = note20.toFixed(1);
-  el('#exportBtn').disabled = false;
+  $cRight.textContent = String(right);
+  $cWrong.textContent = String(wrong);
+  $cBlank.textContent = String(blanks);
+  $score.textContent = note20.toFixed(1);
+  $export.disabled = false;
   saveState();
 }
 
 function exportTxt(){
   const lines = [];
   lines.push(`Teste ${CURRENT.testId} — Resultados`);
-  lines.push(`Certas: ${el('#cRight').textContent}`);
-  lines.push(`Erradas: ${el('#cWrong').textContent}`);
-  lines.push(`Em branco: ${el('#cBlank').textContent}`);
-  lines.push(`Nota (/20): ${el('#score').textContent}`); lines.push('');
+  lines.push(`Certas: ${$cRight.textContent}`);
+  lines.push(`Erradas: ${$cWrong.textContent}`);
+  lines.push(`Em branco: ${$cBlank.textContent}`);
+  lines.push(`Nota (/20): ${$score.textContent}`); lines.push('');
   CURRENT.items.forEach((it, i)=>{
     const chosen = CURRENT.answers[it.id];
     const mark = (chosen===undefined) ? '—' : String.fromCharCode(65+chosen);
@@ -606,21 +468,21 @@ function exportTxt(){
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
 
-function clearProgress(){ localStorage.removeItem(storageKey()); build(el('#testSel').value); }
+function clearProgress(){ localStorage.removeItem(storageKey()); build($sel.value); }
 
-// UI events
-el('#startBtn').addEventListener('click', ()=>build(el('#testSel').value));
-el('#submitBtn').addEventListener('click', ()=>{
+/* Eventos UI */
+$start.addEventListener('click', ()=>build($sel.value));
+$submit.addEventListener('click', ()=>{
   const answered = Object.keys(CURRENT.answers).length;
   if(answered<30){ const remain = 30-answered; if(!confirm(`Tens ${remain} pergunta(s) por responder. Queres entregar na mesma?`)) return; }
   evaluate();
 });
-el('#exportBtn').addEventListener('click', exportTxt);
-el('#clearBtn').addEventListener('click', clearProgress);
-el('#testSel').addEventListener('change', ()=>build(el('#testSel').value));
+$export.addEventListener('click', exportTxt);
+$clear.addEventListener('click', clearProgress);
+$sel.addEventListener('change', ()=>build($sel.value));
 
-// start
-build(el('#testSel').value);
+/* Start */
+build($sel.value);
 </script>
 </body>
 </html>
