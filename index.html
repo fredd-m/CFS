@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — Direito Administrativo (Sessão 09)</title>
+<title>Quiz — GOC (Ajudante)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -24,7 +24,6 @@
   .opts{display:grid;gap:8px}
   .opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid #1f2937;border-radius:10px;background:#0b1220}
   .opt input{margin-top:3px;accent-color:var(--acc)}
-  .disabled{pointer-events:none;opacity:.8}
   .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-weight:600;font-size:.8rem}
   .ok{background:color-mix(in srgb, var(--good) 20%, transparent);border:1px solid var(--good);color:#bbf7d0}
   .ko{background:color-mix(in srgb, var(--bad) 15%, transparent);border:1px solid var(--bad);color:#fecaca}
@@ -35,20 +34,21 @@
   .k{border:1px solid #1f2937;border-radius:10px;padding:6px 10px;color:var(--mute)}
   .score{font-weight:700}
   .muted{color:var(--mute)}
-  .warning{border-left:4px solid #f59e0b;padding:10px 12px;border-radius:8px;background:#0b1220;margin:10px 0;color:#fde68a}
-  @media (prefers-reduced-motion:no-preference){
-    .q{transition:transform .15s ease, background .2s ease}
-    .q:hover{transform:translateY(-1px)}
-  }
+  @media (prefers-reduced-motion:no-preference){ .q{transition:transform .15s ease, background .2s ease} .q:hover{transform:translateY(-1px)} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — Direito Administrativo: Sessão 09</h1>
-    <p class="sub">Responde às 50 perguntas de Verdadeiro/Falso. No fim verás a correção e a nota (/20).</p>
+    <h1>Quiz — GOC (Ajudante)</h1>
+    <p class="sub">Seleciona o teste, responde às 50 questões e só no fim verás a correção e a nota (/20). Progresso é guardado localmente por sessão.</p>
 
     <div class="row" style="margin-bottom:12px">
+      <label for="testSel" class="pill">Escolher teste:
+        <select id="testSel" style="margin-left:8px">
+          <option value="GOC_AJ">GOC — Ajudante</option>
+        </select>
+      </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
       <span class="pill">Progresso: <span id="prog">0/50</span></span>
       <span class="pill">Estado: <span id="state">Em resposta</span></span>
@@ -67,25 +67,24 @@
         <div class="row">
           <button id="submitBtn" class="primary">Entregar</button>
           <button id="exportBtn" title="Exportar resultados para .txt" disabled>Exportar .txt</button>
-          <button id="clearBtn" title="Limpar respostas">Limpar</button>
+          <button id="clearBtn" title="Limpar progresso">Limpar</button>
         </div>
       </div>
     </div>
 
-    <p class="muted" style="margin-top:8px">As perguntas baralham a cada início. Este quiz é apenas para a Sessão 09.</p>
+    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada início. Progresso guardado localmente (por sessão).</p>
   </div>
 </div>
 
 <script>
-/* ---------- Utilidades ---------- */
+function q(stem, options, correctIndex, explanation){ return { stem, options, correctIndex, explanation }; }
 function shuffle(arr){
   const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
   return a;
 }
+function uid(){ return Math.random().toString(36).slice(2); }
+
 const el = (q)=>document.querySelector(q);
 const $quiz   = el('#quizArea');
 const $prog   = el('#prog');
@@ -98,195 +97,255 @@ const $submit = el('#submitBtn');
 const $start  = el('#startBtn');
 const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
+const $sel    = el('#testSel');
 
-let CURRENT = { items:[], answers:{}, locked:false, evaluated:false };
+let CURRENT = { testId:'GOC_AJ', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
+function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
+function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
-/* ---------- Banco de 50 perguntas V/F ---------- */
-/* Verdadeiro = true, Falso = false */
-const QUESTIONS = [
-  // 1
-  { stem:"O procedimento administrativo é a sucessão ordenada de atos e formalidades relativos à formação, manifestação e execução da vontade dos órgãos da Administração Pública.", correct:true },
-  // 2
-  { stem:"O processo administrativo é o conceito oposto de procedimento administrativo, significando a sucessão de decisões políticas.", correct:false },
-  // 3
-  { stem:"A atividade administrativa, em sentido material, visa a satisfação regular e contínua das necessidades coletivas de segurança, cultura e bem-estar.", correct:true },
-  // 4
-  { stem:"O poder discricionário permite à Administração decidir com total liberdade, sem estar condicionada por qualquer critério legal.", correct:false },
-  // 5
-  { stem:"O poder discricionário é sempre exercido dentro de limites definidos pela lei e pelos princípios fundamentais.", correct:true },
-  // 6
-  { stem:"No poder vinculado, a Administração tem apenas uma solução possível prevista na lei.", correct:true },
-  // 7
-  { stem:"A remoção de veículos com alarme a tocar mais de 20 minutos, prevista no Regulamento Geral do Ruído, é um exemplo de poder vinculado.", correct:false },
-  // 8
-  { stem:"A apreensão imediata de determinados veículos prevista no artigo 112.º do Código da Estrada é um exemplo de poder vinculado da Administração.", correct:true },
-  // 9
-  { stem:"Segundo o artigo 2.º, n.º 1 do CPA, o código aplica-se apenas às pessoas coletivas públicas, excluindo entidades privadas com poderes públicos.", correct:false },
-  // 10
-  { stem:"O artigo 2.º, n.º 1 do CPA abrange também entidades privadas que disponham de poderes públicos administrativos.", correct:true },
-  // 11
-  { stem:"O regime da Parte II do CPA (artigos 20.º a 52.º) aplica-se exclusivamente ao funcionamento dos órgãos da Administração Pública.", correct:true },
-  // 12
-  { stem:"Os princípios gerais da atividade administrativa previstos nos artigos 3.º a 19.º do CPA integram o âmbito material definido no artigo 2.º, n.º 3.", correct:true },
-  // 13
-  { stem:"O direito à informação, a participação dos cidadãos, as notificações e a fundamentação são formas de concretização constitucional referidas no artigo 2.º, n.º 3 do CPA.", correct:true },
-  // 14
-  { stem:"Nos procedimentos disciplinares ou de contraordenação nunca são aplicáveis as garantias previstas no CPA.", correct:false },
-  // 15
-  { stem:"Nos procedimentos especiais, como disciplinares ou de urbanismo, as garantias do CPA aplicam-se de forma subsidiária quando a lei especial é omissa.", correct:true },
-  // 16
-  { stem:"O artigo 266.º, n.º 1 da CRP consagra que a Administração tem um limite positivo, que é a prossecução do interesse público.", correct:true },
-  // 17
-  { stem:"O limite negativo da atuação administrativa consiste no respeito pelos direitos e interesses legítimos dos cidadãos.", correct:true },
-  // 18
-  { stem:"Mesmo quando utiliza poderes discricionários, a Administração pode perseguir interesses particulares desde que existam razões de oportunidade.", correct:false },
-  // 19
-  { stem:"A vinculação da Administração aos direitos e interesses legalmente protegidos dos cidadãos resulta, entre outros, do artigo 18.º, n.º 1 da CRP.", correct:true },
-  // 20
-  { stem:"A violação dos direitos legalmente protegidos dos cidadãos nunca gera responsabilidade da Administração.", correct:false },
-  // 21
-  { stem:"A Administração está subordinada à Constituição e os atos administrativos que a violem diretamente são inválidos.", correct:true },
-  // 22
-  { stem:"O princípio da legalidade significa que a Administração está subordinada apenas à lei ordinária, não ao direito internacional.", correct:false },
-  // 23
-  { stem:"Segundo o princípio da igualdade, a Administração deve tratar de forma igual situações objetivamente iguais e pode discriminar arbitrariamente situações diferentes.", correct:false },
-  // 24
-  { stem:"O princípio da igualdade funciona como limite ao exercício do poder discricionário da Administração.", correct:true },
-  // 25
-  { stem:"O princípio da proporcionalidade obriga a Administração a escolher, entre as medidas adequadas, a que implica menores sacrifícios para os administrados.", correct:true },
-  // 26
-  { stem:"O princípio da justiça, no CPA, está ligado à conjugação de outros princípios e à procura de uma decisão racional, adequada e proporcional.", correct:true },
-  // 27
-  { stem:"O princípio da imparcialidade exige que as decisões sejam tomadas com base em critérios objetivos de interesse público, sem influência de interesses pessoais.", correct:true },
-  // 28
-  { stem:"A imparcialidade não se relaciona com o regime de impedimentos dos titulares de órgãos e agentes administrativos.", correct:false },
-  // 29
-  { stem:"O princípio da boa-fé assenta numa relação de confiança entre Administração e particulares e na fiabilidade da atividade administrativa.", correct:true },
-  // 30
-  { stem:"A violação dos princípios fundamentais de direito administrativo nunca afeta a validade dos atos administrativos.", correct:false },
-  // 31
-  { stem:"De acordo com o CPA, a violação de princípios como legalidade, igualdade ou proporcionalidade pode conduzir à nulidade ou à anulabilidade do ato administrativo.", correct:true },
-  // 32
-  { stem:"Regra geral, os vícios dos atos administrativos conduzem à nulidade, reservando-se a anulabilidade para situações excecionais.", correct:false },
-  // 33
-  { stem:"A nulidade do ato administrativo produz efeitos retroativos, como se o ato nunca tivesse existido no ordenamento jurídico.", correct:true },
-  // 34
-  { stem:"Na anulabilidade, os efeitos já produzidos pelo ato são preservados, sendo o ato apenas afastado para o futuro.", correct:true },
-  // 35
-  { stem:"O artigo 3.º do CPA consagra o princípio da legalidade, segundo o qual órgãos e agentes da Administração devem atuar com fundamento na lei.", correct:true },
-  // 36
-  { stem:"O artigo 4.º do CPA estabelece o princípio da prossecução do interesse público.", correct:true },
-  // 37
-  { stem:"A boa administração, prevista no artigo 5.º do CPA, está associada à desburocratização, à descentralização e à desconcentração administrativas.", correct:true },
-  // 38
-  { stem:"O princípio da igualdade encontra-se previsto no artigo 6.º do CPA.", correct:true },
-  // 39
-  { stem:"O princípio da participação dos particulares na formação das decisões está ligado ao artigo 12.º do CPA.", correct:true },
-  // 40
-  { stem:"O princípio da administração eletrónica afasta totalmente a possibilidade de atendimento presencial.", correct:false },
-  // 41
-  { stem:"O princípio da gratuitidade, no artigo 15.º do CPA, significa que todos os procedimentos administrativos são sempre gratuitos e nunca há lugar a taxas.", correct:false },
-  // 42
-  { stem:"A responsabilidade extracontratual do Estado, referida no artigo 16.º do CPA, está regulada na Lei n.º 67/2007, de 31 de dezembro.", correct:true },
-  // 43
-  { stem:"A administração aberta, no artigo 17.º do CPA, inclui o direito de acesso à informação administrativa e o escrutínio da atividade administrativa.", correct:true },
-  // 44
-  { stem:"A proteção dos dados pessoais, prevista no artigo 18.º do CPA, visa evitar o acesso, uso, divulgação ou destruição não autorizados de dados.", correct:true },
-  // 45
-  { stem:"O princípio da cooperação leal com a União Europeia, no artigo 19.º do CPA, impõe colaboração entre a Administração portuguesa e as instituições da União Europeia.", correct:true },
-  // 46
-  { stem:"O princípio da adequação procedimental (artigo 56.º) significa que o procedimento tem uma forma totalmente rígida, sem qualquer possibilidade de adaptação ao caso.", correct:false },
-  // 47
-  { stem:"A proibição do excesso de formalismo é um critério a ter em conta na adequação procedimental.", correct:true },
-  // 48
-  { stem:"O princípio do inquisitório atribui um papel ativo aos órgãos administrativos na instrução do procedimento e na preparação da decisão.", correct:true },
-  // 49
-  { stem:"O princípio da celeridade impõe à Administração um dever de atuar com rapidez, evitando atrasos desnecessários.", correct:true },
-  // 50
-  { stem:"O princípio da cooperação e boa-fé procedimental impede que os interessados usem expedientes dilatórios ou promovam diligências inúteis para atrasar a decisão.", correct:true }
+/* ---------- TESTE GOC — Ajudante (50 perguntas) ---------- */
+const TEST_GOC_AJ = [
+  q(`V/F — Conhecimento tácito é um conhecimento pessoal do indivíduo, ligado a elementos intangíveis (valores, crenças, emoções e intuições).`, [`Verdadeiro`,`Falso`], 0, `Slide: Conhecimento (tácito vs explícito).`),
+  q(`V/F — Conhecimento explícito está formalizado (ex.: documentos, frases) e é facilmente transmitido, inclusive por cursos e treinamentos.`, [`Verdadeiro`,`Falso`], 0, `Slide: Conhecimento (tácito vs explícito).`),
+  q(`V/F — Gestão do conhecimento pode ser definida como o processo de adquirir, distribuir e usar eficazmente o conhecimento.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão do conhecimento (definição).`),
+  q(`V/F — O American Productivity Quality Center define gestão do conhecimento como 'identificar, adquirir e alavancar o conhecimento para aumentar a capacidade da empresa para competir'.`, [`Verdadeiro`,`Falso`], 0, `Slide: APQC (definição).`),
+  q(`V/F — Cultura organizacional é o conjunto de hábitos e crenças estabelecidos através de valores, normas e atitudes partilhadas pelos membros da organização.`, [`Verdadeiro`,`Falso`], 0, `Slide: Cultura organizacional.`),
+  q(`V/F — Cultura organizacional são os princípios que exprimem a identidade da organização.`, [`Verdadeiro`,`Falso`], 0, `Slide: Cultura organizacional.`),
+  q(`V/F — Segundo Charles Handy, existem 4 modelos de cultura organizacional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Tipos de cultura (Handy).`),
+  q(`V/F — Os quatro tipos de cultura organizacional (Handy) incluem: poder, papéis, tarefas e pessoas.`, [`Verdadeiro`,`Falso`], 0, `Slide: Tipos de cultura (Handy).`),
+  q(`V/F — Na gestão da mudança, as abordagens baseiam-se quase todas em três pontos: uso do poder; mudanças induzidas de forma racional; mudanças pela reeducação.`, [`Verdadeiro`,`Falso`], 0, `Slide: Abordagens alternativas da gestão da mudança.`),
+  q(`V/F — A gestão da mudança pelo poder baseia-se na utilização do poder para implementar mudanças.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pelo poder.`),
+  q(`V/F — A gestão da mudança pela razão baseia-se na escolha racional e na persuasão.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pela razão.`),
+  q(`V/F — A gestão da mudança pela reeducação procura alterar valores/atitudes através de aprendizagem e adaptação.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pela reeducação.`),
+  q(`V/F — O mapeamento de processos recorre a técnicas de modelagem de processos como ferramentas de auxílio importantes.`, [`Verdadeiro`,`Falso`], 0, `Slide: Mapeamento de processos (generalidades).`),
+  q(`V/F — O fluxograma de processo é utilizado para desenhar um processo de forma simplificada.`, [`Verdadeiro`,`Falso`], 0, `Slide: Fluxograma.`),
+  q(`V/F — A notação BPMN pretende eliminar ambiguidade na modelação de processos.`, [`Verdadeiro`,`Falso`], 0, `Slide: BPMN (objetivo).`),
+  q(`V/F — Em BPMN, 'Gateways' correspondem a decisões no processo.`, [`Verdadeiro`,`Falso`], 0, `Slide: BPMN — Gateways (Decisões).`),
+  q(`V/F — Benchmarking interno compara práticas/desempenho dentro da própria organização.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
+  q(`V/F — Benchmarking competitivo compara com concorrentes diretos.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
+  q(`V/F — Benchmarking funcional compara funções semelhantes, mesmo em organizações/setores diferentes.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
+  q(`V/F — Benchmarking genérico compara processos comuns, independentemente do setor.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
+  q(`V/F — O ciclo PDCA corresponde a Plan, Do, Check, Act.`, [`Verdadeiro`,`Falso`], 0, `Slide: PDCA.`),
+  q(`V/F — 'Tempo como recurso' significa que o tempo é limitado e deve ser gerido.`, [`Verdadeiro`,`Falso`], 0, `Slides: Gestão do tempo (tempo como recurso).`),
+  q(`V/F — A regulamentação da duração do trabalho prende-se com objetivos de ordem sanitária, social, económica e profissional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão do tempo — nível organizacional.`),
+  q(`V/F — Objetivos de ordem sanitária relacionam-se com proteção da saúde e prevenção de fadiga.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (sanitária).`),
+  q(`V/F — Objetivos de ordem social relacionam-se com equilíbrio e bem-estar social.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (social).`),
+  q(`V/F — Objetivos de ordem económica relacionam-se com produtividade/eficiência e impacto económico.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (económica).`),
+  q(`V/F — Objetivos de ordem profissional relacionam-se com qualidade do desempenho profissional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (profissional).`),
+  q(`V/F — 'Efeito de halo' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
+  q(`V/F — 'Pressões inflacionistas' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
+  q(`V/F — 'Efeito de contraste' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
+  q(`O que é 'gestão do conhecimento' (segundo o slide)?`, [`Processo de adquirir, distribuir e usar eficazmente o conhecimento`,`Processo de arquivar documentos sem partilha interna`,`Processo de reduzir custos através de cortes de pessoal`,`Processo de planear exclusivamente recursos financeiros`], 0, `Definição do slide de Gestão do Conhecimento.`),
+  q(`Qual das opções descreve melhor o conhecimento explícito?`, [`Conhecimento formalizado e facilmente transmitido`,`Conhecimento pessoal ligado a emoções e intuições`,`Conhecimento que só existe na prática e não pode ser registado`,`Conhecimento obtido apenas por experiência tácita`], 0, `Slide: conhecimento explícito.`),
+  q(`Segundo Charles Handy, qual NÃO é um tipo de cultura organizacional listado?`, [`Cultura do poder`,`Cultura de papéis`,`Cultura da inovação`,`Cultura das tarefas`], 2, `Slide: 4 tipos (poder, papéis, tarefas, pessoas).`),
+  q(`As abordagens alternativas da gestão da mudança baseiam-se sobretudo em:`, [`Poder, razão e reeducação`,`Planeamento, organização e controlo`,`Missão, visão e valores`,`Pool, lane e gateway`], 0, `Slide: abordagens da mudança.`),
+  q(`No mapeamento de processos, as técnicas de modelagem de processos são:`, [`Ferramentas de auxílio importantes`,`Apenas gráficos decorativos sem utilidade`,`Exclusivas para processos financeiros`,`Usadas apenas em organizações privadas`], 0, `Slide: técnicas de modelagem.`),
+  q(`Um fluxograma de processo é utilizado para:`, [`Desenhar um processo de forma simplificada`,`Eliminar a necessidade de regras e procedimentos`,`Substituir totalmente a análise estratégica`,`Garantir automaticamente a excelência organizacional`], 0, `Slide: fluxograma.`),
+  q(`A notação BPMN pretende sobretudo:`, [`Eliminar as ambiguidades na modelação de processos`,`Substituir a necessidade de indicadores`,`Ser usada apenas para processos industriais`,`Representar apenas organigramas`], 0, `Slide: BPMN.`),
+  q(`Em BPMN, 'Gateways' (decisões) servem para:`, [`Representar pontos de decisão/ramificação no processo`,`Representar participantes externos (organizações)`,`Representar documentos arquivados`,`Representar metas financeiras`], 0, `Slide: Gateways.`),
+  q(`Qual é o tipo de benchmarking que compara dentro da própria organização?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 0, `Tipos de benchmarking.`),
+  q(`Qual é o tipo de benchmarking que compara com concorrentes diretos?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 1, `Tipos de benchmarking.`),
+  q(`Qual é o tipo de benchmarking que compara funções semelhantes em organizações diferentes?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 2, `Tipos de benchmarking.`),
+  q(`Qual é o tipo de benchmarking que compara processos comuns independentemente do setor?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 3, `Tipos de benchmarking.`),
+  q(`O ciclo PDCA corresponde a:`, [`Plan, Do, Check, Act`,`Prepare, Decide, Control, Assess`,`Plan, Delegate, Communicate, Act`,`People, Data, Cost, Audit`], 0, `Slide: PDCA.`),
+  q(`A regulamentação da duração do trabalho prende-se com objetivos de ordem:`, [`Sanitária, social, económica e profissional`,`Política, militar, judicial e administrativa`,`Financeira, comercial, industrial e logística`,`Individual, familiar, escolar e cultural`], 0, `Slide: objetivos.`),
+  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Efeito de halo`,`Efeito de inversão`,`Efeito de aceleração`,`Efeito de compressão`], 0, `Lista de erros no slide.`),
+  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Pressões inflacionistas`,`Pressões deflacionistas`,`Pressões legislativas`,`Pressões operacionais`], 0, `Lista de erros no slide.`),
+  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Erro por semelhança`,`Erro por divergência`,`Erro por antiguidade`,`Erro por rotação`], 0, `Lista de erros no slide.`),
+  q(`No BSC, qual é um componente listado no slide?`, [`Análise estratégica (Stakeholders e SWOT)`,`Análise jurídica (CRP e CPA)`,`Análise contabilística (balanço e IVA)`,`Análise operacional (GPS e patrulhamento)`], 0, `Slide: Componentes do BSC.`),
+  q(`No BSC, o 'Mapa Estratégico' envolve:`, [`Objetivos distribuídos pelas perspetivas, atendendo aos vetores estratégicos`,`Apenas a lista de tarefas diárias da organização`,`Apenas indicadores financeiros obrigatórios`,`Apenas a estrutura hierárquica (organigrama)`], 0, `Slide: Mapa estratégico.`),
+  q(`No BSC, 'Indicadores, Iniciativas e Metas' servem para:`, [`Medir e operacionalizar os objetivos estratégicos`,`Substituir a missão e a visão`,`Eliminar a necessidade de análise SWOT`,`Definir apenas a cultura organizacional`], 0, `Slide: Indicadores/Iniciativas/Metas.`)
 ];
 
-const TOTAL = QUESTIONS.length;
+let quizChangeHandler=null;
 
-/* ---------- Construção / execução ---------- */
-function build(){
-  CURRENT.items = shuffle(QUESTIONS);
+function build(testId){
+  CURRENT.testId=testId;
+  const base=TEST_GOC_AJ;
+
+  const seed=uid();
+  CURRENT.seed=seed;
+
+  const items = shuffle(base).map((qItem,i)=>{
+    const idxMap = Array.from({length:qItem.options.length}, (_,k)=>k);
+    const shuffledIdxs = shuffle(idxMap);
+    const opts = shuffledIdxs.map(k=>qItem.options[k]);
+    const correct = shuffledIdxs.indexOf(qItem.correctIndex);
+    return {
+      id:`${testId}-${i+1}`,
+      stem:qItem.stem,
+      opts:opts,
+      correct:correct,
+      explanation:qItem.explanation||''
+    };
+  });
+
+  CURRENT.items = items.slice(0, 50);
   CURRENT.answers = {};
-  CURRENT.locked = false;
-  CURRENT.evaluated = false;
+  CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
+  CURRENT.locked=false;
+  CURRENT.evaluated=false;
+
+  if(quizChangeHandler) $quiz.removeEventListener('change', quizChangeHandler);
   render();
+  localStorage.removeItem(storageKey());
   updateCounts();
 }
 
 function render(){
-  $quiz.innerHTML = '';
-  CURRENT.items.forEach((q, idx)=>{
-    const wrap = document.createElement('div');
-    wrap.className = 'q';
-    wrap.dataset.qid = 'Q'+(idx+1);
-    const h = document.createElement('h3');
-    h.innerHTML = `<span class="muted">Q${idx+1}.</span> ${q.stem}`;
-    const opts = document.createElement('div');
-    opts.className = 'opts';
-    ['Verdadeiro','Falso'].forEach((optText, optIdx)=>{
-      const id = `Q${idx+1}-o${optIdx}`;
-      const line = document.createElement('label');
-      line.className = 'opt';
-      line.innerHTML = `
-        <input type="radio" name="Q${idx+1}" id="${id}" value="${optIdx}">
-        <div>${optText}</div>
+  $quiz.innerHTML='';
+  CURRENT.items.forEach((qItem, idx)=>{
+    const wrap=document.createElement('div');
+    wrap.className='q';
+    wrap.dataset.qid=qItem.id;
+
+    const h=document.createElement('h3');
+    h.innerHTML=`<span class="muted">Q${idx+1}.</span> ${qItem.stem}`;
+
+    const opts=document.createElement('div');
+    opts.className='opts';
+
+    qItem.opts.forEach((opt, i)=>{
+      const id=`${qItem.id}-o${i}`;
+      const line=document.createElement('label');
+      line.className='opt';
+      line.innerHTML=`
+        <input type="radio" name="${qItem.id}" id="${id}" value="${i}">
+        <div>${opt}</div>
       `;
       opts.appendChild(line);
     });
+
     wrap.appendChild(h);
     wrap.appendChild(opts);
     $quiz.appendChild(wrap);
   });
 
-  $state.textContent = 'Em resposta';
-  $score.textContent = '–';
-  $cRight.textContent = '0';
-  $cWrong.textContent = '0';
-  $cBlank.textContent = String(TOTAL);
-  $export.disabled = true;
+  $state.textContent='Em resposta';
+  $score.textContent='–';
+  $cRight.textContent='0';
+  $cWrong.textContent='0';
+  $cBlank.textContent=String(CURRENT.items.length);
+  $export.disabled=true;
+
+  quizChangeHandler=onSelect;
+  $quiz.addEventListener('change', quizChangeHandler, { passive:true });
 }
 
 function onSelect(e){
   if(!e.target || e.target.type!=='radio') return;
   if(CURRENT.locked) return;
-  const name = e.target.name; // Qn
-  const val = Number(e.target.value);
-  CURRENT.answers[name] = val;
+  const name=e.target.name;
+  const val=Number(e.target.value);
+  CURRENT.answers[name]=val;
+  saveState();
   updateCounts();
 }
 
 function updateCounts(){
-  const answered = Object.keys(CURRENT.answers).length;
-  $prog.textContent = `${answered}/${TOTAL}`;
-  $cBlank.textContent = String(TOTAL-answered);
+  const answered=Object.keys(CURRENT.answers).length;
+  $prog.textContent=`${answered}/${CURRENT.items.length}`;
+  $cBlank.textContent=String(CURRENT.items.length-answered);
 }
 
 function evaluate(){
-  if(CURRENT.evaluated) return;
-  CURRENT.locked = true;
-  CURRENT.evaluated = true;
-  $state.textContent = 'Corrigido';
+  CURRENT.locked=true;
+  CURRENT.evaluated=true;
+  $state.textContent='Corrigido';
   let right=0, wrong=0;
 
-  const qs = $quiz.querySelectorAll('.q');
-  qs.forEach((qEl, idx)=>{
-    const qid = qEl.dataset.qid;
-    const item = CURRENT.items[idx];
-    const chosen = CURRENT.answers[qid];
-    const correctIdx = item.correct ? 0 : 1;
+  document.querySelectorAll('.q').forEach(qEl=>{
+    const qid=qEl.dataset.qid;
+    const item=CURRENT.items.find(x=>x.id===qid);
+    const chosen=CURRENT.answers[qid];
+    const correct=item.correct;
 
-    const labels = qEl.querySelectorAll('.opt');
-    labels.forEach((lab, i)=>{
-      const input = lab.querySelector('input');
-      input.disabled = true;
-      if(i===correctIdx){
-        lab.classList.add('ok');
-        lab.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--good');
-      }
-      if(chosen!==undefined && i===chosen && chosen!==correctIdx){
-        lab.classList.add('ko');
+    const labels=qEl.querySelectorAll('.opt');
+    labels.forEach((lab,i)=>{
+      const input=lab.querySelector('input');
+      input.disabled=true;
+      if(i===correct) lab.classList.add('ok');
+      if(chosen!==undefined && i===chosen && chosen!==correct) lab.classList.add('ko');
+    });
+
+    const badge=document.createElement('span');
+    badge.className='badge ' + (chosen===correct ? 'ok' : 'ko');
+    badge.textContent=(chosen===correct ? 'Correto' : (chosen===undefined ? 'Em branco' : 'Incorreto'));
+    qEl.querySelector('h3').appendChild(document.createTextNode(' '));
+    qEl.querySelector('h3').appendChild(badge);
+
+    const exp=document.createElement('div');
+    exp.className='explain';
+    const correctTxt=item.opts[correct];
+
+    if(chosen===correct) right++;
+    else if(chosen===undefined) { /* branco */ }
+    else wrong++;
+
+    // Mostrar explicação só se estiver errado/em branco e houver explicação
+    const showExplain = (chosen!==correct) && item.explanation;
+    exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (showExplain ? ` — <em>${item.explanation}</em>` : ``);
+    qEl.appendChild(exp);
+  });
+
+  const blanks=CURRENT.items.length-(right+wrong);
+  const note20=(right/CURRENT.items.length)*20;
+  $cRight.textContent=String(right);
+  $cWrong.textContent=String(wrong);
+  $cBlank.textContent=String(blanks);
+  $score.textContent=note20.toFixed(1);
+  $export.disabled=false;
+  saveState();
+}
+
+function exportTxt(){
+  const lines=[];
+  lines.push(`Teste ${CURRENT.testId} — Resultados`);
+  lines.push(`Certas: ${$cRight.textContent}`);
+  lines.push(`Erradas: ${$cWrong.textContent}`);
+  lines.push(`Em branco: ${$cBlank.textContent}`);
+  lines.push(`Nota (/20): ${$score.textContent}`);
+  lines.push('');
+  CURRENT.items.forEach((it,i)=>{
+    const chosen=CURRENT.answers[it.id];
+    const mark=(chosen===undefined)?'—':String.fromCharCode(65+chosen);
+    const ok=String.fromCharCode(65+it.correct);
+    lines.push(`Q${i+1}. ${it.stem}`);
+    it.opts.forEach((op,idx)=>{
+      const tag=String.fromCharCode(65+idx);
+      const sel=(idx===chosen)?'*':' ';
+      const cor=(idx===it.correct)?' (correta)':'';
+      lines.push(`  ${sel} ${tag}) ${op}${cor}`);
+    });
+    lines.push(`  → Tua resposta: ${mark} | Correta: ${ok}`);
+    lines.push('');
+  });
+  const blob=new Blob([lines.join('\n')], {type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`resultado_teste_${CURRENT.testId}.txt`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+function clearProgress(){ localStorage.removeItem(storageKey()); build($sel.value); }
+
+$start.addEventListener('click', ()=>build($sel.value));
+$submit.addEventListener('click', ()=>{
+  const answered=Object.keys(CURRENT.answers).length;
+  if(answered<CURRENT.items.length){
+    const remain=CURRENT.items.length-answered;
+    if(!confirm(`Tens ${remain} pergunta(s) por responder. Queres entregar na mesma?`)) return;
+  }
+  evaluate();
+});
+$export.addEventListener('click', exportTxt);
+$clear.addEventListener('click', clearProgress);
+$sel.addEventListener('change', ()=>build($sel.value));
+
+build($sel.value);
+</script>
+</body>
+</html>
