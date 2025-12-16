@@ -3,11 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — GOC (Ajudante)</title>
+<title>Quiz — GOC (Ajudante 2)</title>
 <style>
-  :root{
-    --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
-  }
+  :root{--bg:#0f172a;--card:#111827;--ink:#e5e7eb;--mute:#94a3b8;--acc:#22d3ee;--good:#22c55e;--bad:#ef4444;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',sans-serif}
   .wrap{max-width:980px;margin:40px auto;padding:0 16px}
   .card{background:linear-gradient(180deg,#0b1220 0,#0b1220ee 70%,#0b1220cc 100%),radial-gradient(1100px 500px at 110% -10%,#1f2937 0,#0b1220 60%);border:1px solid #1f2937;border-radius:18px;padding:20px 18px;box-shadow:0 10px 30px #0006}
@@ -34,19 +32,18 @@
   .k{border:1px solid #1f2937;border-radius:10px;padding:6px 10px;color:var(--mute)}
   .score{font-weight:700}
   .muted{color:var(--mute)}
-  @media (prefers-reduced-motion:no-preference){ .q{transition:transform .15s ease, background .2s ease} .q:hover{transform:translateY(-1px)} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — GOC (Ajudante)</h1>
-    <p class="sub">Seleciona o teste, responde às 50 questões e só no fim verás a correção e a nota (/20). Progresso é guardado localmente por sessão.</p>
+    <h1>Quiz — GOC (Ajudante 2)</h1>
+    <p class="sub">Responde às 50 questões (misturadas). Só no fim verás a correção e a nota (/20). Progresso é guardado localmente por sessão.</p>
 
     <div class="row" style="margin-bottom:12px">
-      <label for="testSel" class="pill">Escolher teste:
+      <label for="testSel" class="pill">Teste:
         <select id="testSel" style="margin-left:8px">
-          <option value="GOC_AJ">GOC — Ajudante</option>
+          <option value="GOC_AJ2">GOC — Ajudante 2</option>
         </select>
       </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
@@ -72,17 +69,13 @@
       </div>
     </div>
 
-    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada início. Progresso guardado localmente (por sessão).</p>
+    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada início.</p>
   </div>
 </div>
 
 <script>
 function q(stem, options, correctIndex, explanation){ return { stem, options, correctIndex, explanation }; }
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-  return a;
-}
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function uid(){ return Math.random().toString(36).slice(2); }
 
 const el = (q)=>document.querySelector(q);
@@ -99,73 +92,71 @@ const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 const $sel    = el('#testSel');
 
-let CURRENT = { testId:'GOC_AJ', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'GOC_AJ2', items:[], answers:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
-function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
-/* ---------- TESTE GOC — Ajudante (50 perguntas) ---------- */
-const TEST_GOC_AJ = [
-  q(`V/F — Conhecimento tácito é um conhecimento pessoal do indivíduo, ligado a elementos intangíveis (valores, crenças, emoções e intuições).`, [`Verdadeiro`,`Falso`], 0, `Slide: Conhecimento (tácito vs explícito).`),
-  q(`V/F — Conhecimento explícito está formalizado (ex.: documentos, frases) e é facilmente transmitido, inclusive por cursos e treinamentos.`, [`Verdadeiro`,`Falso`], 0, `Slide: Conhecimento (tácito vs explícito).`),
-  q(`V/F — Gestão do conhecimento pode ser definida como o processo de adquirir, distribuir e usar eficazmente o conhecimento.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão do conhecimento (definição).`),
-  q(`V/F — O American Productivity Quality Center define gestão do conhecimento como 'identificar, adquirir e alavancar o conhecimento para aumentar a capacidade da empresa para competir'.`, [`Verdadeiro`,`Falso`], 0, `Slide: APQC (definição).`),
-  q(`V/F — Cultura organizacional é o conjunto de hábitos e crenças estabelecidos através de valores, normas e atitudes partilhadas pelos membros da organização.`, [`Verdadeiro`,`Falso`], 0, `Slide: Cultura organizacional.`),
-  q(`V/F — Cultura organizacional são os princípios que exprimem a identidade da organização.`, [`Verdadeiro`,`Falso`], 0, `Slide: Cultura organizacional.`),
-  q(`V/F — Segundo Charles Handy, existem 4 modelos de cultura organizacional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Tipos de cultura (Handy).`),
-  q(`V/F — Os quatro tipos de cultura organizacional (Handy) incluem: poder, papéis, tarefas e pessoas.`, [`Verdadeiro`,`Falso`], 0, `Slide: Tipos de cultura (Handy).`),
-  q(`V/F — Na gestão da mudança, as abordagens baseiam-se quase todas em três pontos: uso do poder; mudanças induzidas de forma racional; mudanças pela reeducação.`, [`Verdadeiro`,`Falso`], 0, `Slide: Abordagens alternativas da gestão da mudança.`),
-  q(`V/F — A gestão da mudança pelo poder baseia-se na utilização do poder para implementar mudanças.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pelo poder.`),
-  q(`V/F — A gestão da mudança pela razão baseia-se na escolha racional e na persuasão.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pela razão.`),
-  q(`V/F — A gestão da mudança pela reeducação procura alterar valores/atitudes através de aprendizagem e adaptação.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão da mudança pela reeducação.`),
-  q(`V/F — O mapeamento de processos recorre a técnicas de modelagem de processos como ferramentas de auxílio importantes.`, [`Verdadeiro`,`Falso`], 0, `Slide: Mapeamento de processos (generalidades).`),
-  q(`V/F — O fluxograma de processo é utilizado para desenhar um processo de forma simplificada.`, [`Verdadeiro`,`Falso`], 0, `Slide: Fluxograma.`),
-  q(`V/F — A notação BPMN pretende eliminar ambiguidade na modelação de processos.`, [`Verdadeiro`,`Falso`], 0, `Slide: BPMN (objetivo).`),
-  q(`V/F — Em BPMN, 'Gateways' correspondem a decisões no processo.`, [`Verdadeiro`,`Falso`], 0, `Slide: BPMN — Gateways (Decisões).`),
-  q(`V/F — Benchmarking interno compara práticas/desempenho dentro da própria organização.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
-  q(`V/F — Benchmarking competitivo compara com concorrentes diretos.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
-  q(`V/F — Benchmarking funcional compara funções semelhantes, mesmo em organizações/setores diferentes.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
-  q(`V/F — Benchmarking genérico compara processos comuns, independentemente do setor.`, [`Verdadeiro`,`Falso`], 0, `Slides: Benchmarking (tipos).`),
-  q(`V/F — O ciclo PDCA corresponde a Plan, Do, Check, Act.`, [`Verdadeiro`,`Falso`], 0, `Slide: PDCA.`),
-  q(`V/F — 'Tempo como recurso' significa que o tempo é limitado e deve ser gerido.`, [`Verdadeiro`,`Falso`], 0, `Slides: Gestão do tempo (tempo como recurso).`),
-  q(`V/F — A regulamentação da duração do trabalho prende-se com objetivos de ordem sanitária, social, económica e profissional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Gestão do tempo — nível organizacional.`),
-  q(`V/F — Objetivos de ordem sanitária relacionam-se com proteção da saúde e prevenção de fadiga.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (sanitária).`),
-  q(`V/F — Objetivos de ordem social relacionam-se com equilíbrio e bem-estar social.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (social).`),
-  q(`V/F — Objetivos de ordem económica relacionam-se com produtividade/eficiência e impacto económico.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (económica).`),
-  q(`V/F — Objetivos de ordem profissional relacionam-se com qualidade do desempenho profissional.`, [`Verdadeiro`,`Falso`], 0, `Slide: Objetivos (profissional).`),
-  q(`V/F — 'Efeito de halo' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
-  q(`V/F — 'Pressões inflacionistas' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
-  q(`V/F — 'Efeito de contraste' é um erro comum na avaliação de desempenho.`, [`Verdadeiro`,`Falso`], 0, `Slide: Erros de avaliação.`),
-  q(`O que é 'gestão do conhecimento' (segundo o slide)?`, [`Processo de adquirir, distribuir e usar eficazmente o conhecimento`,`Processo de arquivar documentos sem partilha interna`,`Processo de reduzir custos através de cortes de pessoal`,`Processo de planear exclusivamente recursos financeiros`], 0, `Definição do slide de Gestão do Conhecimento.`),
-  q(`Qual das opções descreve melhor o conhecimento explícito?`, [`Conhecimento formalizado e facilmente transmitido`,`Conhecimento pessoal ligado a emoções e intuições`,`Conhecimento que só existe na prática e não pode ser registado`,`Conhecimento obtido apenas por experiência tácita`], 0, `Slide: conhecimento explícito.`),
-  q(`Segundo Charles Handy, qual NÃO é um tipo de cultura organizacional listado?`, [`Cultura do poder`,`Cultura de papéis`,`Cultura da inovação`,`Cultura das tarefas`], 2, `Slide: 4 tipos (poder, papéis, tarefas, pessoas).`),
-  q(`As abordagens alternativas da gestão da mudança baseiam-se sobretudo em:`, [`Poder, razão e reeducação`,`Planeamento, organização e controlo`,`Missão, visão e valores`,`Pool, lane e gateway`], 0, `Slide: abordagens da mudança.`),
-  q(`No mapeamento de processos, as técnicas de modelagem de processos são:`, [`Ferramentas de auxílio importantes`,`Apenas gráficos decorativos sem utilidade`,`Exclusivas para processos financeiros`,`Usadas apenas em organizações privadas`], 0, `Slide: técnicas de modelagem.`),
-  q(`Um fluxograma de processo é utilizado para:`, [`Desenhar um processo de forma simplificada`,`Eliminar a necessidade de regras e procedimentos`,`Substituir totalmente a análise estratégica`,`Garantir automaticamente a excelência organizacional`], 0, `Slide: fluxograma.`),
-  q(`A notação BPMN pretende sobretudo:`, [`Eliminar as ambiguidades na modelação de processos`,`Substituir a necessidade de indicadores`,`Ser usada apenas para processos industriais`,`Representar apenas organigramas`], 0, `Slide: BPMN.`),
-  q(`Em BPMN, 'Gateways' (decisões) servem para:`, [`Representar pontos de decisão/ramificação no processo`,`Representar participantes externos (organizações)`,`Representar documentos arquivados`,`Representar metas financeiras`], 0, `Slide: Gateways.`),
-  q(`Qual é o tipo de benchmarking que compara dentro da própria organização?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 0, `Tipos de benchmarking.`),
-  q(`Qual é o tipo de benchmarking que compara com concorrentes diretos?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 1, `Tipos de benchmarking.`),
-  q(`Qual é o tipo de benchmarking que compara funções semelhantes em organizações diferentes?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 2, `Tipos de benchmarking.`),
-  q(`Qual é o tipo de benchmarking que compara processos comuns independentemente do setor?`, [`Interno`,`Competitivo`,`Funcional`,`Genérico`], 3, `Tipos de benchmarking.`),
-  q(`O ciclo PDCA corresponde a:`, [`Plan, Do, Check, Act`,`Prepare, Decide, Control, Assess`,`Plan, Delegate, Communicate, Act`,`People, Data, Cost, Audit`], 0, `Slide: PDCA.`),
-  q(`A regulamentação da duração do trabalho prende-se com objetivos de ordem:`, [`Sanitária, social, económica e profissional`,`Política, militar, judicial e administrativa`,`Financeira, comercial, industrial e logística`,`Individual, familiar, escolar e cultural`], 0, `Slide: objetivos.`),
-  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Efeito de halo`,`Efeito de inversão`,`Efeito de aceleração`,`Efeito de compressão`], 0, `Lista de erros no slide.`),
-  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Pressões inflacionistas`,`Pressões deflacionistas`,`Pressões legislativas`,`Pressões operacionais`], 0, `Lista de erros no slide.`),
-  q(`Qual das opções é um erro comum de avaliação do desempenho (slide)?`, [`Erro por semelhança`,`Erro por divergência`,`Erro por antiguidade`,`Erro por rotação`], 0, `Lista de erros no slide.`),
-  q(`No BSC, qual é um componente listado no slide?`, [`Análise estratégica (Stakeholders e SWOT)`,`Análise jurídica (CRP e CPA)`,`Análise contabilística (balanço e IVA)`,`Análise operacional (GPS e patrulhamento)`], 0, `Slide: Componentes do BSC.`),
-  q(`No BSC, o 'Mapa Estratégico' envolve:`, [`Objetivos distribuídos pelas perspetivas, atendendo aos vetores estratégicos`,`Apenas a lista de tarefas diárias da organização`,`Apenas indicadores financeiros obrigatórios`,`Apenas a estrutura hierárquica (organigrama)`], 0, `Slide: Mapa estratégico.`),
-  q(`No BSC, 'Indicadores, Iniciativas e Metas' servem para:`, [`Medir e operacionalizar os objetivos estratégicos`,`Substituir a missão e a visão`,`Eliminar a necessidade de análise SWOT`,`Definir apenas a cultura organizacional`], 0, `Slide: Indicadores/Iniciativas/Metas.`)
+/* ---------- TESTE GOC — Ajudante 2 (50 perguntas) ---------- */
+const TEST_GOC_AJ2 = [
+  q(`V/F — O conhecimento organizacional e os ativos intangíveis podem ser vistos como uma fonte de vantagem competitiva, por estarem enraizados na história e na cultura da empresa.`, [`Verdadeiro`,`Falso`], 0, `Ativos intangíveis/Conhecimento organizacional.`),
+  q(`V/F — A cadeia de valor de Porter foi desenvolvida para analisar a concorrência exclusivamente através do preço final do produto.`, [`Verdadeiro`,`Falso`], 1, `Cadeia de valor (Porter).`),
+  q(`V/F — Na cadeia de valor, as atividades primárias estão ligadas à criação física do produto, venda e assistência.`, [`Verdadeiro`,`Falso`], 0, `Atividades primárias.`),
+  q(`V/F — Na cadeia de valor, as atividades de apoio são opcionais e não influenciam o desempenho das atividades primárias.`, [`Verdadeiro`,`Falso`], 1, `Atividades de apoio.`),
+  q(`V/F — No processo de gestão estratégica, a execução ocorre antes da formulação estratégica.`, [`Verdadeiro`,`Falso`], 1, `Processo de gestão estratégica.`),
+  q(`V/F — A análise interna e a gestão da cadeia de valor inserem-se na fase de formulação estratégica.`, [`Verdadeiro`,`Falso`], 1, `Análise e diagnóstico vs formulação.`),
+  q(`V/F — Um fator motivador da mudança organizacional pode ser a necessidade de adaptação a novas realidades.`, [`Verdadeiro`,`Falso`], 0, `Fatores motivadores da mudança.`),
+  q(`V/F — Resistências pessoais à mudança envolvem aspetos como hábitos e necessidades pessoais.`, [`Verdadeiro`,`Falso`], 0, `Resistência individual.`),
+  q(`V/F — O gateway paralelo (BPMN) representa uma divisão do fluxo em dois ou mais ramos, executados em sequência.`, [`Verdadeiro`,`Falso`], 1, `Gateway paralelo.`),
+  q(`V/F — No gateway paralelo, quando usado para reunir fluxos, o processo continua quando todos os fluxos anteriores são executados.`, [`Verdadeiro`,`Falso`], 0, `Gateway paralelo (junção).`),
+  q(`V/F — Em gestão por processos, 'processo' é uma sequência de atividades que transforma entradas em saídas para atingir uma meta.`, [`Verdadeiro`,`Falso`], 0, `Definição de processo.`),
+  q(`V/F — No modelo tradicional, é comum existirem estruturas hierárquicas rígidas e pesadas.`, [`Verdadeiro`,`Falso`], 0, `Modelo tradicional.`),
+  q(`V/F — Na gestão por processos, é normal haver falhas no planeamento e controlo e decisões lentas.`, [`Verdadeiro`,`Falso`], 1, `Comparação: modelo tradicional vs processos.`),
+  q(`V/F — Delegar é dar a um subordinado responsabilidade e autoridade para executar uma tarefa e tomar decisões.`, [`Verdadeiro`,`Falso`], 0, `Delegação (definição).`),
+  q(`V/F — As principais etapas da delegação são: Instruir, Avaliar, Nomear, Controlar, Analisar.`, [`Verdadeiro`,`Falso`], 1, `Etapas: Analisar→Nomear→Instruir→Controlar→Avaliar.`),
+  q(`No processo de gestão estratégica, qual é a sequência correta das fases (conforme slide)?`, [`Análise e diagnóstico → Formulação estratégica → Execução → Avaliação`,`Formulação estratégica → Execução → Avaliação → Análise e diagnóstico`,`Execução → Avaliação → Análise e diagnóstico → Formulação estratégica`,`Análise e diagnóstico → Execução → Formulação estratégica → Avaliação`], 0, `Ordem das fases.`),
+  q(`A cadeia de valor de Porter foi desenvolvida para:`, [`Analisar e controlar as atividades de valor para que as empresas obtenham vantagem competitiva`,`Medir apenas o tempo de execução de tarefas`,`Substituir a análise SWOT`,`Avaliar exclusivamente a cultura organizacional`], 0, `Objetivo da cadeia de valor.`),
+  q(`Na cadeia de valor, as atividades dividem-se em:`, [`Atividades primárias e atividades de apoio`,`Atividades internas e externas`,`Atividades financeiras e jurídicas`,`Atividades de poder e de papéis`], 0, `Categorias de atividades.`),
+  q(`Qual das opções é uma atividade primária (Porter)?`, [`Operações`,`Gestão de recursos humanos`,`Infraestrutura da empresa`,`Desenvolvimento tecnológico`], 0, `Atividades primárias.`),
+  q(`Qual das opções é uma atividade de apoio (Porter)?`, [`Infraestrutura da empresa`,`Marketing e vendas`,`Logística externa`,`Serviço (assistência)`], 0, `Atividades de apoio.`),
+  q(`Segundo o slide, por que razão ativos intangíveis podem gerar vantagem competitiva?`, [`Porque estão enraizados na história e na cultura da empresa`,`Porque são fáceis de copiar pelos competidores`,`Porque dependem só de equipamento`,`Porque dispensam inovação e aprendizagem`], 0, `Ativos intangíveis.`),
+  q(`A frase 'analisar oportunidades e ameaças do mercado não é suficiente' pretende sublinhar que:`, [`A análise externa deve ser complementada por análise interna (ex.: cadeia de valor)`,`Apenas a análise externa interessa`,`Apenas a análise interna interessa`,`A cadeia de valor substitui o diagnóstico`], 0, `Análise externa + interna.`),
+  q(`As novas tecnologias facilitam a gestão estratégica sobretudo porque:`, [`Organizam e armazenam informações, relacionando as atividades da organização`,`Eliminam a necessidade de planeamento`,`Substituem a liderança`,`Tornam desnecessária a avaliação`], 0, `Tecnologias na gestão.`),
+  q(`No slide das abordagens alternativas da gestão da mudança, as intervenções efetivas dependem fundamentalmente do:`, [`Modelo de intervenção utilizado`,`Número de reuniões mensais`,`Orçamento de comunicação`,`Tipo de benchmarking escolhido`], 0, `Modelo de intervenção.`),
+  q(`Na gestão da mudança pela razão, a abordagem baseia-se em:`, [`Escolha racional e persuasão`,`Uso arbitrário do poder`,`Imposição sem informação`,`Redução de metas e indicadores`], 0, `Mudança pela razão.`),
+  q(`Na resistência à mudança de âmbito individual, qual é um exemplo indicado no slide?`, [`Hábitos`,`Discussões técnicas`,`Dificuldades operacionais`,`Argumentos económico-financeiros`], 0, `Resistência individual.`),
+  q(`Na resistência à mudança de âmbito organizacional, qual é um exemplo indicado no slide?`, [`Discussões técnicas`,`Inseguranças`,`Características de personalidade`,`Grau de conhecimento`], 0, `Resistência organizacional.`),
+  q(`No gateway paralelo (BPMN), quando o processo se divide em dois ou mais ramos:`, [`Todos os ramos depois do gateway são executados`,`Apenas um ramo é executado (exclusivo)`,`Os ramos são executados por ordem alfabética`,`O processo termina automaticamente`], 0, `Gateway paralelo.`),
+  q(`O BPMN é também conhecido como:`, [`ISO 19510`,`ISO 9001`,`ISO 14001`,`ISO 45001`], 0, `Norma associada.`),
+  q(`Segundo o slide, BPM (Business Process Management) é uma visão:`, [`Holística de organizar, estruturar e conduzir o negócio`,`Apenas financeira de conduzir o negócio`,`Apenas jurídica de conduzir o negócio`,`Exclusivamente tecnológica`], 0, `BPM (visão holística).`),
+  q(`No modelo tradicional (vs gestão por processos), qual das seguintes características surge no slide?`, [`Empresas voltadas para o interior`,`Empresas orientadas por processos ponta-a-ponta`,`Estruturas leves e flexíveis`,`Custos reduzidos associados à melhoria`], 0, `Modelo tradicional.`),
+  q(`De acordo com o slide, 'processo' é:`, [`Uma sequência definida de atividades/etapas com o objetivo de atingir uma meta`,`Um conjunto de pessoas numa hierarquia`,`Um documento formal (manual) de procedimentos`,`Um indicador de desempenho`], 0, `Definição de processo.`),
+  q(`De forma sintética (slide), processos transformam:`, [`Entradas em produtos/serviços (saídas)`,`Produtos em entradas`,`Metas em indicadores`,`Decisões em organigramas`], 0, `Entradas → saídas.`),
+  q(`Segundo o slide, benchmarking é uma ferramenta que permite comparar:`, [`Produtos/serviços/processos para avaliar performance e eficiência`,`Apenas salários entre departamentos`,`Apenas organigramas entre instituições`,`Apenas horários de trabalho`], 0, `Benchmarking (definição).`),
+  q(`No PDCA, a fase P (Plan) consiste em:`, [`Estabelecer objetivos e processos necessários para atingir resultados projetados`,`Executar o processo e recolher dados finais`,`Corrigir desvios e padronizar imediatamente`,`Eliminar indicadores`], 0, `P — Planear.`),
+  q(`No slide 'Tempo como Recurso', Chronos significa:`, [`Tempo cronológico/sequencial que pode ser medido`,`Momento oportuno (momento certo)`,`Tempo subjetivo impossível de medir`,`Tempo de descanso semanal`], 0, `Chronos.`),
+  q(`No mesmo slide, Kairos significa:`, [`O momento certo/oportuno`,`Tempo cronológico/sequencial`,`Tempo medido em horas`,`Tempo de execução de processos`], 0, `Kairos.`),
+  q(`Segundo o slide, gestão do tempo (nível individual) é a arte de organizar a vida com o intuito de:`, [`Controlar os acontecimentos e evitar períodos de tempo desperdiçados`,`Aumentar burocracia`,`Eliminar planeamento`,`Evitar definição de prioridades`], 0, `Gestão do tempo.`),
+  q(`No slide, a gestão do tempo consiste em:`, [`Registar, controlar e melhorar a utilização do nosso tempo`,`Apenas trabalhar mais horas`,`Apenas usar tecnologia`,`Apenas reduzir reuniões`], 0, `Registar/Controlar/Melhorar.`),
+  q(`Qual das opções aparece no slide como ação ligada à gestão do tempo?`, [`Planear / Priorizar`,`Delegar / Subdelegar`,`Certificar / Acreditar`,`Reeducar / Punir`], 0, `Ação no slide.`),
+  q(`No slide, uma ação recomendada é:`, [`Eliminar tarefas desnecessárias ou ineficazes`,`Adicionar tarefas redundantes`,`Evitar qualquer autoavaliação`,`Aumentar o número de interrupções`], 0, `Eliminar tarefas.`),
+  q(`Principais fatores de gestão do tempo (slide) incluem:`, [`Ambiente organizacional, ritmo de mudança, expetativas e perceção`,`Missão, visão, valores e vetores estratégicos`,`Poder, papéis, tarefas e pessoas`,`Interno, competitivo, funcional e genérico`], 0, `Fatores.`),
+  q(`No slide 'Desperdiçar Tempo', as categorias apresentadas são:`, [`Individual, estrutural, cultural, ambiental e organizacional`,`Interno, externo, técnico, económico e social`,`Sanitária, social, económica e profissional`,`Planeamento, execução, controlo e avaliação`], 0, `Categorias.`),
+  q(`No mesmo slide, 'performance' resulta de:`, [`Fazer as coisas certas (eficácia) e fazê-las bem (eficiência)`,`Fazer muitas coisas rapidamente`,`Fazer as coisas mais baratas`,`Fazer tudo sozinho`], 0, `Eficácia + eficiência.`),
+  q(`Na organização do trabalho (slide), a utilização eficaz do tempo demonstra:`, [`Comprometimento com a empresa`,`Apenas antiguidade`,`Apenas flexibilidade de horários`,`Apenas motivação do avaliador`], 0, `Comprometimento.`),
+  q(`Na organização e condução de reuniões, uma medida indicada é:`, [`Elaborar uma agenda com hora de início/fim e tempo limite por ponto`,`Convocar o máximo de pessoas possível`,`Evitar comunicar objetivos`,`Não distribuir agenda antecipadamente`], 0, `Agenda/tempo.`),
+  q(`Na delegação de tarefas (slide), delegar é:`, [`Dar a um subordinado a responsabilidade de um trabalho e decisões afins`,`Retirar autoridade e responsabilidade ao subordinado`,`Atribuir tarefas sem definir expectativas`,`Transferir sempre a responsabilidade para o superior`], 0, `Definição de delegar.`),
+  q(`Qual é a ordem correta das principais etapas da delegação (slide)?`, [`Analisar → Nomear → Instruir → Controlar → Avaliar`,`Nomear → Analisar → Avaliar → Instruir → Controlar`,`Instruir → Controlar → Nomear → Analisar → Avaliar`,`Avaliar → Controlar → Instruir → Nomear → Analisar`], 0, `Etapas.`),
+  q(`O plano de ação pessoal é apresentado como uma ferramenta utilizada para:`, [`Definir objetivos individuais e melhorar desempenho pessoal e profissional`,`Avaliar exclusivamente a concorrência`,`Substituir a gestão do tempo`,`Eliminar metas e indicadores`], 0, `Plano de ação.`),
+  q(`Qual dos seguintes é um elemento do Plano de Ação Pessoal (slide)?`, [`Flexível e ajustável`,`Secreto e imutável`,`Exclusivamente coletivo`,`Irrealista`], 0, `Elementos do plano.`)
 ];
 
 let quizChangeHandler=null;
 
 function build(testId){
   CURRENT.testId=testId;
-  const base=TEST_GOC_AJ;
+  const base=TEST_GOC_AJ2;
 
-  const seed=uid();
-  CURRENT.seed=seed;
+  CURRENT.seed=uid();
 
   const items = shuffle(base).map((qItem,i)=>{
     const idxMap = Array.from({length:qItem.options.length}, (_,k)=>k);
@@ -183,7 +174,6 @@ function build(testId){
 
   CURRENT.items = items.slice(0, 50);
   CURRENT.answers = {};
-  CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
   CURRENT.locked=false;
   CURRENT.evaluated=false;
 
@@ -236,9 +226,7 @@ function render(){
 function onSelect(e){
   if(!e.target || e.target.type!=='radio') return;
   if(CURRENT.locked) return;
-  const name=e.target.name;
-  const val=Number(e.target.value);
-  CURRENT.answers[name]=val;
+  CURRENT.answers[e.target.name]=Number(e.target.value);
   saveState();
   updateCounts();
 }
@@ -283,7 +271,6 @@ function evaluate(){
     else if(chosen===undefined) { /* branco */ }
     else wrong++;
 
-    // Mostrar explicação só se estiver errado/em branco e houver explicação
     const showExplain = (chosen!==correct) && item.explanation;
     exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (showExplain ? ` — <em>${item.explanation}</em>` : ``);
     qEl.appendChild(exp);
