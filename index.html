@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — GOC (CORONEL - 1)</title>
+<title>Quiz — GOC (Ajudante 3)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -40,17 +40,17 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — GOC (CORONEL - 1)</h1>
-    <p class="sub">Responde às 50 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente.</p>
+    <h1>Quiz — GOC (Ajudante 3)</h1>
+    <p class="sub">Responde às 25 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente.</p>
 
     <div class="row" style="margin-bottom:12px">
       <label for="testSel" class="pill">Escolher teste:
         <select id="testSel" style="margin-left:8px">
-          <option value="GOC_C1">GOC — CORONEL 1</option>
+          <option value="GOC_AJ3">GOC — Ajudante 3</option>
         </select>
       </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
-      <span class="pill">Progresso: <span id="prog">0/50</span></span>
+      <span class="pill">Progresso: <span id="prog">0/25</span></span>
       <span class="pill">Estado: <span id="state">Em resposta</span></span>
     </div>
 
@@ -61,7 +61,7 @@
         <div class="counts">
           <span class="k">Certas: <strong id="cRight">0</strong></span>
           <span class="k">Erradas: <strong id="cWrong">0</strong></span>
-          <span class="k">Em branco: <strong id="cBlank">50</strong></span>
+          <span class="k">Em branco: <strong id="cBlank">25</strong></span>
           <span class="k score">Nota (/20): <strong id="score">–</strong></span>
         </div>
         <div class="row">
@@ -99,70 +99,150 @@ const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 const $sel    = el('#testSel');
 
-let CURRENT = { testId:'GOC_C1', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'GOC_AJ3', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
-/* ---------- TESTE GOC — CORONEL 1 (50 perguntas) ---------- */
-const TEST_GOC_C1 = [
-  q(`V/F — O SPQ é o conjunto integrado de entidades e organizações inter-relacionadas e interatuantes que assegura a coordenação de três subsistemas: normalização, qualificação e metrologia.`, [`Verdadeiro`, `Falso`], 0, `Definição do SPQ (Art. 4.º DL 71/2012).`),
-  q(`V/F — O SPQ foi criado pelo Decreto-Lei n.º 234/93, de 2 de julho, e revisto pelo Decreto-Lei n.º 4/2002, de 4 de janeiro.`, [`Verdadeiro`, `Falso`], 0, `Suporte legal do SPQ (DL 234/93; DL 4/2002).`),
-  q(`V/F — O órgão coordenador do SPQ é o Conselho Nacional da Qualidade (CNQ).`, [`Verdadeiro`, `Falso`], 0, `Slide: Órgão Coordenador — CNQ.`),
-  q(`V/F — A horizontalidade do SPQ significa que apenas se aplica ao setor público.`, [`Verdadeiro`, `Falso`], 1, `Horizontalidade: pode abranger todos os setores de atividade da sociedade.`),
-  q(`V/F — A coexistência no SPQ impede a adesão de sistemas setoriais ou entidades.`, [`Verdadeiro`, `Falso`], 1, `Coexistência: podem aderir sistemas/entidades que cumpram exigências.`),
-  q(`V/F — O subsistema da metrologia garante o rigor e a exatidão das medições e assegura a sua comparabilidade e rastreabilidade.`, [`Verdadeiro`, `Falso`], 0, `Subsistema da Metrologia.`),
-  q(`V/F — O subsistema da normalização enquadra apenas documentos normativos de âmbito interno (da própria organização).`, [`Verdadeiro`, `Falso`], 1, `Normalização: âmbito nacional, europeu e internacional.`),
-  q(`V/F — O subsistema da qualificação enquadra atividades de acreditação, certificação e outras de avaliação da conformidade.`, [`Verdadeiro`, `Falso`], 0, `Subsistema da Qualificação.`),
-  q(`V/F — Uma característica do SPQ é ser um sistema exclusivo, não admitindo outros sistemas voluntários ou obrigatórios.`, [`Verdadeiro`, `Falso`], 1, `Características: não é exclusivo; admite coexistência.`),
-  q(`V/F — O desenvolvimento sustentável é referido como princípio da normalização.`, [`Verdadeiro`, `Falso`], 0, `Princípios da normalização — desenvolvimento sustentável.`),
-  q(`V/F — A EFQM foi fundada em 1991 pelos líderes das 14 maiores empresas europeias.`, [`Verdadeiro`, `Falso`], 1, `EFQM: fundada em 1988; modelo introduzido em 1991.`),
-  q(`V/F — O Modelo de Excelência EFQM foi introduzido em 1991 como base de trabalho para a avaliação dos European Quality Awards.`, [`Verdadeiro`, `Falso`], 0, `EFQM — introduzido em 1991.`),
-  q(`V/F — No EFQM, o sistema de pontuação está dividido em 60% para os meios e 40% para os resultados.`, [`Verdadeiro`, `Falso`], 1, `Pontuação EFQM: 50% meios / 50% resultados.`),
-  q(`V/F — O BSC utiliza apenas indicadores financeiros.`, [`Verdadeiro`, `Falso`], 1, `BSC: indicadores financeiros e não financeiros.`),
-  q(`V/F — A CAF é um instrumento de autoavaliação que ajuda a desenvolver uma cultura de qualidade orientada para o cidadão/cliente.`, [`Verdadeiro`, `Falso`], 0, `CAF — cultura orientada para cidadão/cliente.`),
-  q(`Segundo o Decreto‑Lei n.º 71/2012, a missão do IPQ inclui:`, [`A coordenação do SPQ e o desenvolvimento das atividades necessárias à função de laboratório nacional de metrologia`, `Apenas a emissão de licenças de construção`, `A fiscalização de tribunais administrativos`, `A gestão exclusiva de recursos humanos da Administração Pública`], 0, `Missão do IPQ (DL 71/2012).`),
-  q(`Na definição do SPQ (Art. 4.º DL 71/2012), a coordenação assegurada é a dos subsistemas da:`, [`Normalização, qualificação e metrologia`, `Inspeção, auditoria e fiscalização`, `Formação, logística e finanças`, `Segurança, saúde e ambiente`], 0, `Três subsistemas do SPQ.`),
-  q(`Qual destas é uma característica do SPQ (slide 'Características do SPQ')?`, [`Sistema descentralizado, com larga participação e regras claras e transparentes para a adesão`, `Sistema fechado, com adesão restrita a um único setor`, `Sistema exclusivo, que não admite coexistência`, `Sistema aplicável apenas a produtos, não a serviços`], 0, `Características do SPQ.`),
-  q(`No slide de 'Características do SPQ', 'Aplicação Global' significa que o SPQ:`, [`Pode ser utilizado para qualquer tipo de produto ou serviço`, `Só se aplica a produtos industriais`, `Só se aplica a serviços públicos`, `Apenas se aplica a organizações certificadas ISO 9001`], 0, `Características — aplicação global.`),
-  q(`O princípio de atuação 'Credibilidade e transparência' indica que o funcionamento do SPQ:`, [`Baseia‑se em regras e métodos conhecidos e aceites e é supervisionado por entidades representativas`, `Depende de decisões informais não documentadas`, `Dispensa supervisão por entidades externas`, `É definido unicamente por instruções internas`], 0, `Princípios — credibilidade e transparência.`),
-  q(`O princípio de atuação 'Coexistência' significa que:`, [`Podem aderir ao SPQ sistemas setoriais ou entidades que demonstrem cumprir as exigências e regras estabelecidas`, `Só podem aderir entidades públicas`, `A adesão é proibida a entidades de âmbito setorial`, `O SPQ substitui todos os outros sistemas`], 0, `Princípios — coexistência.`),
-  q(`O subsistema do SPQ que garante o rigor e a exatidão das medições chama‑se:`, [`Metrologia`, `Normalização`, `Qualificação`, `Certificação`], 0, `Subsistema da Metrologia.`),
-  q(`O subsistema do SPQ que enquadra a elaboração de normas e documentos normativos é o da:`, [`Normalização`, `Metrologia`, `Qualificação`, `Avaliação de desempenho`], 0, `Subsistema da Normalização.`),
-  q(`O subsistema da qualificação enquadra, no âmbito do SPQ, atividades de:`, [`Acreditação, certificação e outras de reconhecimento de competências e de avaliação da conformidade`, `Apenas criação de normas`, `Apenas medições laboratoriais`, `Apenas formação interna`], 0, `Subsistema da Qualificação.`),
-  q(`No slide 'Princípios da Normalização', o desenvolvimento sustentável é descrito como garantindo que:`, [`As necessidades da sociedade na sua totalidade são integradas na normalização`, `A normalização se foca apenas em requisitos técnicos internos`, `A participação das partes interessadas é desincentivada`, `As normas são definidas sem envolvimento da sociedade`], 0, `Princípio: desenvolvimento sustentável.`),
-  q(`A EFQM (Fundação Europeia para a Gestão da Qualidade) foi fundada em:`, [`1988`, `1991`, `2002`, `2015`], 0, `EFQM — fundada em 1988.`),
-  q(`O Modelo Europeu de Excelência (EFQM) foi introduzido em 1991 como base de trabalho para:`, [`A avaliação dos European Quality Awards`, `A criação das Normas ISO 9000`, `A certificação obrigatória de todos os serviços públicos`, `A substituição do SPQ`], 0, `EFQM — European Quality Awards.`),
-  q(`O modelo EFQM é descrito como um modelo de:`, [`Autoavaliação organizacional`, `Fiscalização judicial`, `Controlo disciplinar`, `Gestão exclusivamente financeira`], 0, `EFQM — autoavaliação.`),
-  q(`Segundo o slide, o modelo EFQM assenta, entre outros, na necessidade de ter em conta:`, [`Partes interessadas, rede de processos, orientação para resultados e inovação/aprendizagem`, `Apenas custos financeiros e orçamento anual`, `Somente estrutura hierárquica`, `Apenas equipamentos e infraestruturas`], 0, `Pressupostos EFQM.`),
-  q(`No EFQM, os nove critérios estão classificados em duas vertentes:`, [`Meios e Resultados`, `Planeamento e Execução`, `Estratégia e Operações`, `Pessoas e Tecnologia`], 0, `EFQM — Meios/Resultados.`),
-  q(`No EFQM, 'Meios' correspondem a:`, [`A forma como os resultados são alcançados`, `O que a organização alcançou`, `Apenas resultados financeiros`, `Somente auditorias externas`], 0, `EFQM — definição de Meios.`),
-  q(`Qual dos seguintes é um critério de 'Meios' no EFQM?`, [`Parcerias e Recursos`, `Resultados‑chave do desempenho`, `Para a sociedade`, `Resultados externos`], 0, `EFQM — Meios: Parcerias e Recursos.`),
-  q(`No EFQM, o critério 'Processos' refere que os processos são:`, [`Sistematicamente concebidos e geridos, melhorados através da inovação, satisfazendo e gerando valor para os stakeholders`, `Improvisados consoante o momento`, `Definidos apenas para cumprir formalidades`, `Exclusivos de áreas financeiras`], 0, `EFQM — Processos.`),
-  q(`O sistema de pontuação do EFQM está dividido:`, [`50% para os meios e 50% para os resultados`, `70% para os meios e 30% para os resultados`, `40% para os meios e 60% para os resultados`, `Apenas por resultados (100%)`], 0, `EFQM — pontuação 50/50.`),
-  q(`Qual destas é apontada como desvantagem do EFQM?`, [`Utiliza um conjunto muito vasto de indicadores, dificultando o controlo`, `Baseia‑se em relações causa‑efeito entre indicadores`, `Só é aplicável a um único setor`, `Não utiliza indicadores`], 0, `EFQM — desvantagens.`),
-  q(`O BSC é apresentado como uma metodologia que se apoia em conceitos da gestão da qualidade total, como:`, [`Orientação para os clientes, gestão por processos, melhoria contínua e gestão de desempenho`, `Apenas punição e controlo disciplinar`, `Somente auditorias externas`, `Exclusivamente gestão orçamental`], 0, `BSC — ligação à qualidade total.`),
-  q(`Segundo o slide, a aplicação prática do BSC levou ao seu desenvolvimento de:`, [`Metodologia de avaliação da performance para metodologia de gestão estratégica`, `Metodologia de gestão estratégica para modelo de auditoria`, `Modelo de metrologia para modelo de normalização`, `Modelo jurídico para modelo financeiro`], 0, `BSC — evolução.`),
-  q(`No slide, o BSC reflete equilíbrio entre:`, [`Objetivos de curto e longo prazo, medidas financeiras e não‑financeiras, e perspetivas interna e externa`, `Apenas metas internas e externas sem indicadores`, `Somente resultados financeiros de curto prazo`, `Apenas ocorrências e tendências, sem estratégia`], 0, `BSC — equilíbrios.`),
-  q(`Segundo o slide, a metodologia BSC pressupõe a definição de missão, visão, valores e estratégia através de:`, [`Indicadores do desempenho (financeiros e não financeiros) e elaboração de mapas estratégicos`, `Apenas relatórios anuais financeiros`, `Apenas organigramas`, `Apenas regulamentos internos`], 0, `BSC — pressupostos.`),
-  q(`No slide, o Mapa Estratégico no BSC envolve:`, [`Objetivos distribuídos pelas perspetivas, atendendo aos vetores estratégicos`, `Apenas a lista de tarefas diárias`, `Apenas indicadores financeiros`, `Apenas a estrutura hierárquica`], 0, `BSC — mapa estratégico.`),
-  q(`Uma das vantagens da aplicação do BSC (slide) é:`, [`Transformar a visão e a estratégia em ações`, `Eliminar a necessidade de estratégia`, `Evitar o alinhamento dos colaboradores`, `Substituir a medição do desempenho`], 0, `BSC — vantagens.`),
-  q(`Em suma, o BSC é descrito como:`, [`Modelo integrado de quantificação do desempenho organizacional que proporciona uma visão global e integrada através de indicadores por perspetivas`, `Modelo que substitui todos os indicadores por perceções`, `Modelo de metrologia aplicado a medições físicas`, `Modelo exclusivamente de normalização`], 0, `BSC — em suma.`),
-  q(`CAF significa:`, [`Common Assessment Framework`, `Common Audit Framework`, `Central Assessment Framework`, `Common Allocation Framework`], 0, `CAF — sigla.`),
-  q(`No slide, 'Estrutura' no CAF pressupõe:`, [`Um conjunto de princípios agrupados de forma lógica e coerente para efetuar um diagnóstico da organização`, `Apenas um organigrama hierárquico`, `Apenas regras financeiras`, `Apenas um manual técnico`], 0, `CAF — 'Estrutura'.`),
-  q(`No slide, 'Avaliação' no CAF engloba:`, [`As necessidades de melhoria nos sítios onde sejam necessárias`, `Apenas a atribuição de prémios de qualidade`, `Apenas a fiscalização disciplinar`, `Apenas auditorias financeiras externas`], 0, `CAF — 'Avaliação'.`),
-  q(`No CAF, o critério 1 (Liderança) inclui, entre outros, o subcritério 1.1:`, [`Dar uma orientação à organização, desenvolvendo a visão, missão e valores`, `Obter informação sobre necessidades futuras das partes interessadas`, `Planear, implementar e rever a modernização e a inovação`, `Resultados externos e internos`], 0, `CAF — 1.1 Liderança.`),
-  q(`Segundo o slide, a CAF permite aos gestores públicos:`, [`Melhorar competências de gestão e aplicar uma ferramenta de qualidade através de autoavaliação`, `Substituir a necessidade de avaliação`, `Eliminar benchmarking e benchlearning`, `Focar apenas em resultados financeiros`], 0, `CAF — para gestores públicos.`),
-  q(`Segundo o slide, os modelos de excelência são tipicamente vistos como instrumentos de:`, [`Autoavaliação`, `Fiscalização judicial`, `Metrologia industrial`, `Normalização interna`], 0, `Aplicação conjunta — instrumentos de autoavaliação.`),
-  q(`O slide indica que, por serem de aplicação genérica, os modelos de excelência permitem:`, [`Efetuar comparações entre organizações do setor público e privado`, `Apenas comparações dentro do mesmo setor`, `Comparações apenas entre organizações públicas`, `Eliminar qualquer comparação`], 0, `Aplicação conjunta — comparações público/privado.`),
-  q(`De acordo com o slide, para atingir a Qualidade Total são usados com frequência:`, [`EFQM, Normas ISO 9000, BSC e CAF`, `Apenas EFQM e CAF`, `Apenas ISO 9000 e metrologia`, `Somente BSC e normalização`], 0, `Aplicação conjunta — modelos frequentes.`),
+/* ---------- TESTE GOC — Ajudante 3 (25 perguntas) ---------- */
+/* Regras: 30% V/F (8) com 50/50 (4V/4F) + 70% EM (17) com 4 opções */
+const TEST_GOC_AJ3 = [
+  // --- V/F (8) ---
+  q("V/F — Conhecimento tácito é conhecimento pessoal, ligado a elementos intangíveis (valores, crenças, emoções e intuições).", ["Verdadeiro","Falso"], 0, "Slide 2."),
+  q("V/F — Conhecimento explícito está formalizado em documentos/frases/regras e é facilmente transmitido (ex.: cursos e treinamentos).", ["Verdadeiro","Falso"], 0, "Slide 2."),
+  q("V/F — Gestão do conhecimento pode ser definida como o processo de adquirir, distribuir e usar eficazmente o conhecimento.", ["Verdadeiro","Falso"], 0, "Slide 3."),
+  q("V/F — Para os gregos, Chronos é o «momento certo» (oportuno) e Kairos é o tempo cronológico e mensurável.", ["Verdadeiro","Falso"], 1, "Slide 45."),
+  q("V/F — Cultura organizacional corresponde apenas ao organigrama e aos processos formais de uma organização.", ["Verdadeiro","Falso"], 1, "Slide 14."),
+  q("V/F — O fluxograma de processo não é indicado para estudar processos; serve apenas para apresentação visual.", ["Verdadeiro","Falso"], 1, "Slide 30."),
+  q("V/F — Em benchmarking, o tipo competitivo procura as melhores práticas dentro da própria organização.", ["Verdadeiro","Falso"], 1, "Slide 39."),
+  q("V/F — Nos erros de avaliação, o 'efeito de contraste' é um dos mais comuns.", ["Verdadeiro","Falso"], 0, "Slide 59."),
+
+  // --- Escolha múltipla (17) ---
+  q("Segundo o APQC, gestão do conhecimento é o processo de:", [
+    "Identificar, adquirir e alavancar o conhecimento para aumentar a capacidade da empresa para competir",
+    "Armazenar informação sem a partilhar internamente",
+    "Eliminar o conhecimento tácito para reduzir custos",
+    "Substituir a formação por tecnologia"
+  ], 0, "Slide 4."),
+
+  q("No entendimento geral, Cultura Organizacional é:", [
+    "Conjunto de hábitos e crenças estabelecidos através de valores, normas e atitudes partilhadas",
+    "Apenas um conjunto de regras escritas (regulamentos)",
+    "A hierarquia formal e cadeia de comando",
+    "O plano anual de atividades e orçamento"
+  ], 0, "Slide 14."),
+
+  q("Segundo Charles Handy, qual NÃO é um tipo de cultura organizacional listado?", [
+    "Cultura do poder",
+    "Cultura de papéis",
+    "Cultura das tarefas",
+    "Cultura da inovação"
+  ], 3, "Slides 15–17."),
+
+  q("As abordagens alternativas da gestão da mudança baseiam-se quase todas em:", [
+    "Uso do poder; mudança racional; mudança pela reeducação",
+    "Planeamento; execução; auditoria",
+    "Motivação; recompensas; punições",
+    "Estrutura; processos; tecnologia"
+  ], 0, "Slides de gestão da mudança."),
+
+  q("Modelagem de Processos (generalidades) tem, entre outros, o propósito de:", [
+    "Criar uma representação completa e precisa do funcionamento do processo",
+    "Substituir indicadores por descrições narrativas",
+    "Eliminar por completo a necessidade de procedimentos",
+    "Servir apenas para auditorias financeiras"
+  ], 0, "Slide 28."),
+
+  q("Um processo é (slide):", [
+    "Uma sequência definida de atividades/etapas, executadas por equipamentos ou pessoas, com o objetivo de atingir uma meta",
+    "Um conjunto de decisões sem entradas nem saídas",
+    "Uma atividade isolada sem dependências",
+    "Uma regra interna sem execução prática"
+  ], 0, "Slide 29."),
+
+  q("Os fluxogramas (diagramas de fluxo) são:", [
+    "Uma representação gráfica das fases de um processo e das relações de dependência entre elas",
+    "Uma lista de tarefas sem ligação entre si",
+    "Um organigrama da organização",
+    "Uma tabela de indicadores financeiros"
+  ], 0, "Slide 30."),
+
+  q("A notação BPMN pretende:", [
+    "Eliminar as ambiguidades resultantes das diversas formas de representação gráfica de um processo",
+    "Substituir a análise estratégica",
+    "Eliminar a necessidade de processos",
+    "Ser usada apenas em tecnologia"
+  ], 0, "Slide 31."),
+
+  q("Em benchmarking, o tipo interno corresponde a:", [
+    "Procurar as melhores práticas dentro da própria organização",
+    "Comparar apenas com concorrentes diretos",
+    "Comparar funções em diferentes setores",
+    "Comparar processos comuns independentemente do setor"
+  ], 0, "Slide 39."),
+
+  q("Em benchmarking, o tipo funcional é:", [
+    "Relativo ao processo de trabalho das empresas, mesmo que de setores distintos, analisando funções (ex.: distribuição)",
+    "Comparação apenas com concorrentes diretos",
+    "Procura das melhores práticas dentro da organização",
+    "Comparação multissetorial de aspetos funcionais e tarefas"
+  ], 0, "Slide 39."),
+
+  q("O ciclo PDCA corresponde a:", [
+    "Plan, Do, Check, Act",
+    "Prepare, Decide, Control, Assess",
+    "Plan, Do, Control, Approve",
+    "Prepare, Develop, Check, Align"
+  ], 0, "Slide 40."),
+
+  q("Para os gregos, o tempo definido por Chronos corresponde a:", [
+    "Tempo cronológico/sequencial que pode ser medido",
+    "O «momento certo» (oportuno)",
+    "Um tempo indefinido onde algo especial acontece",
+    "Um tempo apenas subjetivo"
+  ], 0, "Slide 45."),
+
+  q("Segundo o slide, gestão do tempo consiste em:", [
+    "Registar, controlar e melhorar a utilização do nosso tempo",
+    "Fazer mais tarefas em menos tempo sem planear",
+    "Eliminar toda a planificação",
+    "Delegar sempre todas as tarefas"
+  ], 0, "Slide 46."),
+
+  q("Principais fatores de gestão do tempo (slide) incluem:", [
+    "Ambiente organizacional; ritmo de mudança; expetativas; perceção",
+    "Orçamento; contabilidade; auditoria; inspeção",
+    "Tecnologia; infraestruturas; frota; logística",
+    "Hierarquia; disciplina; controlo; punição"
+  ], 0, "Slide 47."),
+
+  q("Delegar é (slide):", [
+    "Dar a um subordinado a responsabilidade de um trabalho e decisões afins",
+    "Transferir toda a responsabilidade e deixar de acompanhar",
+    "Distribuir tarefas sem definir responsabilidades",
+    "Dar instruções apenas por escrito e sem controlo"
+  ], 0, "Slide 56."),
+
+  q("Principais etapas da delegação (slide):", [
+    "Analisar, Nomear, Instruir, Controlar, Avaliar",
+    "Planear, Executar, Inspecionar, Punir, Arquivar",
+    "Ouvir, Decidir, Registar, Comunicar, Encerrar",
+    "Medir, Comparar, Corrigir, Validar, Certificar"
+  ], 0, "Slide 57."),
+
+  q("Qual destes é um erro comum de avaliação (slide)?", [
+    "Efeito de halo",
+    "Efeito de prioridade",
+    "Efeito de normalização",
+    "Efeito de padronização"
+  ], 0, "Slide 59.")
 ];
 
 let quizChangeHandler=null;
 
 function build(testId){
   CURRENT.testId=testId;
-  const base=TEST_GOC_C1;
+  const base=TEST_GOC_AJ3;
 
   const seed=uid();
   CURRENT.seed=seed;
@@ -181,7 +261,7 @@ function build(testId){
     };
   });
 
-  CURRENT.items = items.slice(0, 50);
+  CURRENT.items = items.slice(0, 25);
   CURRENT.answers = {};
   CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
   CURRENT.locked=false;
@@ -283,6 +363,7 @@ function evaluate(){
     else if(chosen===undefined) { /* branco */ }
     else wrong++;
 
+    // Explicação só nas erradas/em branco, e curta
     const showExplain = (chosen!==correct) && item.explanation;
     exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (showExplain ? ` — <em>${item.explanation}</em>` : ``);
     qEl.appendChild(exp);
