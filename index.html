@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — GOC (Ajudante 3)</title>
+<title>Quiz — PRL (30 Perguntas)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -40,17 +40,17 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — GOC (Ajudante 3)</h1>
-    <p class="sub">Responde às 25 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente.</p>
+    <h1>Quiz — PRL (30 Perguntas)</h1>
+    <p class="sub">Responde às 30 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente.</p>
 
     <div class="row" style="margin-bottom:12px">
       <label for="testSel" class="pill">Escolher teste:
         <select id="testSel" style="margin-left:8px">
-          <option value="GOC_AJ3">GOC — Ajudante 3</option>
+          <option value="PRL_1">PRL — Resumo (30)</option>
         </select>
       </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
-      <span class="pill">Progresso: <span id="prog">0/25</span></span>
+      <span class="pill">Progresso: <span id="prog">0/30</span></span>
       <span class="pill">Estado: <span id="state">Em resposta</span></span>
     </div>
 
@@ -61,7 +61,7 @@
         <div class="counts">
           <span class="k">Certas: <strong id="cRight">0</strong></span>
           <span class="k">Erradas: <strong id="cWrong">0</strong></span>
-          <span class="k">Em branco: <strong id="cBlank">25</strong></span>
+          <span class="k">Em branco: <strong id="cBlank">30</strong></span>
           <span class="k score">Nota (/20): <strong id="score">–</strong></span>
         </div>
         <div class="row">
@@ -99,150 +99,361 @@ const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 const $sel    = el('#testSel');
 
-let CURRENT = { testId:'GOC_AJ3', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'PRL_1', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
-/* ---------- TESTE GOC — Ajudante 3 (25 perguntas) ---------- */
-/* Regras: 30% V/F (8) com 50/50 (4V/4F) + 70% EM (17) com 4 opções */
-const TEST_GOC_AJ3 = [
-  // --- V/F (8) ---
-  q("V/F — Conhecimento tácito é conhecimento pessoal, ligado a elementos intangíveis (valores, crenças, emoções e intuições).", ["Verdadeiro","Falso"], 0, "Slide 2."),
-  q("V/F — Conhecimento explícito está formalizado em documentos/frases/regras e é facilmente transmitido (ex.: cursos e treinamentos).", ["Verdadeiro","Falso"], 0, "Slide 2."),
-  q("V/F — Gestão do conhecimento pode ser definida como o processo de adquirir, distribuir e usar eficazmente o conhecimento.", ["Verdadeiro","Falso"], 0, "Slide 3."),
-  q("V/F — Para os gregos, Chronos é o «momento certo» (oportuno) e Kairos é o tempo cronológico e mensurável.", ["Verdadeiro","Falso"], 1, "Slide 45."),
-  q("V/F — Cultura organizacional corresponde apenas ao organigrama e aos processos formais de uma organização.", ["Verdadeiro","Falso"], 1, "Slide 14."),
-  q("V/F — O fluxograma de processo não é indicado para estudar processos; serve apenas para apresentação visual.", ["Verdadeiro","Falso"], 1, "Slide 30."),
-  q("V/F — Em benchmarking, o tipo competitivo procura as melhores práticas dentro da própria organização.", ["Verdadeiro","Falso"], 1, "Slide 39."),
-  q("V/F — Nos erros de avaliação, o 'efeito de contraste' é um dos mais comuns.", ["Verdadeiro","Falso"], 0, "Slide 59."),
-
-  // --- Escolha múltipla (17) ---
-  q("Segundo o APQC, gestão do conhecimento é o processo de:", [
-    "Identificar, adquirir e alavancar o conhecimento para aumentar a capacidade da empresa para competir",
-    "Armazenar informação sem a partilhar internamente",
-    "Eliminar o conhecimento tácito para reduzir custos",
-    "Substituir a formação por tecnologia"
-  ], 0, "Slide 4."),
-
-  q("No entendimento geral, Cultura Organizacional é:", [
-    "Conjunto de hábitos e crenças estabelecidos através de valores, normas e atitudes partilhadas",
-    "Apenas um conjunto de regras escritas (regulamentos)",
-    "A hierarquia formal e cadeia de comando",
-    "O plano anual de atividades e orçamento"
-  ], 0, "Slide 14."),
-
-  q("Segundo Charles Handy, qual NÃO é um tipo de cultura organizacional listado?", [
-    "Cultura do poder",
-    "Cultura de papéis",
-    "Cultura das tarefas",
-    "Cultura da inovação"
-  ], 3, "Slides 15–17."),
-
-  q("As abordagens alternativas da gestão da mudança baseiam-se quase todas em:", [
-    "Uso do poder; mudança racional; mudança pela reeducação",
-    "Planeamento; execução; auditoria",
-    "Motivação; recompensas; punições",
-    "Estrutura; processos; tecnologia"
-  ], 0, "Slides de gestão da mudança."),
-
-  q("Modelagem de Processos (generalidades) tem, entre outros, o propósito de:", [
-    "Criar uma representação completa e precisa do funcionamento do processo",
-    "Substituir indicadores por descrições narrativas",
-    "Eliminar por completo a necessidade de procedimentos",
-    "Servir apenas para auditorias financeiras"
-  ], 0, "Slide 28."),
-
-  q("Um processo é (slide):", [
-    "Uma sequência definida de atividades/etapas, executadas por equipamentos ou pessoas, com o objetivo de atingir uma meta",
-    "Um conjunto de decisões sem entradas nem saídas",
-    "Uma atividade isolada sem dependências",
-    "Uma regra interna sem execução prática"
-  ], 0, "Slide 29."),
-
-  q("Os fluxogramas (diagramas de fluxo) são:", [
-    "Uma representação gráfica das fases de um processo e das relações de dependência entre elas",
-    "Uma lista de tarefas sem ligação entre si",
-    "Um organigrama da organização",
-    "Uma tabela de indicadores financeiros"
-  ], 0, "Slide 30."),
-
-  q("A notação BPMN pretende:", [
-    "Eliminar as ambiguidades resultantes das diversas formas de representação gráfica de um processo",
-    "Substituir a análise estratégica",
-    "Eliminar a necessidade de processos",
-    "Ser usada apenas em tecnologia"
-  ], 0, "Slide 31."),
-
-  q("Em benchmarking, o tipo interno corresponde a:", [
-    "Procurar as melhores práticas dentro da própria organização",
-    "Comparar apenas com concorrentes diretos",
-    "Comparar funções em diferentes setores",
-    "Comparar processos comuns independentemente do setor"
-  ], 0, "Slide 39."),
-
-  q("Em benchmarking, o tipo funcional é:", [
-    "Relativo ao processo de trabalho das empresas, mesmo que de setores distintos, analisando funções (ex.: distribuição)",
-    "Comparação apenas com concorrentes diretos",
-    "Procura das melhores práticas dentro da organização",
-    "Comparação multissetorial de aspetos funcionais e tarefas"
-  ], 0, "Slide 39."),
-
-  q("O ciclo PDCA corresponde a:", [
-    "Plan, Do, Check, Act",
-    "Prepare, Decide, Control, Assess",
-    "Plan, Do, Control, Approve",
-    "Prepare, Develop, Check, Align"
-  ], 0, "Slide 40."),
-
-  q("Para os gregos, o tempo definido por Chronos corresponde a:", [
-    "Tempo cronológico/sequencial que pode ser medido",
-    "O «momento certo» (oportuno)",
-    "Um tempo indefinido onde algo especial acontece",
-    "Um tempo apenas subjetivo"
-  ], 0, "Slide 45."),
-
-  q("Segundo o slide, gestão do tempo consiste em:", [
-    "Registar, controlar e melhorar a utilização do nosso tempo",
-    "Fazer mais tarefas em menos tempo sem planear",
-    "Eliminar toda a planificação",
-    "Delegar sempre todas as tarefas"
-  ], 0, "Slide 46."),
-
-  q("Principais fatores de gestão do tempo (slide) incluem:", [
-    "Ambiente organizacional; ritmo de mudança; expetativas; perceção",
-    "Orçamento; contabilidade; auditoria; inspeção",
-    "Tecnologia; infraestruturas; frota; logística",
-    "Hierarquia; disciplina; controlo; punição"
-  ], 0, "Slide 47."),
-
-  q("Delegar é (slide):", [
-    "Dar a um subordinado a responsabilidade de um trabalho e decisões afins",
-    "Transferir toda a responsabilidade e deixar de acompanhar",
-    "Distribuir tarefas sem definir responsabilidades",
-    "Dar instruções apenas por escrito e sem controlo"
-  ], 0, "Slide 56."),
-
-  q("Principais etapas da delegação (slide):", [
-    "Analisar, Nomear, Instruir, Controlar, Avaliar",
-    "Planear, Executar, Inspecionar, Punir, Arquivar",
-    "Ouvir, Decidir, Registar, Comunicar, Encerrar",
-    "Medir, Comparar, Corrigir, Validar, Certificar"
-  ], 0, "Slide 57."),
-
-  q("Qual destes é um erro comum de avaliação (slide)?", [
-    "Efeito de halo",
-    "Efeito de prioridade",
-    "Efeito de normalização",
-    "Efeito de padronização"
-  ], 0, "Slide 59.")
+/* ---------- TESTE PRL (30 perguntas) ---------- */
+const TEST_PRL_1 = [
+  q(
+    `Na Lei 102/2009, “Perigo” é:`,
+    [
+      `A propriedade intrínseca de uma instalação/atividade/equipamento/agente com potencial para provocar dano`,
+      `A consequência final de um acidente já ocorrido`,
+      `A combinação de fatores económicos e sociais do trabalho`,
+      `Um evento súbito que causa lesão no local de trabalho`
+    ],
+    0,
+    `Perigo = potencial para provocar dano (Lei 102/2009 — conceitos).`
+  ),
+  q(
+    `Na Lei 102/2009, “Risco” é:`,
+    [
+      `A probabilidade de concretização do dano em função das condições de utilização/exposição/interação com o perigo`,
+      `A propriedade intrínseca de um agente para provocar dano`,
+      `Um sinónimo de acidente de trabalho`,
+      `Um equipamento de proteção individual`
+    ],
+    0,
+    `Risco = probabilidade de ocorrer dano associado a um perigo (Lei 102/2009 — conceitos).`
+  ),
+  q(
+    `Em SST, qual é a forma correta de interpretar “perigo” e “risco”?`,
+    [
+      `Perigo = fonte com potencial de dano; Risco = probabilidade/consequência desse dano ocorrer`,
+      `Perigo = probabilidade; Risco = fonte de dano`,
+      `Perigo = apenas riscos psicossociais; Risco = apenas riscos físicos`,
+      `Perigo e risco significam sempre a mesma coisa`
+    ],
+    0,
+    `Perigo é a fonte; risco é a chance/impacto de acontecer dano.`
+  ),
+  q(
+    `Qual dos seguintes é um dever do trabalhador (SST) indicado na matéria?`,
+    [
+      `Respeitar as sinalizações de segurança`,
+      `Definir valores-limite de exposição para todos os riscos`,
+      `Realizar auditorias externas obrigatórias à empresa`,
+      `Substituir equipamentos perigosos por outros mais seguros (decisão exclusiva)`
+    ],
+    0,
+    `Deveres incluem respeitar sinalização e instruções, usar EPC/EPI, comunicar avarias/deficiências.`
+  ),
+  q(
+    `Segundo a matéria, um dever do trabalhador é:`,
+    [
+      `Comunicar de imediato superiormente todas as avarias e deficiências detetadas`,
+      `Dispensar-se de comparecer aos exames médicos sempre que quiser`,
+      `Ignorar instruções do empregador se estiver confiante`,
+      `Guardar para si situações perigosas para evitar conflitos`
+    ],
+    0,
+    `Comunicar avarias/deficiências é dever.`
+  ),
+  q(
+    `Qual destes é um direito referido na matéria de SST?`,
+    [
+      `Ter o mesmo nível de proteção em segurança e saúde, independentemente do tipo de contrato`,
+      `Recusar sempre qualquer formação em SST`,
+      `Escolher não cumprir regras de segurança se estiver com pressa`,
+      `Exigir que a sinalização seja opcional em locais de trabalho`
+    ],
+    0,
+    `Direito: mesmo nível de proteção, seja contrato sem termo ou temporário.`
+  ),
+  q(
+    `Na vigilância da saúde, a responsabilidade técnica cabe a:`,
+    [
+      `Médico do trabalho`,
+      `Chefe de posto / superior hierárquico`,
+      `Técnico de informática`,
+      `Representante sindical`
+    ],
+    0,
+    `Lei 102/2009 (resumo): responsabilidade técnica da vigilância da saúde é do médico do trabalho.`
+  ),
+  q(
+    `Quem deve promover a realização de exames de saúde adequados (admissão, periódicos, ocasionais)?`,
+    [
+      `O empregador`,
+      `O trabalhador, apenas se quiser`,
+      `A ACT, em todas as empresas`,
+      `Apenas o médico assistente do trabalhador`
+    ],
+    0,
+    `Lei 102/2009 (resumo): o empregador deve promover exames de saúde adequados.`
+  ),
+  q(
+    `Quais são os exames de saúde previstos (regra geral) na vigilância da saúde?`,
+    [
+      `Admissão, periódicos e ocasionais`,
+      `Apenas um exame único no início da carreira`,
+      `Apenas exames ocasionais após acidente`,
+      `Somente exames periódicos de 10 em 10 anos`
+    ],
+    0,
+    `Lei 102/2009 (resumo): admissão, periódicos e ocasionais.`
+  ),
+  q(
+    `Quanto à periodicidade, os exames periódicos são (regra geral):`,
+    [
+      `Anuais para menores e >50; de 2 em 2 anos para os restantes`,
+      `Semestrais para todos os trabalhadores`,
+      `De 5 em 5 anos para todos`,
+      `Apenas quando há acidente de trabalho`
+    ],
+    0,
+    `Lei 102/2009 (resumo): anual para menores e >50; bienal para restantes.`
+  ),
+  q(
+    `Quando se realizam exames ocasionais (regra geral)?`,
+    [
+      `Quando há alterações substanciais no trabalho com impacto na saúde ou no regresso após ausência >30 dias por doença/acidente`,
+      `Apenas aos domingos`,
+      `Sempre que o trabalhador mude de turno`,
+      `Só no fim do contrato`
+    ],
+    0,
+    `Lei 102/2009 (resumo): ocasionais com alterações relevantes ou regresso após ausência >30 dias.`
+  ),
+  q(
+    `“Ambiente de trabalho saudável” (PNSO 2018-2020) é aquele em que:`,
+    [
+      `Trabalhadores e gestores colaboram na melhoria contínua para proteção/promoção da saúde e bem-estar e garantem segurança`,
+      `Apenas o empregador decide sem participação dos trabalhadores`,
+      `A produtividade é o único objetivo, mesmo com riscos`,
+      `A segurança depende só do uso de EPI`
+    ],
+    0,
+    `Definição do PNSO: colaboração + melhoria contínua + proteção/promoção + segurança.`
+  ),
+  q(
+    `No contexto do PNSO, um ambiente de trabalho saudável inclui também:`,
+    [
+      `Recursos que apoiem e incentivem a saúde individual no trabalho e envolvimento da empresa na comunidade`,
+      `A eliminação de qualquer formação em SST`,
+      `A substituição de serviços de SST por inspeções ocasionais`,
+      `Apenas medidas disciplinares após acidentes`
+    ],
+    0,
+    `PNSO: recursos de apoio e envolvimento da empresa na comunidade.`
+  ),
+  q(
+    `A sinalização de segurança tem por objetivo:`,
+    [
+      `Chamar a atenção, rápida e inequivocamente, para situações que comportem riscos para a segurança`,
+      `Substituir a formação em segurança`,
+      `Servir apenas para decoração do local`,
+      `Punir automaticamente quem não cumpre`
+    ],
+    0,
+    `Objetivo: alerta rápido e inequívoco para riscos.`
+  ),
+  q(
+    `A sinalização de segurança e saúde reveste várias formas. Qual é o conjunto correto?`,
+    [
+      `Sinais coloridos, sinais acústicos, sinais verbais e sinais gestuais`,
+      `Apenas sinais coloridos`,
+      `Apenas sinais verbais e gestuais`,
+      `Somente alarmes acústicos`
+    ],
+    0,
+    `Formas de sinalização: colorida, acústica, verbal e gestual.`
+  ),
+  q(
+    `Que cor corresponde a “Sinal de obrigação” (uso obrigatório de EPI, por exemplo)?`,
+    [
+      `Azul`,
+      `Vermelho`,
+      `Amarelo/alaranjado`,
+      `Verde`
+    ],
+    0,
+    `Sinal de obrigação: azul (materiais de sinalização).`
+  ),
+  q(
+    `Que cor corresponde a “Sinal de aviso” (atenção/precaução)?`,
+    [
+      `Amarelo ou amarelo-alaranjado`,
+      `Verde`,
+      `Azul`,
+      `Branco`
+    ],
+    0,
+    `Sinal de aviso: amarelo/amarelo-alaranjado.`
+  ),
+  q(
+    `Que cor corresponde a “Sinal de proibição”?`,
+    [
+      `Vermelho`,
+      `Verde`,
+      `Azul`,
+      `Amarelo`
+    ],
+    0,
+    `Sinal de proibição: vermelho.`
+  ),
+  q(
+    `Que cor corresponde a “Sinal de salvamento ou socorro” (saídas, postos de socorro)?`,
+    [
+      `Verde`,
+      `Vermelho`,
+      `Amarelo`,
+      `Azul`
+    ],
+    0,
+    `Sinal de salvamento/socorro: verde.`
+  ),
+  q(
+    `A sinalização de obstáculos e locais permanentemente perigosos (ex.: buracos no pavimento) deve ser feita com:`,
+    [
+      `Faixas preto/amarelo ou vermelho/branco`,
+      `Faixas azul/branco`,
+      `Faixas verde/preto`,
+      `Faixas apenas brancas`
+    ],
+    0,
+    `Matéria: obstáculos/local perigoso → faixas preto/amarelo ou vermelho/branco.`
+  ),
+  q(
+    `Em exposição acidental por via percutânea (picada/corte), o cuidado imediato correto é:`,
+    [
+      `Deixar sangrar livremente e lavar com água e sabão; não espremer a ferida`,
+      `Espremer bem a ferida para “expulsar” o sangue`,
+      `Aplicar lixívia diretamente para desinfetar`,
+      `Cobrir sem lavar e continuar o serviço`
+    ],
+    0,
+    `Cuidados imediatos: deixar sangrar e lavar; não fazer expressão; evitar agentes cáusticos.`
+  ),
+  q(
+    `Na exposição das mucosas (ocular/nasal/bucal), a medida imediata indicada é:`,
+    [
+      `Lavar abundantemente com água limpa ou soro fisiológico`,
+      `Aplicar álcool concentrado diretamente na mucosa`,
+      `Usar lixívia diluída`,
+      `Apenas secar com papel e seguir`
+    ],
+    0,
+    `Matéria: mucosas → lavar abundantemente com água/soro fisiológico.`
+  ),
+  q(
+    `Após exposição acidental a material/fluidos potencialmente contaminados, deve-se (logo que possível) informar:`,
+    [
+      `Superior hierárquico, Secção Sanitária local e Centro Clínico`,
+      `Apenas colegas de patrulha`,
+      `Apenas o médico assistente particular`,
+      `Ninguém, para evitar registos`
+    ],
+    0,
+    `Matéria: informar superior, Secção Sanitária local e Centro Clínico; reportar acidente.`
+  ),
+  q(
+    `Quanto ao risco de infeção por VIH, a matéria indica aproximadamente:`,
+    [
+      `Via percutânea ~0,3% e via mucosa ~0,09%`,
+      `Via percutânea ~10% e via mucosa ~5%`,
+      `Via percutânea ~1,8% e via mucosa ~0,3%`,
+      `Via percutânea ~62% e via mucosa ~37%`
+    ],
+    0,
+    `Tabela de risco: VIH percutânea 0,3%; VIH mucosa 0,09%.`
+  ),
+  q(
+    `Qual afirmação está correta sobre risco de infeção por contacto com pele intacta?`,
+    [
+      `Contacto de fluidos com pele intacta não se associa a risco de infeção (na matéria indicada)`,
+      `Qualquer contacto com pele intacta tem sempre risco elevado`,
+      `Pele intacta tem risco maior do que mucosas`,
+      `Pele intacta só tem risco se estiver seca`
+    ],
+    0,
+    `Matéria: contacto com pele intacta não se associa a risco de infeção.`
+  ),
+  q(
+    `No SBV (adulto), a sequência de compressões/ventilações é:`,
+    [
+      `30 compressões torácicas e 2 ventilações`,
+      `15 compressões e 1 ventilação`,
+      `50 compressões e 5 ventilações`,
+      `10 compressões e 10 ventilações`
+    ],
+    0,
+    `SBV adulto: 30:2.`
+  ),
+  q(
+    `Um critério de qualidade na RCP (segundo a matéria) é:`,
+    [
+      `Ritmo de pelo menos 100/min e compressões com pelo menos 5 cm`,
+      `Interromper frequentemente para avaliar pulso`,
+      `Ventilar de forma excessiva para “garantir” oxigénio`,
+      `Comprimir só 2 cm para evitar lesões`
+    ],
+    0,
+    `Qualidade: ≥100/min, ≥5 cm, expansão total, minimizar interrupções, evitar ventilação excessiva.`
+  ),
+  q(
+    `Quando parar o SBV (segundo a matéria)?`,
+    [
+      `Se a vítima recuperar, por exaustão do socorrista, ou com a chegada de ajuda diferenciada`,
+      `Ao fim de 2 minutos, sempre`,
+      `Quando a vítima não responde de imediato`,
+      `Logo após ligar 112`
+    ],
+    0,
+    `Matéria: parar SBV se recuperar, exaustão, ou chegada de ajuda diferenciada.`
+  ),
+  q(
+    `A Posição Lateral de Segurança (PLS) é indicada quando:`,
+    [
+      `A vítima está inconsciente e respira normalmente`,
+      `A vítima está consciente e a falar normalmente`,
+      `A vítima não respira`,
+      `A vítima tem obstrução grave e está consciente`
+    ],
+    0,
+    `PLS mantém via aérea permeável numa vítima inconsciente que respira normalmente.`
+  ),
+  q(
+    `Na obstrução da via aérea (OVA), “obstrução ligeira” caracteriza-se por:`,
+    [
+      `Consegue tossir e consegue falar`,
+      `Não consegue tossir nem falar`,
+      `Cianose e grande dificuldade ventilatória`,
+      `Inconsciência imediata`
+    ],
+    0,
+    `Ligeira: tosse eficaz e consegue falar; grave: dificuldade ventilatória/cianose e não consegue tossir/falar.`
+  ),
+  q(
+    `A ACT (Autoridade para as Condições do Trabalho) é sobretudo:`,
+    [
+      `A autoridade com competência inspectiva para fiscalizar o cumprimento da legislação de SST e laboral`,
+      `O serviço de urgência hospitalar`,
+      `Uma entidade que substitui os serviços internos de SST`,
+      `Uma entidade apenas consultiva sem poder de atuação`
+    ],
+    0,
+    `A ACT tem competência inspectiva na área laboral (fiscalização).`
+  )
 ];
 
 let quizChangeHandler=null;
 
 function build(testId){
   CURRENT.testId=testId;
-  const base=TEST_GOC_AJ3;
+  const base=TEST_PRL_1;
 
   const seed=uid();
   CURRENT.seed=seed;
@@ -261,7 +472,7 @@ function build(testId){
     };
   });
 
-  CURRENT.items = items.slice(0, 25);
+  CURRENT.items = items.slice(0, 30);
   CURRENT.answers = {};
   CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
   CURRENT.locked=false;
@@ -363,8 +574,7 @@ function evaluate(){
     else if(chosen===undefined) { /* branco */ }
     else wrong++;
 
-    // Explicação só nas erradas/em branco, e curta
-    const showExplain = (chosen!==correct) && item.explanation;
+    const showExplain = item.explanation;
     exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (showExplain ? ` — <em>${item.explanation}</em>` : ``);
     qEl.appendChild(exp);
   });
