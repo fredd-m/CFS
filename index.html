@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — PRL (30 Perguntas)</title>
+<title>Quiz — PRL (30+30)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -40,13 +40,14 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — PRL (30 Perguntas)</h1>
-    <p class="sub">Responde às 30 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente.</p>
+    <h1>Quiz — PRL</h1>
+    <p class="sub">Escolhe o teste (Resumo ou Difícil). Responde às 30 questões e só no fim verás a correção e a nota (/20). Progresso guardado localmente por teste.</p>
 
     <div class="row" style="margin-bottom:12px">
       <label for="testSel" class="pill">Escolher teste:
         <select id="testSel" style="margin-left:8px">
           <option value="PRL_1">PRL — Resumo (30)</option>
+          <option value="PRL_DIFICIL">PRL — Difícil (30)</option>
         </select>
       </label>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
@@ -67,12 +68,12 @@
         <div class="row">
           <button id="submitBtn" class="primary">Entregar</button>
           <button id="exportBtn" title="Exportar resultados para .txt" disabled>Exportar .txt</button>
-          <button id="clearBtn" title="Limpar progresso">Limpar</button>
+          <button id="clearBtn" title="Limpar progresso deste teste">Limpar</button>
         </div>
       </div>
     </div>
 
-    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada início. Progresso guardado localmente (por sessão).</p>
+    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada início. Progresso guardado localmente (por teste).</p>
   </div>
 </div>
 
@@ -99,365 +100,460 @@ const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 const $sel    = el('#testSel');
 
-let CURRENT = { testId:'PRL_1', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'PRL_1', items:[], answers:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
-function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
+function loadState(){
+  const raw=localStorage.getItem(storageKey());
+  if(!raw) return null;
+  try{ return JSON.parse(raw); }catch{ return null; }
+}
 
-/* ---------- TESTE PRL (30 perguntas) ---------- */
+/* ---------- TESTE PRL — RESUMO (30) ---------- */
 const TEST_PRL_1 = [
-  q(
-    `Na Lei 102/2009, “Perigo” é:`,
-    [
-      `A propriedade intrínseca de uma instalação/atividade/equipamento/agente com potencial para provocar dano`,
-      `A consequência final de um acidente já ocorrido`,
-      `A combinação de fatores económicos e sociais do trabalho`,
-      `Um evento súbito que causa lesão no local de trabalho`
-    ],
-    0,
-    `Perigo = potencial para provocar dano (Lei 102/2009 — conceitos).`
-  ),
-  q(
-    `Na Lei 102/2009, “Risco” é:`,
-    [
-      `A probabilidade de concretização do dano em função das condições de utilização/exposição/interação com o perigo`,
-      `A propriedade intrínseca de um agente para provocar dano`,
-      `Um sinónimo de acidente de trabalho`,
-      `Um equipamento de proteção individual`
-    ],
-    0,
-    `Risco = probabilidade de ocorrer dano associado a um perigo (Lei 102/2009 — conceitos).`
-  ),
-  q(
-    `Em SST, qual é a forma correta de interpretar “perigo” e “risco”?`,
-    [
-      `Perigo = fonte com potencial de dano; Risco = probabilidade/consequência desse dano ocorrer`,
-      `Perigo = probabilidade; Risco = fonte de dano`,
-      `Perigo = apenas riscos psicossociais; Risco = apenas riscos físicos`,
-      `Perigo e risco significam sempre a mesma coisa`
-    ],
-    0,
-    `Perigo é a fonte; risco é a chance/impacto de acontecer dano.`
-  ),
-  q(
-    `Qual dos seguintes é um dever do trabalhador (SST) indicado na matéria?`,
-    [
-      `Respeitar as sinalizações de segurança`,
-      `Definir valores-limite de exposição para todos os riscos`,
-      `Realizar auditorias externas obrigatórias à empresa`,
-      `Substituir equipamentos perigosos por outros mais seguros (decisão exclusiva)`
-    ],
-    0,
-    `Deveres incluem respeitar sinalização e instruções, usar EPC/EPI, comunicar avarias/deficiências.`
-  ),
-  q(
-    `Segundo a matéria, um dever do trabalhador é:`,
-    [
-      `Comunicar de imediato superiormente todas as avarias e deficiências detetadas`,
-      `Dispensar-se de comparecer aos exames médicos sempre que quiser`,
-      `Ignorar instruções do empregador se estiver confiante`,
-      `Guardar para si situações perigosas para evitar conflitos`
-    ],
-    0,
-    `Comunicar avarias/deficiências é dever.`
-  ),
-  q(
-    `Qual destes é um direito referido na matéria de SST?`,
-    [
-      `Ter o mesmo nível de proteção em segurança e saúde, independentemente do tipo de contrato`,
-      `Recusar sempre qualquer formação em SST`,
-      `Escolher não cumprir regras de segurança se estiver com pressa`,
-      `Exigir que a sinalização seja opcional em locais de trabalho`
-    ],
-    0,
-    `Direito: mesmo nível de proteção, seja contrato sem termo ou temporário.`
-  ),
-  q(
-    `Na vigilância da saúde, a responsabilidade técnica cabe a:`,
-    [
-      `Médico do trabalho`,
-      `Chefe de posto / superior hierárquico`,
-      `Técnico de informática`,
-      `Representante sindical`
-    ],
-    0,
-    `Lei 102/2009 (resumo): responsabilidade técnica da vigilância da saúde é do médico do trabalho.`
-  ),
-  q(
-    `Quem deve promover a realização de exames de saúde adequados (admissão, periódicos, ocasionais)?`,
-    [
-      `O empregador`,
-      `O trabalhador, apenas se quiser`,
-      `A ACT, em todas as empresas`,
-      `Apenas o médico assistente do trabalhador`
-    ],
-    0,
-    `Lei 102/2009 (resumo): o empregador deve promover exames de saúde adequados.`
-  ),
-  q(
-    `Quais são os exames de saúde previstos (regra geral) na vigilância da saúde?`,
-    [
-      `Admissão, periódicos e ocasionais`,
-      `Apenas um exame único no início da carreira`,
-      `Apenas exames ocasionais após acidente`,
-      `Somente exames periódicos de 10 em 10 anos`
-    ],
-    0,
-    `Lei 102/2009 (resumo): admissão, periódicos e ocasionais.`
-  ),
-  q(
-    `Quanto à periodicidade, os exames periódicos são (regra geral):`,
-    [
-      `Anuais para menores e >50; de 2 em 2 anos para os restantes`,
-      `Semestrais para todos os trabalhadores`,
-      `De 5 em 5 anos para todos`,
-      `Apenas quando há acidente de trabalho`
-    ],
-    0,
-    `Lei 102/2009 (resumo): anual para menores e >50; bienal para restantes.`
-  ),
-  q(
-    `Quando se realizam exames ocasionais (regra geral)?`,
-    [
-      `Quando há alterações substanciais no trabalho com impacto na saúde ou no regresso após ausência >30 dias por doença/acidente`,
-      `Apenas aos domingos`,
-      `Sempre que o trabalhador mude de turno`,
-      `Só no fim do contrato`
-    ],
-    0,
-    `Lei 102/2009 (resumo): ocasionais com alterações relevantes ou regresso após ausência >30 dias.`
-  ),
-  q(
-    `“Ambiente de trabalho saudável” (PNSO 2018-2020) é aquele em que:`,
-    [
-      `Trabalhadores e gestores colaboram na melhoria contínua para proteção/promoção da saúde e bem-estar e garantem segurança`,
-      `Apenas o empregador decide sem participação dos trabalhadores`,
-      `A produtividade é o único objetivo, mesmo com riscos`,
-      `A segurança depende só do uso de EPI`
-    ],
-    0,
-    `Definição do PNSO: colaboração + melhoria contínua + proteção/promoção + segurança.`
-  ),
-  q(
-    `No contexto do PNSO, um ambiente de trabalho saudável inclui também:`,
-    [
-      `Recursos que apoiem e incentivem a saúde individual no trabalho e envolvimento da empresa na comunidade`,
-      `A eliminação de qualquer formação em SST`,
-      `A substituição de serviços de SST por inspeções ocasionais`,
-      `Apenas medidas disciplinares após acidentes`
-    ],
-    0,
-    `PNSO: recursos de apoio e envolvimento da empresa na comunidade.`
-  ),
-  q(
-    `A sinalização de segurança tem por objetivo:`,
-    [
-      `Chamar a atenção, rápida e inequivocamente, para situações que comportem riscos para a segurança`,
-      `Substituir a formação em segurança`,
-      `Servir apenas para decoração do local`,
-      `Punir automaticamente quem não cumpre`
-    ],
-    0,
-    `Objetivo: alerta rápido e inequívoco para riscos.`
-  ),
-  q(
-    `A sinalização de segurança e saúde reveste várias formas. Qual é o conjunto correto?`,
-    [
-      `Sinais coloridos, sinais acústicos, sinais verbais e sinais gestuais`,
-      `Apenas sinais coloridos`,
-      `Apenas sinais verbais e gestuais`,
-      `Somente alarmes acústicos`
-    ],
-    0,
-    `Formas de sinalização: colorida, acústica, verbal e gestual.`
-  ),
-  q(
-    `Que cor corresponde a “Sinal de obrigação” (uso obrigatório de EPI, por exemplo)?`,
-    [
-      `Azul`,
-      `Vermelho`,
-      `Amarelo/alaranjado`,
-      `Verde`
-    ],
-    0,
-    `Sinal de obrigação: azul (materiais de sinalização).`
-  ),
-  q(
-    `Que cor corresponde a “Sinal de aviso” (atenção/precaução)?`,
-    [
-      `Amarelo ou amarelo-alaranjado`,
-      `Verde`,
-      `Azul`,
-      `Branco`
-    ],
-    0,
-    `Sinal de aviso: amarelo/amarelo-alaranjado.`
-  ),
-  q(
-    `Que cor corresponde a “Sinal de proibição”?`,
-    [
-      `Vermelho`,
-      `Verde`,
-      `Azul`,
-      `Amarelo`
-    ],
-    0,
-    `Sinal de proibição: vermelho.`
-  ),
-  q(
-    `Que cor corresponde a “Sinal de salvamento ou socorro” (saídas, postos de socorro)?`,
-    [
-      `Verde`,
-      `Vermelho`,
-      `Amarelo`,
-      `Azul`
-    ],
-    0,
-    `Sinal de salvamento/socorro: verde.`
-  ),
-  q(
-    `A sinalização de obstáculos e locais permanentemente perigosos (ex.: buracos no pavimento) deve ser feita com:`,
-    [
-      `Faixas preto/amarelo ou vermelho/branco`,
-      `Faixas azul/branco`,
-      `Faixas verde/preto`,
-      `Faixas apenas brancas`
-    ],
-    0,
-    `Matéria: obstáculos/local perigoso → faixas preto/amarelo ou vermelho/branco.`
-  ),
-  q(
-    `Em exposição acidental por via percutânea (picada/corte), o cuidado imediato correto é:`,
-    [
-      `Deixar sangrar livremente e lavar com água e sabão; não espremer a ferida`,
-      `Espremer bem a ferida para “expulsar” o sangue`,
-      `Aplicar lixívia diretamente para desinfetar`,
-      `Cobrir sem lavar e continuar o serviço`
-    ],
-    0,
-    `Cuidados imediatos: deixar sangrar e lavar; não fazer expressão; evitar agentes cáusticos.`
-  ),
-  q(
-    `Na exposição das mucosas (ocular/nasal/bucal), a medida imediata indicada é:`,
-    [
-      `Lavar abundantemente com água limpa ou soro fisiológico`,
-      `Aplicar álcool concentrado diretamente na mucosa`,
-      `Usar lixívia diluída`,
-      `Apenas secar com papel e seguir`
-    ],
-    0,
-    `Matéria: mucosas → lavar abundantemente com água/soro fisiológico.`
-  ),
-  q(
-    `Após exposição acidental a material/fluidos potencialmente contaminados, deve-se (logo que possível) informar:`,
-    [
-      `Superior hierárquico, Secção Sanitária local e Centro Clínico`,
-      `Apenas colegas de patrulha`,
-      `Apenas o médico assistente particular`,
-      `Ninguém, para evitar registos`
-    ],
-    0,
-    `Matéria: informar superior, Secção Sanitária local e Centro Clínico; reportar acidente.`
-  ),
-  q(
-    `Quanto ao risco de infeção por VIH, a matéria indica aproximadamente:`,
-    [
-      `Via percutânea ~0,3% e via mucosa ~0,09%`,
-      `Via percutânea ~10% e via mucosa ~5%`,
-      `Via percutânea ~1,8% e via mucosa ~0,3%`,
-      `Via percutânea ~62% e via mucosa ~37%`
-    ],
-    0,
-    `Tabela de risco: VIH percutânea 0,3%; VIH mucosa 0,09%.`
-  ),
-  q(
-    `Qual afirmação está correta sobre risco de infeção por contacto com pele intacta?`,
-    [
-      `Contacto de fluidos com pele intacta não se associa a risco de infeção (na matéria indicada)`,
-      `Qualquer contacto com pele intacta tem sempre risco elevado`,
-      `Pele intacta tem risco maior do que mucosas`,
-      `Pele intacta só tem risco se estiver seca`
-    ],
-    0,
-    `Matéria: contacto com pele intacta não se associa a risco de infeção.`
-  ),
-  q(
-    `No SBV (adulto), a sequência de compressões/ventilações é:`,
-    [
-      `30 compressões torácicas e 2 ventilações`,
-      `15 compressões e 1 ventilação`,
-      `50 compressões e 5 ventilações`,
-      `10 compressões e 10 ventilações`
-    ],
-    0,
-    `SBV adulto: 30:2.`
-  ),
-  q(
-    `Um critério de qualidade na RCP (segundo a matéria) é:`,
-    [
-      `Ritmo de pelo menos 100/min e compressões com pelo menos 5 cm`,
-      `Interromper frequentemente para avaliar pulso`,
-      `Ventilar de forma excessiva para “garantir” oxigénio`,
-      `Comprimir só 2 cm para evitar lesões`
-    ],
-    0,
-    `Qualidade: ≥100/min, ≥5 cm, expansão total, minimizar interrupções, evitar ventilação excessiva.`
-  ),
-  q(
-    `Quando parar o SBV (segundo a matéria)?`,
-    [
-      `Se a vítima recuperar, por exaustão do socorrista, ou com a chegada de ajuda diferenciada`,
-      `Ao fim de 2 minutos, sempre`,
-      `Quando a vítima não responde de imediato`,
-      `Logo após ligar 112`
-    ],
-    0,
-    `Matéria: parar SBV se recuperar, exaustão, ou chegada de ajuda diferenciada.`
-  ),
-  q(
-    `A Posição Lateral de Segurança (PLS) é indicada quando:`,
-    [
-      `A vítima está inconsciente e respira normalmente`,
-      `A vítima está consciente e a falar normalmente`,
-      `A vítima não respira`,
-      `A vítima tem obstrução grave e está consciente`
-    ],
-    0,
-    `PLS mantém via aérea permeável numa vítima inconsciente que respira normalmente.`
-  ),
-  q(
-    `Na obstrução da via aérea (OVA), “obstrução ligeira” caracteriza-se por:`,
-    [
-      `Consegue tossir e consegue falar`,
-      `Não consegue tossir nem falar`,
-      `Cianose e grande dificuldade ventilatória`,
-      `Inconsciência imediata`
-    ],
-    0,
-    `Ligeira: tosse eficaz e consegue falar; grave: dificuldade ventilatória/cianose e não consegue tossir/falar.`
-  ),
-  q(
-    `A ACT (Autoridade para as Condições do Trabalho) é sobretudo:`,
-    [
-      `A autoridade com competência inspectiva para fiscalizar o cumprimento da legislação de SST e laboral`,
-      `O serviço de urgência hospitalar`,
-      `Uma entidade que substitui os serviços internos de SST`,
-      `Uma entidade apenas consultiva sem poder de atuação`
-    ],
-    0,
-    `A ACT tem competência inspectiva na área laboral (fiscalização).`
-  )
+  q(`Na Lei 102/2009, “Perigo” é:`,[
+    `A propriedade intrínseca de uma instalação/atividade/equipamento/agente com potencial para provocar dano`,
+    `A consequência final de um acidente já ocorrido`,
+    `A combinação de fatores económicos e sociais do trabalho`,
+    `Um evento súbito que causa lesão no local de trabalho`
+  ],0,`Perigo = potencial para provocar dano (Lei 102/2009 — conceitos).`),
+
+  q(`Na Lei 102/2009, “Risco” é:`,[
+    `A probabilidade de concretização do dano em função das condições de utilização/exposição/interação com o perigo`,
+    `A propriedade intrínseca de um agente para provocar dano`,
+    `Um sinónimo de acidente de trabalho`,
+    `Um equipamento de proteção individual`
+  ],0,`Risco = probabilidade de ocorrer dano associado a um perigo (Lei 102/2009 — conceitos).`),
+
+  q(`Em SST, qual é a forma correta de interpretar “perigo” e “risco”?`,[
+    `Perigo = fonte com potencial de dano; Risco = probabilidade/consequência desse dano ocorrer`,
+    `Perigo = probabilidade; Risco = fonte de dano`,
+    `Perigo = apenas riscos psicossociais; Risco = apenas riscos físicos`,
+    `Perigo e risco significam sempre a mesma coisa`
+  ],0,`Perigo é a fonte; risco é a chance/impacto de acontecer dano.`),
+
+  q(`Qual dos seguintes é um dever do trabalhador (SST)?`,[
+    `Respeitar as sinalizações de segurança`,
+    `Definir valores-limite de exposição para todos os riscos`,
+    `Realizar auditorias externas obrigatórias à empresa`,
+    `Substituir equipamentos perigosos por outros mais seguros (decisão exclusiva)`
+  ],0,`Deveres incluem respeitar sinalização e instruções, usar EPC/EPI e comunicar avarias/deficiências.`),
+
+  q(`Segundo a matéria, um dever do trabalhador é:`,[
+    `Comunicar de imediato superiormente todas as avarias e deficiências detetadas`,
+    `Dispensar-se de comparecer aos exames médicos sempre que quiser`,
+    `Ignorar instruções do empregador se estiver confiante`,
+    `Guardar para si situações perigosas para evitar conflitos`
+  ],0,`Comunicar avarias/deficiências é dever.`),
+
+  q(`Qual destes é um direito referido na matéria de SST?`,[
+    `Ter o mesmo nível de proteção em segurança e saúde, independentemente do tipo de contrato`,
+    `Recusar sempre qualquer formação em SST`,
+    `Escolher não cumprir regras de segurança se estiver com pressa`,
+    `Exigir que a sinalização seja opcional em locais de trabalho`
+  ],0,`Direito: mesmo nível de proteção, seja contrato sem termo ou temporário.`),
+
+  q(`Na vigilância da saúde, a responsabilidade técnica cabe a:`,[
+    `Médico do trabalho`,
+    `Chefe de posto / superior hierárquico`,
+    `Técnico de informática`,
+    `Representante sindical`
+  ],0,`Responsabilidade técnica: médico do trabalho.`),
+
+  q(`Quem deve promover a realização de exames de saúde adequados?`,[
+    `O empregador`,
+    `O trabalhador, apenas se quiser`,
+    `A ACT, em todas as empresas`,
+    `Apenas o médico assistente do trabalhador`
+  ],0,`O empregador deve promover exames de saúde adequados.`),
+
+  q(`Quais são os exames de saúde previstos (regra geral)?`,[
+    `Admissão, periódicos e ocasionais`,
+    `Apenas um exame único no início da carreira`,
+    `Apenas exames ocasionais após acidente`,
+    `Somente exames periódicos de 10 em 10 anos`
+  ],0,`Exames: admissão, periódicos e ocasionais.`),
+
+  q(`Quanto à periodicidade, os exames periódicos são (regra geral):`,[
+    `Anuais para menores e >50; de 2 em 2 anos para os restantes`,
+    `Semestrais para todos os trabalhadores`,
+    `De 5 em 5 anos para todos`,
+    `Apenas quando há acidente de trabalho`
+  ],0,`Regra: anual para menores e >50; bienal para restantes.`),
+
+  q(`Quando se realizam exames ocasionais (regra geral)?`,[
+    `Alterações substanciais no trabalho com impacto na saúde ou regresso após ausência >30 dias por doença/acidente`,
+    `Apenas aos domingos`,
+    `Sempre que o trabalhador mude de turno`,
+    `Só no fim do contrato`
+  ],0,`Ocasionais: alterações relevantes ou regresso após ausência prolongada.`),
+
+  q(`“Ambiente de trabalho saudável” (PNSO) é aquele em que:`,[
+    `Trabalhadores e gestores colaboram na melhoria contínua para proteção/promoção da saúde e bem-estar e garantem segurança`,
+    `Apenas o empregador decide sem participação dos trabalhadores`,
+    `A produtividade é o único objetivo, mesmo com riscos`,
+    `A segurança depende só do uso de EPI`
+  ],0,`Definição PNSO: colaboração + melhoria contínua + proteção/promoção + segurança.`),
+
+  q(`No contexto do PNSO, um ambiente de trabalho saudável inclui também:`,[
+    `Recursos que apoiem a saúde individual no trabalho e envolvimento da empresa na comunidade`,
+    `A eliminação de qualquer formação em SST`,
+    `A substituição de serviços de SST por inspeções ocasionais`,
+    `Apenas medidas disciplinares após acidentes`
+  ],0,`PNSO: recursos de apoio e envolvimento na comunidade.`),
+
+  q(`A sinalização de segurança tem por objetivo:`,[
+    `Chamar a atenção, rápida e inequivocamente, para situações que comportem riscos para a segurança`,
+    `Substituir a formação em segurança`,
+    `Servir apenas para decoração do local`,
+    `Punir automaticamente quem não cumpre`
+  ],0,`Objetivo: alerta rápido e inequívoco para riscos.`),
+
+  q(`A sinalização de segurança e saúde reveste várias formas. Qual é o conjunto correto?`,[
+    `Sinais coloridos, sinais acústicos, sinais verbais e sinais gestuais`,
+    `Apenas sinais coloridos`,
+    `Apenas sinais verbais e gestuais`,
+    `Somente alarmes acústicos`
+  ],0,`Formas: colorida, acústica, verbal e gestual.`),
+
+  q(`Que cor corresponde a “Sinal de obrigação”?`,[
+    `Azul`,`Vermelho`,`Amarelo/alaranjado`,`Verde`
+  ],0,`Obrigação: azul.`),
+
+  q(`Que cor corresponde a “Sinal de aviso”?`,[
+    `Amarelo ou amarelo-alaranjado`,`Verde`,`Azul`,`Branco`
+  ],0,`Aviso: amarelo.`),
+
+  q(`Que cor corresponde a “Sinal de proibição”?`,[
+    `Vermelho`,`Verde`,`Azul`,`Amarelo`
+  ],0,`Proibição: vermelho.`),
+
+  q(`Que cor corresponde a “Sinal de salvamento ou socorro”?`,[
+    `Verde`,`Vermelho`,`Amarelo`,`Azul`
+  ],0,`Salvamento/socorro: verde.`),
+
+  q(`A sinalização de obstáculos e locais permanentemente perigosos deve ser feita com:`,[
+    `Faixas preto/amarelo ou vermelho/branco`,
+    `Faixas azul/branco`,
+    `Faixas verde/preto`,
+    `Faixas apenas brancas`
+  ],0,`Obstáculos/local perigoso → faixas preto/amarelo ou vermelho/branco.`),
+
+  q(`Em exposição acidental por via percutânea (picada/corte), o cuidado imediato correto é:`,[
+    `Deixar sangrar livremente e lavar com água e sabão; não espremer a ferida`,
+    `Espremer bem a ferida para “expulsar” o sangue`,
+    `Aplicar lixívia diretamente para desinfetar`,
+    `Cobrir sem lavar e continuar o serviço`
+  ],0,`Cuidados imediatos: deixar sangrar e lavar; não espremer; evitar agentes cáusticos.`),
+
+  q(`Na exposição das mucosas, a medida imediata indicada é:`,[
+    `Lavar abundantemente com água limpa ou soro fisiológico`,
+    `Aplicar álcool concentrado diretamente na mucosa`,
+    `Usar lixívia diluída`,
+    `Apenas secar com papel e seguir`
+  ],0,`Mucosas → lavar abundantemente com água/soro fisiológico.`),
+
+  q(`Após exposição acidental, deve-se (logo que possível) informar:`,[
+    `Superior hierárquico, Secção Sanitária local e Centro Clínico`,
+    `Apenas colegas de patrulha`,
+    `Apenas o médico assistente particular`,
+    `Ninguém, para evitar registos`
+  ],0,`Reportar: superior + Secção Sanitária local + Centro Clínico (e participação conforme procedimentos).`),
+
+  q(`Quanto ao risco de infeção por VIH, a matéria indica aproximadamente:`,[
+    `Via percutânea ~0,3% e via mucosa ~0,09%`,
+    `Via percutânea ~10% e via mucosa ~5%`,
+    `Via percutânea ~1,8% e via mucosa ~0,3%`,
+    `Via percutânea ~62% e via mucosa ~37%`
+  ],0,`Risco aproximado: percutânea 0,3%; mucosa 0,09%.`),
+
+  q(`Qual afirmação está correta sobre risco por contacto com pele intacta?`,[
+    `Contacto de fluidos com pele intacta não se associa a risco de infeção (na matéria indicada)`,
+    `Qualquer contacto com pele intacta tem sempre risco elevado`,
+    `Pele intacta tem risco maior do que mucosas`,
+    `Pele intacta só tem risco se estiver seca`
+  ],0,`Pele intacta: sem risco relevante (na abordagem da matéria).`),
+
+  q(`No SBV (adulto), a sequência de compressões/ventilações é:`,[
+    `30 compressões torácicas e 2 ventilações`,
+    `15 compressões e 1 ventilação`,
+    `50 compressões e 5 ventilações`,
+    `10 compressões e 10 ventilações`
+  ],0,`SBV adulto: 30:2.`),
+
+  q(`Um critério de qualidade na RCP é:`,[
+    `Ritmo de pelo menos 100/min e compressões com pelo menos 5 cm`,
+    `Interromper frequentemente para avaliar pulso`,
+    `Ventilar de forma excessiva`,
+    `Comprimir só 2 cm`
+  ],0,`Qualidade: ≥100/min, ≥5 cm, expansão total, poucas interrupções, evitar ventilação excessiva.`),
+
+  q(`Quando parar o SBV?`,[
+    `Se a vítima recuperar, por exaustão do socorrista, ou com a chegada de ajuda diferenciada`,
+    `Ao fim de 2 minutos, sempre`,
+    `Quando a vítima não responde de imediato`,
+    `Logo após ligar 112`
+  ],0,`Parar SBV: recuperação / exaustão / chegada de ajuda diferenciada.`),
+
+  q(`A PLS é indicada quando:`,[
+    `A vítima está inconsciente e respira normalmente`,
+    `A vítima está consciente e a falar`,
+    `A vítima não respira`,
+    `A vítima tem obstrução grave e está consciente`
+  ],0,`PLS: inconsciente com respiração normal.`),
+
+  q(`Na OVA, “obstrução ligeira” caracteriza-se por:`,[
+    `Consegue tossir e consegue falar`,
+    `Não consegue tossir nem falar`,
+    `Cianose e grande dificuldade ventilatória`,
+    `Inconsciência imediata`
+  ],0,`Ligeira: tosse eficaz e fala; grave: não tosse/não fala, dificuldade respiratória/cianose.`),
+
+  q(`A ACT é sobretudo:`,[
+    `A autoridade com competência inspectiva para fiscalizar a legislação de SST e laboral`,
+    `O serviço de urgência hospitalar`,
+    `Uma entidade que substitui os serviços internos de SST`,
+    `Uma entidade apenas consultiva sem poder de atuação`
+  ],0,`ACT: fiscalização e controlo do cumprimento da legislação laboral/SST.`),
 ];
+
+/* ---------- TESTE PRL — DIFÍCIL (30) ---------- */
+const TEST_PRL_DIFICIL = [
+  q(`Qual é a melhor medida (mais “a montante”) perante um perigo identificado?`,[
+    `Eliminar o perigo na origem`,
+    `Distribuir luvas a todos`,
+    `Colocar sinalização de aviso`,
+    `Reforçar apenas a formação`
+  ],0,`Na hierarquia, eliminar/substituir vem antes de sinalização/EPI.`),
+
+  q(`Quando não é possível eliminar, a segunda melhor abordagem é:`,[
+    `Substituir por algo menos perigoso`,
+    `Dar EPI e manter tudo igual`,
+    `Criar um relatório e arquivar`,
+    `Aumentar o horário de supervisão`
+  ],0,`Substituição é medida de controlo prioritária após eliminação.`),
+
+  q(`Qual é a regra correta sobre EPI?`,[
+    `Deve ser usado como complemento e, em geral, depois de priorizar medidas coletivas`,
+    `É sempre a primeira medida a aplicar`,
+    `Substitui a necessidade de avaliação de riscos`,
+    `Dispensa formação e informação`
+  ],0,`EPI é importante, mas não deve substituir medidas coletivas/na origem.`),
+
+  q(`O que melhor distingue “prevenção” de “proteção”?`,[
+    `Prevenção evita/reduz a probabilidade do evento; proteção reduz consequências/danos`,
+    `Prevenção é só EPI; proteção é só sinalização`,
+    `Prevenção é após acidente; proteção é antes`,
+    `São sinónimos`
+  ],0,`Prevenção atua antes; proteção minimiza impacto quando o risco existe.`),
+
+  q(`Em “promoção da saúde” no local de trabalho, o foco é sobretudo:`,[
+    `Melhorar bem-estar e hábitos/condições que aumentam saúde e qualidade de vida`,
+    `Apenas cumprir o mínimo legal`,
+    `Punir comportamentos inseguros`,
+    `Só tratar acidentes após acontecerem`
+  ],0,`Promoção: medidas positivas para bem-estar/saúde.`),
+
+  q(`Na vigilância da saúde, qual combinação está correta?`,[
+    `Responsabilidade do empregador; responsabilidade técnica do médico do trabalho`,
+    `Responsabilidade do trabalhador; técnica do chefe`,
+    `Responsabilidade da ACT; técnica do sindicato`,
+    `Responsabilidade do médico; técnica do empregador`
+  ],0,`Empregador garante; médico do trabalho assume responsabilidade técnica.`),
+
+  q(`Exame ocasional faz mais sentido quando:`,[
+    `Há alteração relevante das condições de trabalho com possível impacto na saúde`,
+    `O trabalhador pede por curiosidade`,
+    `A empresa muda de logótipo`,
+    `Há mudança de colegas no turno`
+  ],0,`Ocasionais: alterações relevantes/retorno após ausência prolongada.`),
+
+  q(`Um objetivo nuclear da vigilância da saúde é:`,[
+    `Detetar precocemente efeitos do trabalho na saúde e confirmar aptidão para a função`,
+    `Substituir a avaliação de riscos`,
+    `Reduzir custos eliminando exames`,
+    `Atribuir sanções disciplinares`
+  ],0,`Vigilância: saúde + aptidão + prevenção.`),
+
+  q(`“Ambiente de trabalho saudável” (PNSO) implica, tipicamente:`,[
+    `Colaboração e melhoria contínua (trabalhadores e gestão) para proteger e promover saúde/bem-estar`,
+    `Apenas decisões unilaterais da chefia`,
+    `Apenas foco em metas produtivas`,
+    `Apenas EPI em vez de medidas organizacionais`
+  ],0,`PNSO: colaboração + melhoria contínua + proteção/promoção.`),
+
+  q(`Qual dos seguintes exemplos é risco ergonómico típico?`,[
+    `Posturas forçadas e repetição de movimentos`,
+    `Gases e vapores tóxicos`,
+    `Ruído de máquinas industriais`,
+    `Radiação ionizante`
+  ],0,`Ergonómico: postura, repetição, esforço, monotonia.`),
+
+  q(`O princípio ergonómico “os dispositivos técnicos devem adaptar-se ao indivíduo” significa:`,[
+    `Ajustar posto/equipamento ao trabalhador (altura, alcance, postura)`,
+    `Exigir que o trabalhador se adapte sempre, sem ajustes`,
+    `Trocar apenas a iluminação`,
+    `Usar apenas sinalização`
+  ],0,`Ergonomia: adaptar trabalho/posto ao ser humano.`),
+
+  q(`Na sinalização, qual correspondência está correta?`,[
+    `Azul: obrigação; Vermelho: proibição/combate a incêndio; Amarelo: aviso; Verde: salvamento/socorro`,
+    `Azul: salvamento; Verde: proibição; Vermelho: obrigação; Amarelo: combate incêndio`,
+    `Amarelo: obrigação; Vermelho: salvamento; Verde: aviso; Azul: proibição`,
+    `Verde: proibição; Azul: aviso; Vermelho: obrigação; Amarelo: salvamento`
+  ],0,`Cores típicas: vermelho (proibição/incêndio), amarelo (aviso), azul (obrigação), verde (salvamento).`),
+
+  q(`Qual afirmação sobre sinalização é mais correta?`,[
+    `Complementa a prevenção e deve ser clara, visível e mantida em bom estado`,
+    `Substitui totalmente formação e procedimentos`,
+    `É opcional quando há EPI`,
+    `Só se aplica a trabalhadores internos`
+  ],0,`Sinalização complementa e deve ser mantida/adequada.`),
+
+  q(`Em exposição percutânea (picada/corte), o erro típico é:`,[
+    `Espremer a ferida para “sair o sangue”`,
+    `Lavar com água e sabão`,
+    `Deixar sangrar livremente`,
+    `Comunicar e seguir o procedimento`
+  ],0,`Não espremer; lavar e seguir cadeia de reporte.`),
+
+  q(`Em exposição ocular (mucosa), o correto é:`,[
+    `Lavar abundantemente com água/soro fisiológico`,
+    `Aplicar álcool diretamente`,
+    `Aplicar lixívia diluída`,
+    `Tapar e aguardar sem lavar`
+  ],0,`Mucosas: água/soro abundante.`),
+
+  q(`Qual cadeia de ação é mais adequada após exposição a fluidos?`,[
+    `Cuidados imediatos + comunicação/report + avaliação clínica/seguimento`,
+    `Apenas lavar e esquecer`,
+    `Apenas comunicar, sem cuidados locais`,
+    `Apenas fazer um relatório ao fim do turno`
+  ],0,`Importa agir localmente e cumprir reporte/seguimento.`),
+
+  q(`No SBV, qual é a combinação correta (adulto)?`,[
+    `30 compressões : 2 ventilações`,
+    `15:2`,
+    `5:1`,
+    `10:2`
+  ],0,`SBV adulto: 30:2.`),
+
+  q(`Uma boa prática de RCP (qualidade) inclui:`,[
+    `Minimizar interrupções e permitir expansão total do tórax`,
+    `Parar frequentemente para avaliar pulso`,
+    `Fazer ventilações muito longas e fortes`,
+    `Comprimir superficialmente para evitar dor`
+  ],0,`Qualidade: poucas pausas, boa profundidade, recoil, evitar hiperventilar.`),
+
+  q(`A PLS é indicada quando a vítima está:`,[
+    `Inconsciente mas respira normalmente`,
+    `Consciente e a falar`,
+    `Sem respiração`,
+    `Com obstrução grave consciente`
+  ],0,`PLS mantém via aérea em inconsciente com respiração.`),
+
+  q(`Numa OVA grave, o sinal mais sugestivo é:`,[
+    `Não consegue falar/tossir eficazmente e tem grande dificuldade respiratória`,
+    `Tosse eficaz e fala normal`,
+    `Espirra repetidamente`,
+    `Queixa-se apenas de sede`
+  ],0,`OVA grave: não fala/não tosse, dificuldade/cianose.`),
+
+  q(`Extintor de CO₂ é especialmente indicado quando o risco principal é:`,[
+    `Equipamento elétrico energizado`,
+    `Óleos de fritura (classe F)`,
+    `Metais combustíveis (classe D)`,
+    `Sólidos porosos com brasa profunda (classe A típica)`
+  ],0,`CO₂ é útil em elétrico e líquidos; evitar em certos cenários (ex.: classe F).`),
+
+  q(`Qual combinação “classe → exemplo” está correta?`,[
+    `Classe A: sólidos (madeira/papel); Classe B: líquidos inflamáveis; Classe C: gases`,
+    `Classe A: gases; Classe B: metais; Classe C: óleos`,
+    `Classe A: óleos; Classe B: sólidos; Classe C: metais`,
+    `Classe A: elétrico; Classe B: gases; Classe C: sólidos`
+  ],0,`A: sólidos; B: líquidos; C: gases (convenção habitual).`),
+
+  q(`Uma regra prática ao usar um extintor é:`,[
+    `Apontar à base das chamas e avançar com controlo`,
+    `Apontar ao topo das chamas para “abafar”`,
+    `Colocar o extintor deitado e agitar`,
+    `Ficar muito perto da chama desde o início`
+  ],0,`Apontar à base; distância segura e técnica controlada.`),
+
+  q(`Qual é um exemplo de risco psicossocial?`,[
+    `Stress crónico e fadiga por turnos/carga de trabalho`,
+    `Ruído contínuo acima do recomendado`,
+    `Exposição a produtos corrosivos`,
+    `Vibração de ferramentas`
+  ],0,`Psicossocial: stress, fadiga, conflitos, pressão, turnos.`),
+
+  q(`Qual das seguintes é uma boa medida organizacional (prevenção) para fadiga/turnos?`,[
+    `Gestão de horários/descanso e rotação adequada`,
+    `Distribuir apenas luvas novas`,
+    `Colocar sinais de “atenção” no posto`,
+    `Aumentar a carga horária para “adaptar”`
+  ],0,`Medidas organizacionais reduzem fadiga e risco.`),
+
+  q(`A ACT tem, entre outras, a missão de:`,[
+    `Fiscalizar normas laborais e promover políticas de prevenção dos riscos profissionais`,
+    `Substituir o médico do trabalho`,
+    `Emitir diplomas universitários`,
+    `Gerir o SNS`
+  ],0,`ACT: fiscalização + promoção/prevenção.`),
+
+  q(`Qual afirmação é mais correta sobre “ambiente de trabalho saudável”?`,[
+    `Inclui segurança, conforto e bem-estar físico/mental/social, com enfoque preventivo`,
+    `É apenas ter um espaço “bonito”`,
+    `É apenas ter EPI disponível`,
+    `É apenas reduzir custos`
+  ],0,`É saúde+segurança+bem-estar, não só estética/EPI.`),
+
+  q(`Qual opção representa melhor a diferença “doença profissional” vs “doença relacionada com o trabalho”?`,[
+    `Doença profissional liga-se diretamente ao exercício/exposição típica do trabalho; relacionada pode resultar das condições/ambiente sem ser exclusiva da profissão`,
+    `Doença profissional é sempre súbita; relacionada é sempre crónica`,
+    `Doença profissional é sempre psicológica; relacionada é sempre física`,
+    `São exatamente iguais`
+  ],0,`Distinção usada na matéria: direta da atividade/exposição vs condições de trabalho mais amplas.`),
+
+  q(`Qual dos seguintes exemplos é mais típico de “acidente de trabalho”?`,[
+    `Queda durante tarefa laboral com lesão imediata`,
+    `Dor lombar que surge ao longo de anos`,
+    `Ansiedade desenvolvida por stress prolongado`,
+    `Conjuntivite por exposição repetida ao longo de meses`
+  ],0,`Acidente: evento súbito no tempo/local de trabalho com lesão.`),
+
+  q(`Ao fazer avaliação rápida antes de prestar primeiros socorros, a prioridade inicial é:`,[
+    `Garantir a tua segurança e a segurança do local`,
+    `Dar água à vítima imediatamente`,
+    `Mover a vítima sempre para “conforto”`,
+    `Procurar documentos da vítima`
+  ],0,`Primeiro: segurança do socorrista e do cenário.`),
+
+  q(`“Proteger, Alertar, Socorrer” significa, por ordem:`,[
+    `Garantir segurança → chamar ajuda (112/apoio) → prestar assistência adequada`,
+    `Dar assistência → chamar ajuda → garantir segurança`,
+    `Chamar ajuda → dar assistência → ignorar riscos`,
+    `Levar a vítima → chamar ajuda → voltar ao local`
+  ],0,`Sequência base: proteger, alertar, socorrer.`),
+];
+
+/* ---------- MAPA DE TESTES ---------- */
+const TESTS = {
+  PRL_1: TEST_PRL_1,
+  PRL_DIFICIL: TEST_PRL_DIFICIL
+};
 
 let quizChangeHandler=null;
 
-function build(testId){
-  CURRENT.testId=testId;
-  const base=TEST_PRL_1;
+function build(testId, keepProgress=false){
+  CURRENT.testId = testId;
+  const base = TESTS[testId] || TEST_PRL_1;
 
-  const seed=uid();
-  CURRENT.seed=seed;
+  // seed nova para baralhar
+  const seed = uid();
+  CURRENT.seed = seed;
 
+  // baralhar perguntas + baralhar opções
   const items = shuffle(base).map((qItem,i)=>{
     const idxMap = Array.from({length:qItem.options.length}, (_,k)=>k);
     const shuffledIdxs = shuffle(idxMap);
@@ -474,13 +570,27 @@ function build(testId){
 
   CURRENT.items = items.slice(0, 30);
   CURRENT.answers = {};
-  CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
-  CURRENT.locked=false;
-  CURRENT.evaluated=false;
+  CURRENT.locked = false;
+  CURRENT.evaluated = false;
 
   if(quizChangeHandler) $quiz.removeEventListener('change', quizChangeHandler);
   render();
-  localStorage.removeItem(storageKey());
+
+  if(!keepProgress){
+    localStorage.removeItem(storageKey());
+  }else{
+    const st = loadState();
+    if(st && st.answers){
+      CURRENT.answers = st.answers;
+      // repor seleções no UI
+      Object.entries(CURRENT.answers).forEach(([qid, val])=>{
+        const input = document.querySelector(`input[name="${qid}"][value="${val}"]`);
+        if(input) input.checked = true;
+      });
+      updateCounts();
+    }
+  }
+
   updateCounts();
 }
 
@@ -574,8 +684,7 @@ function evaluate(){
     else if(chosen===undefined) { /* branco */ }
     else wrong++;
 
-    const showExplain = item.explanation;
-    exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (showExplain ? ` — <em>${item.explanation}</em>` : ``);
+    exp.innerHTML = `<strong>Resposta correta:</strong> ${correctTxt}` + (item.explanation ? ` — <em>${item.explanation}</em>` : ``);
     qEl.appendChild(exp);
   });
 
@@ -620,9 +729,12 @@ function exportTxt(){
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
 
-function clearProgress(){ localStorage.removeItem(storageKey()); build($sel.value); }
+function clearProgress(){
+  localStorage.removeItem(storageKey());
+  build($sel.value, false);
+}
 
-$start.addEventListener('click', ()=>build($sel.value));
+$start.addEventListener('click', ()=>build($sel.value, false));
 $submit.addEventListener('click', ()=>{
   const answered=Object.keys(CURRENT.answers).length;
   if(answered<CURRENT.items.length){
@@ -633,9 +745,10 @@ $submit.addEventListener('click', ()=>{
 });
 $export.addEventListener('click', exportTxt);
 $clear.addEventListener('click', clearProgress);
-$sel.addEventListener('change', ()=>build($sel.value));
+$sel.addEventListener('change', ()=>build($sel.value, true));
 
-build($sel.value);
+// iniciar
+build($sel.value, true);
 </script>
 </body>
 </html>
