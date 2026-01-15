@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — PRL (30 — Matéria Completa)</title>
+<title>Quiz — Cerimonial Militar (50)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -40,12 +40,12 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Quiz — PRL (30)</h1>
-    <p class="sub">30 questões (matéria completa dos PDFs). Opções erradas plausíveis. Só no fim vês a correção e a nota (/20). Progresso guardado localmente.</p>
+    <h1>Quiz — Cerimonial Militar (50)</h1>
+    <p class="sub">50 questões (matéria completa dos PDFs). Verdadeiro/Falso e escolha múltipla (4 opções). Opções erradas plausíveis. Só no fim vês a correção e a nota (/20). Progresso guardado localmente.</p>
 
     <div class="row" style="margin-bottom:12px">
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
-      <span class="pill">Progresso: <span id="prog">0/30</span></span>
+      <span class="pill">Progresso: <span id="prog">0/50</span></span>
       <span class="pill">Estado: <span id="state">Em resposta</span></span>
     </div>
 
@@ -56,7 +56,7 @@
         <div class="counts">
           <span class="k">Certas: <strong id="cRight">0</strong></span>
           <span class="k">Erradas: <strong id="cWrong">0</strong></span>
-          <span class="k">Em branco: <strong id="cBlank">30</strong></span>
+          <span class="k">Em branco: <strong id="cBlank">50</strong></span>
           <span class="k score">Nota (/20): <strong id="score">–</strong></span>
         </div>
         <div class="row">
@@ -93,346 +93,444 @@ const $start  = el('#startBtn');
 const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 
-let CURRENT = { testId:'PRL_30_COMPLETO', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'CM_50_CERIMONIAL', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
 /* ==========================================================
-   TESTE ÚNICO — 30 perguntas (NOVAS, baseadas nos PDFs)
-   (Sem repetir as “clássicas” que já tinhas: perigo/risco,
-    cores, 30:2, PLS, OVA, exposição percutânea/mucosa, etc.)
+   CERIMONIAL MILITAR — 50 perguntas (baseadas nos PDFs)
+   - Inclui V/F e escolha múltipla (4 opções)
+   - Sem referência a leis pelo número
    ========================================================== */
-const TEST_PRL_30 = [
+const TEST_CM_50 = [
+  // ---------- V/F (1–25) ----------
   q(
-    `1) Na movimentação manual de cargas, qual combinação está correta segundo a matéria?`,
-    [
-      `Operações ocasionais: >30 kg; operações frequentes: >20 kg (maior risco de lesões lombares)`,
-      `Operações ocasionais: >20 kg; operações frequentes: >30 kg (maior risco de lesões lombares)`,
-      `Operações ocasionais: >25 kg; operações frequentes: >25 kg (valor fixo recomendado)`,
-      `Operações ocasionais: >40 kg; operações frequentes: >10 kg (depende apenas da forma da carga)`
-    ],
+    `1) No protocolo de precedências, a presidência do ato e a ordem de precedência não são sempre a mesma coisa.`,
+    [`Verdadeiro`, `Falso`, `Depende apenas do uniforme`, `Depende apenas do local`],
     0,
-    `Nos slides de ergonomia: valores de referência para risco acrescido — ocasionais >30 kg e frequentes >20 kg.`
+    `A matéria distingue a ideia de “presidir ao ato” da ordem formal de precedências; há regras e exceções consoante o contexto.`
   ),
   q(
-    `2) Qual dos seguintes fatores é referido como aumentando o risco de lesões lombares ao manusear cargas?`,
-    [
-      `Cargas desequilibradas/instáveis e difíceis de agarrar`,
-      `Cargas com etiqueta legível e embalagem rígida`,
-      `Cargas pequenas e centradas junto ao corpo`,
-      `Cargas em carrinho com rodas e pega ajustada`
-    ],
+    `2) Em igualdade de categoria, a antiguidade pode influenciar a colocação (ex.: data de posse/eleição/nomeação, conforme o caso).`,
+    [`Verdadeiro`, `Falso`, `Só conta a idade`, `Só conta o posto militar`],
     0,
-    `A matéria lista: demasiado grandes/pesadas, difíceis de agarrar/alcançar, desequilibradas/instáveis, etc.`
+    `Nos princípios de precedências, quando há igualdade de categoria, usa-se um critério de desempate indicado na matéria.`
   ),
   q(
-    `3) “Tríade predisponente” para LME (lesões músculo-esqueléticas) apresentada na matéria é:`,
-    [
-      `Posições angulares extremas + elevada repetição + esforço excessivo`,
-      `Iluminação deficiente + ruído + calor`,
-      `Exposição química + radiação + vibração`,
-      `Risco biológico + stress + monotonia`
-    ],
+    `3) Em cerimónias de natureza militar, as honras/continências seguem regras próprias e não dependem apenas do estatuto protocolar civil.`,
+    [`Verdadeiro`, `Falso`, `Depende do tamanho do evento`, `Depende da música escolhida`],
     0,
-    `Triângulo clássico (nos slides): posturas extremas, repetição e força/esforço.`
+    `A matéria separa “precedências” (protocolo) de “honras militares/continências” (regras militares).`
   ),
   q(
-    `4) Segundo a matéria, a combinação de movimentos mais lesiva para a coluna (sobretudo repetida) é:`,
-    [
-      `Flexão + compressão`,
-      `Extensão + rotação lenta`,
-      `Abdução do ombro + pronação do antebraço`,
-      `Elevação escapular + flexão do punho`
-    ],
-    0,
-    `Nos slides: flexão e compressão simultâneas (sobretudo repetidas) aumentam risco de lesão.`
+    `4) A existência de convite escrito é suficiente, por si só, para atribuir honras militares a uma entidade.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, se for um evento solene`, `Verdadeiro, se houver banda`],
+    1,
+    `Honras militares resultam de regras próprias e não de “convite” ou etiqueta social.`
   ),
   q(
-    `5) A ergonomia é descrita (ideia central) como:`,
-    [
-      `Conjunto de conhecimentos que adapta o trabalho ao ser humano, visando segurança, conforto e eficácia`,
-      `Conjunto de regras para aumentar a produtividade independentemente do desgaste`,
-      `Sistema de sinalização para reduzir acidentes por desatenção`,
-      `Área exclusiva de desenho industrial sem ligação à saúde ocupacional`
-    ],
+    `5) O tratamento e a forma de apresentação (ex.: “Meu Comandante”, “Senhor Comandante”, “Senhora Ministra”) devem adequar-se ao cargo e ao contexto formal.`,
+    [`Verdadeiro`, `Falso`, `Só se usa “tu” em qualquer caso`, `É sempre igual em todo o serviço`],
     0,
-    `Nos slides: adaptação do trabalho ao homem (ergon+nomos), com foco em segurança/saúde/eficácia.`
+    `A matéria de continências e fórmulas de tratamento prevê adequação ao cargo/contexto.`
   ),
   q(
-    `6) Qual exemplo corresponde mais a uma medida “técnica/engenharia” (no sentido de controlo do risco)?`,
-    [
-      `Instalar resguardos/guardas fixas numa máquina com partes móveis`,
-      `Dar formação anual e reforçar cartazes no posto`,
-      `Criar uma norma interna e pedir “mais atenção”`,
-      `Reforçar a supervisão informal sem alterar o posto`
-    ],
+    `6) Numa cerimónia com guarda de honra, a sequência de ações tende a ser padronizada: chegada, continência, eventual revista/saudação e encaminhamento.`,
+    [`Verdadeiro`, `Falso`, `Só acontece em visitas informais`, `Depende do clima`],
     0,
-    `Medidas técnicas atuam na fonte/engenharia (ex.: resguardos), mais robustas do que medidas apenas administrativas.`
+    `A matéria apresenta sequências típicas para receção de altas entidades e atos solenes.`
   ),
   q(
-    `7) Na lógica de avaliação/gestão do risco, a sequência mais coerente é:`,
-    [
-      `Identificar perigos → identificar expostos → estimar/avaliar o risco → definir medidas → monitorizar/rever`,
-      `Definir medidas → identificar perigos → monitorizar → avaliar → registar`,
-      `Medir gravidade → escolher EPI → registar → identificar perigos → formar`,
-      `Identificar expostos → aplicar EPI → considerar risco eliminado → encerrar avaliação`
-    ],
-    0,
-    `Sequência típica: identificação, avaliação, controlo, revisão.`
+    `7) Numa receção formal, a “revista” (quando prevista) ocorre sempre antes de qualquer continência.`,
+    [`Verdadeiro`, `Falso`, `Só se houver estandarte`, `Só se houver viatura oficial`],
+    1,
+    `A ordem dos momentos varia consoante o tipo de cerimónia; não é “sempre” antes de tudo.`
   ),
   q(
-    `8) Na Lei 102/2009 (registo/arquivo), qual item faz parte do que deve ser organizado/conservado (exemplos dos slides)?`,
-    [
-      `Identificação dos trabalhadores expostos, com indicação da natureza do agente e, se possível, grau de exposição`,
-      `Registo do desempenho anual por equipa (KPIs de produtividade)`,
-      `Fichas de férias e banco de horas (sem relação com SST)`,
-      `Inventário de património mobiliário e viaturas`
-    ],
+    `8) O Estandarte Nacional pode participar em formaturas e desfiles, com regras próprias de honra e respeito.`,
+    [`Verdadeiro`, `Falso`, `Só aparece em funerais`, `Só aparece em atos desportivos`],
     0,
-    `Nos slides (art. 46.º): identificação de expostos e natureza/agente/grau (quando possível), entre outros.`
+    `A matéria prevê presença do Estandarte Nacional e normas de enquadramento.`
   ),
   q(
-    `9) Ainda no art. 46.º (registos/arquivo), qual exemplo está correto?`,
-    [
-      `Resultados da vigilância da saúde de cada trabalhador com referência ao respetivo posto/função`,
-      `Apenas o nome do médico, sem ligação ao posto/função`,
-      `Registos de formação em SST substituem registos de acidentes/incidentes`,
-      `Basta conservar os registos enquanto durar o contrato do trabalhador`
-    ],
+    `9) Durante a execução do Hino Nacional em ato solene, a atitude exigida é de respeito e compostura, conforme o enquadramento do pessoal e das forças.`,
+    [`Verdadeiro`, `Falso`, `Depende do grau hierárquico`, `Depende do tipo de música`],
     0,
-    `Os slides referem: resultados da vigilância da saúde por trabalhador com referência ao posto/função.`
+    `A matéria de cerimonial/continências descreve o comportamento em momentos solenes.`
   ),
   q(
-    `10) O que define “incidente” na matéria (acidentes/serviço)?`,
-    [
-      `Evento que afeta o trabalhador no decurso do trabalho ou relacionado, sem lesões diagnosticadas de imediato ou só com primeiros socorros`,
-      `Evento com lesão grave sempre com baixa prolongada`,
-      `Qualquer situação perigosa, mesmo sem envolvimento de trabalhadores`,
-      `Doença que se desenvolve lentamente e reduz a capacidade de trabalho`
-    ],
-    0,
-    `Nos slides: incidente = evento sem lesões diagnosticadas de imediato ou que apenas necessitam de primeiros socorros.`
+    `10) Em continências, a iniciativa é sempre de quem é hierarquicamente superior.`,
+    [`Verdadeiro`, `Falso`, `Depende do armamento`, `Depende do clima`],
+    1,
+    `Regra geral: quem vê primeiro presta continência conforme as regras; a iniciativa não é “sempre” do superior.`
   ),
   q(
-    `11) “Participação” é definida (nos slides) como:`,
-    [
-      `Procedimento previsto na lei para prestar informações sobre acontecimento perigoso/incidente/acidente em serviço/doença profissional`,
-      `Relatório informal sem valor documental, apenas para arquivo pessoal`,
-      `Declaração clínica do médico do trabalho entregue ao trabalhador`,
-      `Ato de inspeção realizado exclusivamente pela ACT`
-    ],
+    `11) A sentinela possui regras próprias de continência, distintas do militar isolado em deslocação.`,
+    [`Verdadeiro`, `Falso`, `Só conta a educação pessoal`, `Só conta a antiguidade`],
     0,
-    `Definição textual nos slides: participação = procedimento legal de prestação de informações.`
+    `A matéria diferencia sentinela/guarda/postos e procedimentos.`
   ),
   q(
-    `12) “Registo” (no contexto dos slides de acidentes/serviço) é:`,
-    [
-      `Procedimento mediante o qual é anotada a informação relativa a incidentes, acidentes em serviço e doenças`,
-      `Apenas um mapa de assiduidade do trabalhador`,
-      `Uma ficha clínica completa (substitui a participação)`,
-      `Um documento apenas para efeitos de prémio/estatística anual`
-    ],
+    `12) Uma força formada presta continência de forma diferente do militar isolado (por voz de comando e execução coletiva).`,
+    [`Verdadeiro`, `Falso`, `Só se for em campo`, `Só se for à noite`],
     0,
-    `Nos slides: registo = anotação/inscrição da informação relativa a ocorrências.`
+    `A continência de força formada é coletiva e enquadrada por comandos.`
   ),
   q(
-    `13) Qual afirmação está mais alinhada com o papel da ACT (atribuições) nos slides?`,
-    [
-      `Desenvolver ações de sensibilização, informação e aconselhamento para trabalhadores/empregadores`,
-      `Substituir o médico do trabalho na emissão de fichas de aptidão`,
-      `Definir internamente as escalas de serviço da subunidade`,
-      `Autorizar obras particulares sem vistoria`
-    ],
+    `13) “Apresentar armas” é um gesto/ato cerimonial que pode ser usado como forma solene de saudação militar.`,
+    [`Verdadeiro`, `Falso`, `Só serve para inspeção de armas`, `É apenas para tiro`],
     0,
-    `Nos slides ACT: sensibilização, informação e aconselhamento é uma atribuição.`
+    `A matéria inclui movimentos e atos cerimoniais como forma de homenagem/saudação.`
   ),
   q(
-    `14) Outra atribuição referida da ACT é:`,
-    [
-      `Promover a formação especializada nos domínios da segurança e saúde no trabalho`,
-      `Emitir cartas de condução e certificações automóveis`,
-      `Realizar triagem clínica em contexto de urgência`,
-      `Executar manutenção de equipamentos de combate a incêndio`
-    ],
-    0,
-    `Nos slides ACT: promover formação especializada em SST.`
+    `14) “Perfilar armas” é sempre equivalente a “apresentar armas” e pode substituir-se livremente em qualquer contexto.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, se a unidade for pequena`, `Verdadeiro, se houver banda`],
+    1,
+    `São atos com finalidades e usos distintos; não são totalmente permutáveis.`
   ),
   q(
-    `15) No PNSO (2018-2020) apresentado, qual conjunto corresponde aos eixos estratégicos?`,
-    [
-      `Políticas saudáveis; Cidadania em saúde; Equidade e acesso adequado aos cuidados de saúde`,
-      `Produtividade; Fiscalização; Metrologia`,
-      `Qualidade total; Benchmarking; Certificação ISO`,
-      `Normalização; Metrologia; Qualificação`
-    ],
+    `15) Em atos fúnebres, a cobertura do féretro com a Bandeira Nacional segue uma orientação específica de colocação.`,
+    [`Verdadeiro`, `Falso`, `Depende da preferência da família`, `Depende do posto`],
     0,
-    `Eixos estratégicos no slide do PNSO: políticas saudáveis, cidadania em saúde, equidade/acesso adequado.`
+    `A matéria define a colocação correta e a simbologia associada.`
   ),
   q(
-    `16) No mesmo bloco do PNSO, qual medida está indicada para COVID-19 (SARS-CoV-2) nos slides?`,
-    [
-      `Etiqueta respiratória (espirrar para o cotovelo) e lavagem frequente das mãos`,
-      `Aumentar a lotação dos espaços para “imunidade natural”`,
-      `Evitar máscara e privilegiar ventilação apenas artificial`,
-      `Suspender higiene das mãos para não irritar a pele`
-    ],
+    `16) Em vigília/guarda de honra junto ao féretro, podem existir regras de rotação temporal para garantir solenidade e uniformidade.`,
+    [`Verdadeiro`, `Falso`, `Só em funerais civis`, `Só se houver estandarte`],
     0,
-    `Nos slides: etiqueta respiratória e lavagem frequente das mãos, entre outras medidas.`
+    `A matéria refere rotações periódicas em contexto cerimonial.`
   ),
   q(
-    `17) Nos slides de sinalização, um requisito transversal para equipamentos de sinalização é:`,
-    [
-      `Serem mantidos em bom estado de conservação (limpeza e funcionalidade)`,
-      `Serem substituídos por instruções verbais sempre que possível`,
-      `Serem colocados apenas em áreas administrativas`,
-      `Serem opcionais se existir formação anual`
-    ],
+    `17) No protocolo de atos, a ordem de entrada/saída pode seguir critérios de precedência, mas também critérios funcionais (quem preside, quem intervém).`,
+    [`Verdadeiro`, `Falso`, `Só conta quem chegou primeiro`, `Só conta quem tem mais idade`],
     0,
-    `Há referência expressa à necessidade de manter em bom estado (limpeza/funcionamento).`
+    `A matéria aborda precedência e funcionalidade do ato (presidência/intervenções).`
   ),
   q(
-    `18) Na sinalização de obstáculos e locais permanentemente perigosos, os slides referem que deve:`,
-    [
-      `Ter em conta dimensões do obstáculo/local e ser proporcional à zona a cobrir`,
-      `Ser sempre igual (tamanho fixo) em qualquer instalação`,
-      `Ser colocada apenas no chão, nunca em paredes`,
-      `Ser feita apenas com sinalização verbal`
-    ],
-    0,
-    `Nos slides: dimensionamento proporcional à zona a cobrir e dimensões do obstáculo/local.`
+    `18) A colocação de bandeiras e símbolos (ex.: em palco) é irrelevante desde que “fique bonito”.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, se for evento interno`, `Verdadeiro, se for no quartel`],
+    1,
+    `A matéria trata regras de enquadramento/posição de símbolos nacionais e institucionais.`
   ),
   q(
-    `19) Em primeiros socorros, “choque hipovolémico” é enquadrado (ideia base) como:`,
-    [
-      `Perda de volume tão significativa que compromete a perfusão adequada (hipotensão marcada)`,
-      `Aumento súbito de glicemia que causa tremores e ansiedade`,
-      `Reação alérgica leve sem impacto hemodinâmico`,
-      `Dor local intensa sem alterações sistémicas`
-    ],
+    `19) A “mesa de honra” pode ter uma regra de centro (quem preside ao ato) e distribuição lateral coerente com precedências.`,
+    [`Verdadeiro`, `Falso`, `Depende do tamanho da mesa`, `Depende do catering`],
     0,
-    `Choque hipovolémico: perda de volume circulante com falha de perfusão e hipotensão.`
+    `A matéria descreve a lógica de presidência e distribuição de lugares.`
   ),
   q(
-    `20) Num cenário de hemorragia, qual sinal é mais sugestivo de gravidade sistémica (no quadro/abordagem dos slides)?`,
-    [
-      `Alteração do estado mental + pulso rápido/fraco + hipotensão`,
-      `Dor localizada sem alterações vitais`,
-      `Apenas prurido na zona da ferida`,
-      `Lacrimejo isolado e espirros`
-    ],
+    `20) Em cerimónias, o fardamento/vestuário deve ser coerente com o tipo de ato e o grau de solenidade.`,
+    [`Verdadeiro`, `Falso`, `Só conta a meteorologia`, `Só conta o conforto`],
     0,
-    `Os slides usam sinais vitais/estado mental como indicadores de gravidade (choque/hemorragia).`
+    `A matéria reforça adequação do fardamento à cerimónia e uniformidade.`
   ),
   q(
-    `21) Em queimaduras, qual afirmação é mais consistente com a abordagem de primeiros socorros (conteúdo típico dos slides)?`,
-    [
-      `Arrefecer a zona com água (não gelada) e proteger a queimadura; evitar rebentar bolhas`,
-      `Aplicar pasta de dentes para “refrescar” e cobrir com algodão`,
-      `Esfregar vigorosamente para retirar pele solta e aplicar álcool`,
-      `Colocar gelo diretamente durante vários minutos para acelerar cicatrização`
-    ],
+    `21) A banda/música de cerimónia pode ter momentos específicos: chegada da entidade, honras, homenagens e encerramento.`,
+    [`Verdadeiro`, `Falso`, `Só toca no fim`, `Só toca se houver desfile`],
     0,
-    `Primeiros socorros: arrefecer com água corrente (não gelada), proteger e não rebentar bolhas.`
+    `A matéria apresenta o enquadramento musical (toques/peças) em momentos formais.`
   ),
   q(
-    `22) Na abordagem ao AVC, qual conjunto de sinais é referido nos slides (estilo FAST)?`,
-    [
-      `Face (boca ao lado) + falta de força + alteração da fala`,
-      `Dor lombar + rigidez do pescoço + febre`,
-      `Prurido generalizado + urticária + lacrimejo`,
-      `Tosse persistente + expetoração + pieira`
-    ],
-    0,
-    `Nos slides: face assimétrica, fraqueza e dificuldade na fala.`
+    `22) A saudação a altas entidades é sempre feita por aperto de mão em fila, mesmo em atos militares.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, se for à entrada`, `Verdadeiro, se houver fotógrafos`],
+    1,
+    `Em contexto militar existem procedimentos próprios; “sempre” aperto de mão não é regra.`
   ),
   q(
-    `23) Sobre AVC, qual afirmação está correta segundo os slides?`,
-    [
-      `Isquémico: obstrução/redução do fluxo; Hemorrágico: rutura do vaso com extravasamento`,
-      `Isquémico: rutura do vaso; Hemorrágico: obstrução do vaso`,
-      `Isquémico: sempre associado a trauma; Hemorrágico: sempre infeccioso`,
-      `Isquémico e hemorrágico são sinónimos (diferença apenas de intensidade)`
-    ],
+    `23) A imposição de condecorações segue regras de quem pode impor e uma sequência típica do ato.`,
+    [`Verdadeiro`, `Falso`, `Qualquer militar pode impor`, `Só pode impor o adjunto`],
     0,
-    `Definições apresentadas: isquémico = obstrução/redução de fluxo; hemorrágico = rutura/extravasamento.`
+    `A matéria define competências e sequência cerimonial do ato.`
   ),
   q(
-    `24) Sobre “ambiente psicossocial de trabalho” (no bloco do ambiente de trabalho saudável), é referido que inclui:`,
-    [
-      `Cultura organizacional, modelo de gestão e valores da entidade empregadora`,
-      `Apenas ruído, vibração e temperaturas extremas`,
-      `Somente agentes químicos e biológicos`,
-      `Exclusivamente iluminação e arrumação do posto`
-    ],
+    `24) A homenagem aos mortos pode incluir momentos solenes com toques específicos e atitudes de respeito da força.`,
+    [`Verdadeiro`, `Falso`, `Só acontece em cerimónias desportivas`, `Só acontece em visitas informais`],
     0,
-    `Nos slides: ambiente psicossocial inclui cultura organizacional, modelo de gestão e valores.`
+    `A matéria prevê homenagem/evocação com enquadramento musical e postura.`
   ),
   q(
-    `25) O que caracteriza melhor um “risco psicossocial” (como aparece nos slides)?`,
+    `25) A forma de conduzir a bandeira/estandarte em desfile é indiferente, desde que não caia.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, se for curta distância`, `Verdadeiro, se estiver bom tempo`],
+    1,
+    `Há regras de respeito, posição e comportamento do porta-estandarte e escolta.`
+  ),
+
+  // ---------- Escolha múltipla (26–50) ----------
+  q(
+    `26) Numa mesa de honra, qual princípio é mais consistente com a matéria?`,
     [
-      `Stress/burnout e situações de assédio (moral/sexual)`,
-      `Exposição a solventes orgânicos e poeiras minerais`,
-      `Radiação ionizante e campos eletromagnéticos`,
-      `Cortes e entorses por queda ao mesmo nível`
+      `Quem preside fica no centro; à direita e esquerda distribuem-se os restantes por precedência`,
+      `Quem preside senta-se sempre no lugar mais afastado do público`,
+      `A distribuição é aleatória para evitar “comparações”`,
+      `Quem tem maior altura fica sempre no centro`
     ],
     0,
-    `Nos slides: stress/burnout e assédio são exemplos de riscos psicossociais.`
+    `Regra típica de presidência: centro para quem preside e distribuição lateral coerente.`
   ),
   q(
-    `26) Ainda na Lei 102/2009 (registos/arquivo), qual informação é explicitamente referida nos slides?`,
+    `27) Numa cerimónia militar com receção formal, qual opção descreve melhor o objetivo das honras?`,
     [
-      `Identificação do médico responsável pela vigilância da saúde`,
-      `Nome do diretor financeiro responsável pelo orçamento`,
-      `Lista de fornecedores de EPI por trimestre`,
-      `Plano de marketing e comunicação institucional`
+      `Prestar uma saudação solene, traduzindo respeito institucional e disciplina`,
+      `Testar a velocidade de execução de movimentos`,
+      `Criar um momento “informal” para socialização`,
+      `Substituir a necessidade de protocolo civil`
     ],
     0,
-    `Nos slides do art. 46.º: identificar o médico responsável pela vigilância da saúde.`
+    `Honras/continências são expressão formal de respeito e disciplina institucional.`
   ),
   q(
-    `27) Sobre “agentes com potencial impacto genético” (formulação geral da matéria), qual opção é mais coerente?`,
+    `28) Qual comportamento é mais adequado durante um momento solene (ex.: hino/evocação)?`,
     [
-      `Substâncias/agentes classificados como perigosos, incluindo alguns com advertências de risco e radiações ionizantes`,
-      `Apenas substâncias “benéficas” sem qualquer advertência`,
-      `Qualquer temperatura elevada é, por si só, sempre agente genotóxico`,
-      `Apenas ruído e vibração são agentes genéticos`
+      `Manter postura composta, silêncio e respeito; seguir o enquadramento da força`,
+      `Conversar em voz baixa para “não incomodar”`,
+      `Gravar vídeos e circular para melhor ângulo`,
+      `Aplaudir a meio para “motivar”`
     ],
     0,
-    `Nos slides, a ideia é associada a agentes perigosos e radiações ionizantes; evita-se a formulação errada “benéficos”.`
+    `Compostura e respeito são regra em momentos solenes.`
   ),
   q(
-    `28) No âmbito de SST, qual exemplo é mais “medida administrativa/organizacional” (e não técnica)?`,
+    `29) Numa guarda junto a um local/área delimitada (obstáculo, zona de cerimónia), qual prática é mais coerente?`,
     [
-      `Definir rotação de tarefas e pausas para reduzir repetição e fadiga`,
-      `Instalar exaustão localizada numa fonte de poeiras`,
-      `Substituir um solvente por outro menos nocivo`,
-      `Colocar resguardos em partes móveis`
+      `Manter alinhamento, disciplina de posto e cumprimento rigoroso do serviço`,
+      `Abandonar o posto se não houver público`,
+      `Improvisar postura para evitar cansaço`,
+      `Trocar de lugar sem coordenação`
     ],
     0,
-    `Rotação/pausas são medidas organizacionais; exaustão/substituição/resguardos são mais “técnicas/na fonte”.`
+    `A matéria reforça disciplina de posto e uniformidade em contexto cerimonial.`
   ),
   q(
-    `29) Em ergonomia, qual objetivo aparece alinhado com a prevenção de lombalgias na matéria?`,
+    `30) Qual opção traduz melhor a distinção central ensinada na matéria?`,
     [
-      `Adoção de técnicas/práticas de trabalho adequadas no levantamento e manuseamento de cargas`,
-      `Aumentar a velocidade de execução para reduzir tempo de exposição`,
-      `Levantar sempre com costas fletidas para reduzir esforço nas pernas`,
-      `Evitar qualquer adaptação do posto para “uniformizar procedimentos”`
+      `Precedências definem colocação/ordem; continências/honras definem gestos e saudação militar`,
+      `Precedências e continências são sinónimos`,
+      `Continências servem apenas para desfiles, precedências apenas para funerais`,
+      `Precedências dependem do gosto do organizador`
     ],
     0,
-    `Nos slides: boas práticas/técnicas de trabalho são fundamentais na prevenção de lombalgias.`
+    `Separação entre protocolo (ordem) e regras militares (honras/gestos).`
   ),
   q(
-    `30) No enquadramento de “acidente em serviço” nos slides, ele é apresentado como:`,
+    `31) Na colocação de entidades numa fila para cumprimentos/saudação formal, o critério mais correto é:`,
     [
-      `O acidente de trabalho que ocorre no decurso da prestação de trabalho por trabalhadores da Administração Pública`,
-      `Qualquer incidente fora do horário, sem ligação à prestação laboral`,
-      `Qualquer doença comum, independentemente do posto e função`,
-      `Um evento exclusivamente clínico sem relação com o trabalho`
+      `Ordenar por precedência e função no ato, evitando inversões sem justificação`,
+      `Ordenar por ordem de chegada`,
+      `Ordenar por preferência pessoal do anfitrião`,
+      `Ordenar por ordem alfabética`
     ],
     0,
-    `Nos slides: acidente em serviço = acidente de trabalho no decurso da prestação pelos trabalhadores da Administração Pública (referência ao DL 503/99).`
+    `A matéria privilegia coerência com precedências e função/presidência do ato.`
+  ),
+  q(
+    `32) Qual cenário exige mais atenção ao detalhe cerimonial?`,
+    [
+      `Ato solene com alta entidade, guarda de honra e presença de símbolos nacionais`,
+      `Treino informal no ginásio da unidade`,
+      `Reunião técnica interna sem convidados`,
+      `Briefing rápido antes do patrulhamento`
+    ],
+    0,
+    `Quanto maior a solenidade e presença institucional, maior o rigor cerimonial.`
+  ),
+  q(
+    `33) Qual opção é mais alinhada com a ideia de “receção” em cerimónia militar?`,
+    [
+      `Acolhimento formal, com enquadramento da força e atos de saudação previstos`,
+      `Uma conversa livre sem qualquer estrutura`,
+      `Um lanche antes de qualquer formalidade`,
+      `Uma assinatura de presenças sem acompanhamento`
+    ],
+    0,
+    `Receção é estruturada e enquadrada pela força/organização do ato.`
+  ),
+  q(
+    `34) Em contexto de honras fúnebres, qual prática é claramente inadequada?`,
+    [
+      `Manter solenidade, silêncio e coordenação nos movimentos`,
+      `Garantir respeito pelos símbolos e pela cerimónia`,
+      `Fazer piadas para “desanuviar” junto ao féretro`,
+      `Cumprir a rotação/ordenação prevista`
+    ],
+    2,
+    `O contexto fúnebre exige solenidade e respeito.`
+  ),
+  q(
+    `35) Na condução de um estandarte, a opção mais coerente é:`,
+    [
+      `Manter porte e estabilidade; seguir regras de escolta e respeito`,
+      `Usá-lo como apoio para descansar o braço`,
+      `Inclinar ao acaso conforme a música`,
+      `Alternar de mão sem coordenação`
+    ],
+    0,
+    `A matéria enfatiza porte, estabilidade e respeito pelos símbolos.`
+  ),
+  q(
+    `36) Numa cerimónia com formatura, a opção mais correta sobre comandos é:`,
+    [
+      `Os movimentos coletivos são executados por voz de comando e uniformidade`,
+      `Cada militar escolhe o momento de executar para evitar rigidez`,
+      `Só o porta-estandarte obedece a comando`,
+      `Os comandos são dispensáveis se houver música`
+    ],
+    0,
+    `Força formada executa movimentos de forma coletiva e comandada.`
+  ),
+  q(
+    `37) Qual opção descreve melhor um erro comum que a matéria procura evitar?`,
+    [
+      `Misturar precedências civis com regras de continência como se fossem a mesma coisa`,
+      `Cumprir rigorosamente a sequência do ato`,
+      `Garantir uniformidade de postura e alinhamento`,
+      `Confirmar previamente a colocação de símbolos`
+    ],
+    0,
+    `É uma confusão típica: protocolo (ordem) vs honras (gestos).`
+  ),
+  q(
+    `38) Numa cerimónia, a colocação de símbolos (nacionais/institucionais) deve:`,
+    [
+      `Respeitar regras e coerência visual e protocolar, evitando disposições arbitrárias`,
+      `Ser definida apenas pelo fotógrafo`,
+      `Ser feita depois do início do ato`,
+      `Ser sempre escondida para “não distrair”`
+    ],
+    0,
+    `A matéria trata a colocação como elemento formal, não decorativo ao acaso.`
+  ),
+  q(
+    `39) Em evento com várias intervenções, a regra mais coerente para ordem de fala é:`,
+    [
+      `Considerar presidência do ato e função de cada interveniente, com coerência de precedência`,
+      `Quem fala melhor vai sempre primeiro`,
+      `Quem chegou por último fala primeiro`,
+      `Ordem alfabética dos nomes`
+    ],
+    0,
+    `A função no ato (presidência/intervenção) é essencial para ordenar intervenções.`
+  ),
+  q(
+    `40) Qual opção é mais adequada para preparar uma cerimónia?`,
+    [
+      `Ensaiar sequência, confirmar posições, comandos, símbolos e tempos`,
+      `Improvisar para parecer “mais natural”`,
+      `Eliminar ensaio para poupar tempo`,
+      `Confiar apenas no bom senso de cada elemento`
+    ],
+    0,
+    `Preparação/ensaio e confirmação de detalhes é um ponto-chave da matéria.`
+  ),
+  q(
+    `41) Quando existe “presidência do ato”, a posição de maior destaque é normalmente:`,
+    [
+      `O centro (ou ponto focal) definido para quem preside, visível ao público/força`,
+      `Qualquer lugar desde que haja microfone`,
+      `O lugar mais próximo da saída`,
+      `O lugar mais longe do estandarte`
+    ],
+    0,
+    `Regra típica: centro/ponto focal para quem preside.`
+  ),
+  q(
+    `42) Em continência individual, qual comportamento é mais correto?`,
+    [
+      `Executar a continência conforme o contexto e manter postura correta até ao termo adequado`,
+      `Executar e continuar a falar ao telemóvel`,
+      `Executar apenas se houver público`,
+      `Executar apenas se for filmado`
+    ],
+    0,
+    `A matéria reforça postura e momento de início/termo conforme a situação.`
+  ),
+  q(
+    `43) No âmbito de um desfile/formatura, qual elemento tende a exigir especial rigor de alinhamento?`,
+    [
+      `Frentes, intervalos, alinhamento e cadência, para uniformidade visual e disciplina`,
+      `A escolha de música no final`,
+      `A decoração do palco`,
+      `A cor das fitas nos crachás`
+    ],
+    0,
+    `Alinhamento/cadência são aspetos-base de rigor e uniformidade.`
+  ),
+  q(
+    `44) Qual opção corresponde melhor ao propósito de uma guarda de honra?`,
+    [
+      `Prestar homenagem/saudação solene, enquadrando a receção e a dignidade do ato`,
+      `Substituir a segurança do perímetro`,
+      `Servir apenas como “cenário” para fotografia`,
+      `Evitar a necessidade de convite`
+    ],
+    0,
+    `Guarda de honra tem função simbólica/cerimonial de homenagem e enquadramento.`
+  ),
+  q(
+    `45) Em cerimónias, o que faz uma opção errada ser “plausível” (e por isso perigosa em teste)?`,
+    [
+      `Confundir etiqueta social com regra militar (ex.: achar que aperto de mão substitui continência)`,
+      `Ser totalmente absurda e fora do tema`,
+      `Depender do horóscopo`,
+      `Não ter palavras técnicas`
+    ],
+    0,
+    `A matéria alerta para diferenças entre protocolo social e normas militares.`
+  ),
+  q(
+    `46) Qual atitude é mais correta ao circular numa área de cerimónia já organizada?`,
+    [
+      `Evitar atravessar zonas formais, manter discrição e respeitar a disposição estabelecida`,
+      `Circular pelo meio para chegar mais rápido`,
+      `Mudar cadeiras para “melhorar a vista”`,
+      `Interromper para cumprimentar toda a gente`
+    ],
+    0,
+    `Respeito pela organização e discrição são princípios básicos em atos solenes.`
+  ),
+  q(
+    `47) Se houver dúvida sobre colocação (lugares/precedências), a prática mais adequada é:`,
+    [
+      `Confirmar previamente com quem coordena o cerimonial/protocolo e manter coerência`,
+      `Decidir no momento para parecer confiante`,
+      `Perguntar ao público`,
+      `Adotar sempre a ordem de chegada`
+    ],
+    0,
+    `A matéria favorece validação prévia e coerência, para evitar constrangimentos.`
+  ),
+  q(
+    `48) Qual opção descreve melhor “erro de cerimónia” típico?`,
+    [
+      `Trocar posições de entidades de forma visível, criando inversão de precedência sem justificação`,
+      `Ensaiar e cumprir a sequência`,
+      `Sinalizar claramente entradas e saídas`,
+      `Garantir pontualidade`
+    ],
+    0,
+    `Inversões visíveis e injustificadas são falhas clássicas de protocolo/cerimonial.`
+  ),
+  q(
+    `49) Em ato com condecorações, o objetivo da sequência cerimonial é:`,
+    [
+      `Garantir solenidade, clareza do momento e respeito institucional por quem recebe e por quem impõe`,
+      `Acelerar ao máximo para terminar cedo`,
+      `Permitir improviso para ser mais emotivo`,
+      `Evitar qualquer anúncio público`
+    ],
+    0,
+    `O ato é formal e procura solenidade e clareza.`
+  ),
+  q(
+    `50) Qual opção é mais consistente com a matéria para evitar falhas no dia do ato?`,
+    [
+      `Checklist de cerimónia: símbolos, lugares, sequência, comandos, horários e responsáveis`,
+      `Confiar que “alguém resolve”`,
+      `Eliminar o responsável por área para reduzir hierarquia`,
+      `Não informar ninguém do plano para evitar pressão`
+    ],
+    0,
+    `Planeamento com responsabilidades e verificação reduz falhas.`
   ),
 ];
 
@@ -442,7 +540,7 @@ function build(keepProgress=false){
   const seed=uid();
   CURRENT.seed=seed;
 
-  const base=TEST_PRL_30;
+  const base=TEST_CM_50;
 
   // baralhar perguntas e opções (mantendo a correta)
   const items = shuffle(base).map((qItem,i)=>{
@@ -459,7 +557,7 @@ function build(keepProgress=false){
     };
   });
 
-  CURRENT.items = items.slice(0, 30);
+  CURRENT.items = items.slice(0, 50);
   CURRENT.answers = {};
   CURRENT.key = Object.fromEntries(CURRENT.items.map(it=>[it.id,it.correct]));
   CURRENT.locked=false;
@@ -590,7 +688,7 @@ function evaluate(){
 
 function exportTxt(){
   const lines=[];
-  lines.push(`PRL — Resultados`);
+  lines.push(`Cerimonial Militar — Resultados`);
   lines.push(`Certas: ${$cRight.textContent}`);
   lines.push(`Erradas: ${$cWrong.textContent}`);
   lines.push(`Em branco: ${$cBlank.textContent}`);
@@ -615,7 +713,7 @@ function exportTxt(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=`resultado_prl_30_materia_completa.txt`;
+  a.download=`resultado_cerimonial_50.txt`;
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
