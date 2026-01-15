@@ -93,464 +93,485 @@ const $start  = el('#startBtn');
 const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 
-let CURRENT = { testId:'CM_50_SLIDES_CM1_CM2', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'CM_50_SLIDES_CM1_CM2_V2', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
 /* ==========================================================
-   CERIMONIAL MILITAR — 50 perguntas (APENAS SLIDES CM1+CM2)
-   - Sem exigir números de leis
-   - Distratores plausíveis (sem “ao calhas”)
+   CERIMONIAL MILITAR — 50 perguntas (VERSÃO 2)
+   APENAS SLIDES CM1+CM2 | SEM REPETIR AS 50 ANTERIORES
    ========================================================== */
 const TEST_CM_50 = [
-  // -------------------- Protocolo / precedências / princípios --------------------
+  // -------------------- Protocolo / precedências / regras finas --------------------
   q(
-    `1) (V/F) Em cerimónias oficiais e ocasiões de representação do Estado, deve ser assegurada a presença de titulares dos vários órgãos do âmbito correspondente à entidade organizadora, bem como do escalão imediatamente inferior.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas quando exista mesa de honra`, `Falso, porque basta o órgão superior`],
+    `1) (V/F) Quando duas altas entidades têm a mesma posição protocolar, precede a que resulta de eleição popular (se aplicável).`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias locais`, `Falso, porque vale sempre a antiguidade primeiro`],
     0,
-    `Princípio apresentado nos slides: garantir pluralismo e representação dos órgãos, incluindo escalão inferior.`
+    `Slides: entre entidades de idêntica posição, precede a cujo título resultar de eleição popular.`
   ),
   q(
-    `2) (V/F) A representação de uma alta entidade por outra só pode ocorrer quando exista previsão legal expressa.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias militares`, `Falso, porque a representação é sempre livre`],
+    `2) (V/F) Entre entidades com igual título, a regra geral é preceder quem tiver mais antiguidade no exercício do cargo, salvo exceções indicadas nos slides.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em atos não oficiais`, `Falso, porque a precedência é aleatória entre iguais`],
     0,
-    `Nos slides: a representação só pode fazer-se ao abrigo de disposição legal expressa.`
+    `Slides: “igual título” → antiguidade no cargo, salvo regra em contrário.`
   ),
   q(
-    `3) (V/F) A lista de precedências apresentada nos slides prevalece mesmo em cerimónias não oficiais, para as altas entidades públicas.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em atos do Governo`, `Falso, porque só vale em cerimónias oficiais`],
-    0,
-    `Nos slides: regra de prevalência da lista de precedências para altas entidades públicas.`
-  ),
-  q(
-    `4) Em termos de precedência absoluta, quem é indicado nos slides como presidindo em qualquer cerimónia oficial em que esteja presente?`,
+    `3) Nos slides, “igual título” é apresentado como diferente de:`,
     [
-      `Presidente da República`,
+      `“estar na mesma posição protocolar”`,
+      `“ter o mesmo posto militar”`,
+      `“ser da mesma área ministerial”`,
+      `“integrar o mesmo órgão de soberania”`
+    ],
+    0,
+    `Slides: “igual título” ≠ estar na mesma posição protocolar (nem funções idênticas).`
+  ),
+  q(
+    `4) (V/F) Segundo os slides, o Presidente da República não se pode fazer representar por ninguém, e um delegado pessoal não goza de precedência sobre entidades mais categorizadas.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas fora do território nacional`, `Falso, porque pode delegar em qualquer oficial`],
+    0,
+    `Slides: PR não pode fazer-se representar; delegado pessoal não “herda” precedência.`
+  ),
+  q(
+    `5) Em caso de substituição constitucional, quem assume o estatuto protocolar de Presidente da República interino (nos slides)?`,
+    [
       `Presidente da Assembleia da República`,
       `Primeiro-Ministro`,
-      `Presidente do Supremo Tribunal de Justiça`
+      `Presidente do Supremo Tribunal de Justiça`,
+      `Chefe do Estado-Maior-General das Forças Armadas`
     ],
     0,
-    `Nos slides (órgãos de soberania/precedências): o Presidente da República tem precedência absoluta.`
+    `Slides: PR é substituído, nos termos constitucionais, pelo Presidente da AR (PR interino).`
   ),
   q(
-    `5) Os “Órgãos de soberania” indicados nos slides são:`,
+    `6) Segundo os slides, num ato realizado na Assembleia da República, quem preside sempre, mesmo com o Presidente da República presente?`,
     [
-      `Presidente da República, Assembleia da República, Governo e Tribunais`,
-      `Presidente da República, Governo, Forças Armadas e Autarquias`,
-      `Assembleia da República, Governo, Autarquias e Regiões Autónomas`,
-      `Presidente da República, Conselho de Estado, Governo e Tribunais`
+      `Presidente da Assembleia da República`,
+      `Presidente da República`,
+      `Primeiro-Ministro`,
+      `Presidente do Tribunal Constitucional`
     ],
     0,
-    `Nos slides: enunciação dos órgãos de soberania conforme a Constituição.`
+    `Slides: na AR, o Presidente da AR preside sempre.`
   ),
   q(
-    `6) (V/F) A representação dos órgãos de composição pluripartidária deve incluir sempre membros da maioria e da oposição.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em sessões parlamentares`, `Falso, porque depende do anfitrião`],
+    `7) (V/F) Nos slides, o Primeiro-Ministro pode fazer-se representar por um ministro da sua escolha, que passa a gozar do respetivo estatuto protocolar.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias militares`, `Falso, porque só pode ser por Secretário de Estado`],
     0,
-    `Nos slides: regra de presença de maioria e oposição na representação de órgãos pluripartidários.`
+    `Slides: PM pode ser representado por ministro da sua escolha, com estatuto protocolar respetivo.`
   ),
   q(
-    `7) (V/F) O luto nacional é declarado pelo Governo, que fixa a duração e o âmbito.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só por despacho interno`, `Falso, porque é declarado pelo Presidente da República`],
+    `8) Numa cerimónia de natureza diplomática, qual ministro precede os outros, segundo os slides?`,
+    [
+      `Ministro dos Negócios Estrangeiros`,
+      `Ministro da Defesa Nacional`,
+      `Ministro da Administração Interna`,
+      `Ministro da Justiça`
+    ],
     0,
-    `Nos slides: luto nacional é declarado pelo Governo, com duração e âmbito.`
+    `Slides: em cerimónias diplomáticas, MNE precede todos os outros.`
+  ),
+  q(
+    `9) (V/F) Nos slides, os Secretários e Subsecretários de Estado podem representar os respetivos ministros na ausência ou impedimento destes.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se houver despacho do Protocolo`, `Falso, porque só vice-ministros podem`],
+    0,
+    `Slides: podem representar os respetivos ministros (ausência/impedimento).`
   ),
 
-  // -------------------- Seating / galhardetes --------------------
+  // -------------------- Poder local (regras práticas) --------------------
   q(
-    `8) Segundo os slides, o “seating” (ímpar) numa tribuna deve seguir a ordem:`,
+    `10) No respetivo concelho, os Presidentes de Câmara Municipal gozam de estatuto protocolar equivalente a:`,
     [
-      `8–6–4–2–1–3–5–7–9`,
-      `9–7–5–3–1–2–4–6–8`,
-      `1–2–3–4–5–6–7–8–9`,
-      `2–4–6–8–1–3–5–7–9`
+      `Ministros`,
+      `Secretários de Estado`,
+      `Chefes de Gabinete`,
+      `Presidentes de Junta de Freguesia`
     ],
     0,
-    `Nos slides: seating ímpar na tribuna = 8–6–4–2–1–3–5–7–9.`
+    `Slides: no concelho, PCM goza do estatuto protocolar dos ministros.`
   ),
   q(
-    `9) Segundo os slides, o “seating” (par) num palco deve seguir a ordem:`,
+    `11) Segundo os slides, os Presidentes de Câmara Municipal presidem a todos os atos:`,
     [
-      `9–7–5–3–1 | 2–4–6–8–10`,
-      `10–8–6–4–2 | 1–3–5–7–9`,
-      `1–3–5–7–9 | 2–4–6–8–10`,
-      `8–6–4–2–1 | 3–5–7–9–10`
+      `Realizados nos Paços do Concelho ou organizados pela respetiva Câmara (com exceções indicadas)`,
+      `Que ocorram em espaço público no concelho, independentemente do organizador`,
+      `Sempre que exista mesa de honra, mesmo fora do concelho`,
+      `Apenas quando não haja presença de qualquer membro do Governo`
     ],
     0,
-    `Nos slides: seating par no palco = 9–7–5–3–1 | 2–4–6–8–10.`
+    `Slides: presidência em Paços do Concelho ou atos organizados pela Câmara, salvo exceções (PR/PAR/PM, etc.).`
   ),
   q(
-    `10) Nos slides, a posição das altas entidades num séquito deve ser:`,
-    [
-      `5–3–1–2–4`,
-      `1–2–3–4–5`,
-      `3–1–2–4–5`,
-      `2–4–1–3–5`
-    ],
+    `12) (V/F) No respetivo concelho, o Presidente da Assembleia Municipal segue imediatamente o Presidente da Câmara.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias militares`, `Falso, porque segue o Comandante-Geral da GNR`],
     0,
-    `Nos slides: posição num séquito = 5–3–1–2–4.`
-  ),
-  q(
-    `11) (V/F) O galhardete simboliza a presença de uma Alta Entidade e pode estar num mastro ou na tribuna.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só em mastros interiores`, `Falso, porque só pode estar na tribuna`],
-    0,
-    `Nos slides: galhardete simboliza presença e pode estar em mastro ou tribuna.`
-  ),
-  q(
-    `12) (V/F) Em caso de duas Altas Entidades com direito a galhardete, coloca-se apenas o galhardete da entidade com maior precedência.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas se for no exterior`, `Falso, porque se colocam sempre ambos`],
-    0,
-    `Nos slides: só é colocado o galhardete da entidade com maior precedência.`
-  ),
-  q(
-    `13) (V/F) O galhardete dos Ministros é igual ao dos Secretários de Estado, segundo os slides.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias da GNR`, `Falso, porque cada ministério tem padrão diferente`],
-    0,
-    `Nos slides: galhardete dos Ministros é igual ao dos Secretários de Estado.`
-  ),
-  q(
-    `14) (V/F) Segundo os slides, nunca se utiliza a Bandeira Nacional para descerrar placas.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em atos religiosos`, `Falso, pode usar-se se for em interior`],
-    0,
-    `Nos slides: “Nunca se utiliza a Bandeira Nacional para descerrar placas.”`
+    `Slides: PAM segue imediatamente o PCM no concelho.`
   ),
 
-  // -------------------- Hinos / marchas / toques --------------------
+  // -------------------- Equiparações / cônjuges --------------------
   q(
-    `15) O Hino Nacional indicado nos slides (símbolos nacionais) é:`,
-    [`A Portuguesa`, `A Maria da Fonte`, `O Hino da GNR`, `A Marcha do Combatente`],
+    `13) (V/F) Se o cônjuge (ou união de facto) de uma alta entidade for convidado e estiver a acompanhá-la, é-lhe atribuído lugar equiparado à mesma.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só em cerimónias nacionais`, `Falso, porque acompanhantes nunca têm equiparação`],
     0,
-    `Nos slides: o Hino Nacional é “A Portuguesa”.`
+    `Slides: cônjuge/união de facto convidado → lugar equiparado quando acompanha.`
   ),
   q(
-    `16) O Hino da Maria da Fonte (nos slides) é associado, entre outros, a:`,
+    `14) Nos slides, as altas entidades públicas não mencionadas explicitamente na lista são enquadradas por:`,
     [
-      `Presidente da Assembleia da República e Primeiro-Ministro`,
-      `Apenas ao Presidente da República`,
-      `Apenas a Chefes de Estado estrangeiros`,
-      `Apenas ao Comandante-Geral da GNR`
+      `Aproximação de competências (material e territorial) às entidades listadas`,
+      `Ordem alfabética do cargo`,
+      `Antiguidade do próprio organismo`,
+      `Decisão discricionária do chefe do protocolo local`
     ],
     0,
-    `Nos slides: Hino da Maria da Fonte inclui, entre outros, PAR e PM.`
-  ),
-  q(
-    `17) (V/F) Nos slides, refere-se que um Oficial General tem direito ao Hino da Maria da Fonte.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas se presidir ao ato`, `Falso, porque só ministros têm esse direito`],
-    0,
-    `Afirmação presente nos slides (bloco de hinos/marchas/toques).`
-  ),
-  q(
-    `18) (V/F) Nos slides, é referido que a Marcha de Continência substitui o Hino Nacional.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em desfiles`, `Falso, porque a marcha nunca substitui hinos`],
-    0,
-    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
-  ),
-  q(
-    `19) (V/F) Nos slides, é referido que a Marcha de Continência substitui o Hino da Maria da Fonte.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em recinto fechado`, `Falso, porque a Maria da Fonte tem sempre prioridade`],
-    0,
-    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
-  ),
-  q(
-    `20) (V/F) Entidades estrangeiras equiparadas a nacionais, com direito ao Hino da Maria da Fonte, têm direito aos respetivos Hinos Nacionais.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só se houver banda`, `Falso, porque em Portugal só se toca o Hino Nacional`],
-    0,
-    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
+    `Slides: equiparações por competências material/territorial mais próximas.`
   ),
 
-  // -------------------- Apito / Toque de Sentido à Unidade --------------------
+  // -------------------- Luto nacional (conteúdo sem “número de lei”) --------------------
   q(
-    `21) Segundo os slides, o Comandante-Geral da GNR tem direito, pelo militar de atendimento, a:`,
-    [`4 sinais curtos seguidos`, `5 sinais curtos seguidos`, `3 sinais curtos seguidos`, `1 sinal prolongado`],
+    `15) (V/F) Nos slides, o luto nacional é declarado pelo Governo sob a forma de decreto, definindo duração e âmbito.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas por despacho`, `Falso, porque é sempre declarado pelo Presidente da República`],
     0,
-    `Nos slides: Comandante-Geral = 4 sinais curtos seguidos.`
+    `Slides: Governo declara por decreto, fixando duração e âmbito.`
   ),
   q(
-    `22) Segundo os slides, os Oficiais Generais da GNR têm direito, pelo militar de atendimento, a:`,
-    [`3 sinais curtos seguidos`, `4 sinais curtos seguidos`, `2 sinais curtos seguidos`, `1 sinal prolongado`],
-    0,
-    `Nos slides: Oficiais Generais = 3 sinais curtos seguidos.`
-  ),
-  q(
-    `23) (V/F) Nos slides, os militares da categoria profissional de Sargentos não têm direito aos toques de apito.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, exceto se forem de serviço ao posto`, `Falso, porque têm direito a 1 sinal curto`],
-    0,
-    `Afirmação expressa nos slides.`
-  ),
-  q(
-    `24) O Toque de Sentido à Unidade é descrito nos slides como:`,
+    `16) Segundo os slides, o luto nacional é declarado, entre outros casos, pelo falecimento de:`,
     [
-      `Conjunto de 4 toques (GNR + Unidade + Sentido + toque da Alta Entidade)`,
-      `Conjunto de 3 toques (GNR + Sentido + Alta Entidade)`,
-      `Conjunto de 2 toques (Unidade + Alta Entidade)`,
-      `Um único toque prolongado padronizado`
+      `Presidente da República, Presidente da Assembleia da República e Primeiro-Ministro (e ainda antigos PR)`,
+      `Qualquer Ministro em exercício, sempre`,
+      `Qualquer Chefe de Estado-Maior, automaticamente`,
+      `Qualquer presidente de câmara, no respetivo concelho`
     ],
     0,
-    `Nos slides: Toque de Sentido à Unidade = 4 toques e varia consoante Unidade e AE.`
+    `Slides: enumeração base + antigos Presidentes da República.`
+  ),
+  q(
+    `17) (V/F) Nos slides, o luto nacional também pode ser declarado por falecimento de personalidade ou ocorrência de evento de excecional relevância.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em território continental`, `Falso, porque só por falecimentos de titulares`],
+    0,
+    `Slides: admite-se por personalidade ou evento de excecional relevância.`
   ),
 
-  // -------------------- Condecorações --------------------
+  // -------------------- Guardas honoríficas (cavalaria) --------------------
   q(
-    `25) (V/F) Nos slides, as condecorações devem ser colocadas pela sua precedência.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em farda de gala`, `Falso, porque a ordem é sempre cronológica`],
+    `18) (V/F) Nos slides, as Guardas Honoríficas são forças armadas de cavalaria presentes em atos solenes ou cerimónias de grande representatividade.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias internas`, `Falso, porque são forças apeadas`],
     0,
-    `Afirmação presente nos slides.`
+    `Slides: definição de guardas honoríficas (cavalaria).`
   ),
   q(
-    `26) (V/F) Nos slides, salvo algumas Ordens Honoríficas, as Medalhas Militares precedem as medalhas civis.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias da GNR`, `Falso, porque civis precedem sempre`],
-    0,
-    `Afirmação presente nos slides.`
-  ),
-  q(
-    `27) (V/F) Nos slides, uma medalha de um País estrangeiro precede uma medalha de Organização Internacional.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se for condecoração militar`, `Falso, porque organizações internacionais precedem países`],
-    0,
-    `Afirmação presente nos slides.`
-  ),
-  q(
-    `28) Nos slides (exemplo com Ordem Militar da Torre e Espada), a Grã-Cruz/Grande-Colar corresponde, em honras militares, a:`,
+    `19) Segundo os slides, o serviço de Guarda Honorífica é normalmente restrito a edifícios do Estado, nomeadamente:`,
     [
-      `General`,
-      `Coronel`,
-      `Tenente-Coronel`,
-      `Major`
+      `Palácio Presidencial, Palácio Nacional da Ajuda, Palácio Nacional de Queluz, Palácio Nacional de São Bento, MAI e Comando-Geral da Guarda`,
+      `Qualquer quartel da GNR e qualquer sede de câmara municipal`,
+      `Apenas Palácio Presidencial e MAI`,
+      `Apenas edifícios militares (academias e escolas)`
     ],
     0,
-    `Nos slides: Grande-Colar e Grã-Cruz → honras correspondentes a General.`
+    `Slides: lista exemplificativa de locais onde normalmente terá lugar.`
   ),
   q(
-    `29) Nos slides (mesmo exemplo), o grau “Grande-Oficial” corresponde, em honras militares, a:`,
+    `20) (V/F) Nos slides, a Guarda Honorífica é expressamente autorizada pelo General Comandante-Geral.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas quando existir Chefe de Estado estrangeiro`, `Falso, porque é autorizada pelo chefe do protocolo`],
+    0,
+    `Slides: autorização expressa pelo General Comandante-Geral.`
+  ),
+  q(
+    `21) Nas Guardas Honoríficas, depois de postadas, em regra ficam em “sentido” para convidados oficiais e fazem “apresentar-arma”:`,
     [
-      `Coronel`,
-      `Tenente-Coronel`,
-      `Major`,
-      `Alferes`
-    ],
-    0,
-    `Nos slides: Grande-Oficial → honras correspondentes a Coronel.`
-  ),
-  q(
-    `30) Nos slides (mesmo exemplo), o grau “Cavaleiro/Dama” corresponde, em honras militares, a:`,
-    [
-      `Alferes`,
-      `Major`,
-      `Tenente-Coronel`,
-      `Coronel`
-    ],
-    0,
-    `Nos slides: Cavaleiro/Dama → honras correspondentes a Alferes.`
-  ),
-
-  // -------------------- Entidades com honras / exemplos práticos --------------------
-  q(
-    `31) (V/F) Nos slides, é reforçado que as entidades civis com direito a honras militares carecem de normativo legal que o suporte.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só para entidades nacionais`, `Falso, porque o protocolo basta`],
-    0,
-    `Nos slides (casos práticos): necessidade de suporte normativo para honras militares.`
-  ),
-  q(
-    `32) Num caso prático dos slides: numa Guarda de Honra a um Ministro do Interior estrangeiro (Espanha), a banda deve executar:`,
-    [
-      `Os dois Hinos Nacionais`,
-      `O Hino da Maria da Fonte`,
-      `A Marcha de Continência apenas`,
-      `O Hino Nacional português e, em vez do outro, a Maria da Fonte`
-    ],
-    0,
-    `Nos slides (caso prático): para ministro estrangeiro, executam-se os dois hinos nacionais.`
-  ),
-  q(
-    `33) (V/F) Nos slides (caso prático), refere-se que Sua Santidade o Papa, por ser Chefe de Estado do Vaticano, tem direito a honras militares.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se visitar quartel`, `Falso, porque só chefes de Estado “laicos” têm direito`],
-    0,
-    `Nos slides: Papa enquanto Chefe de Estado tem direito a honras.`
-  ),
-
-  // -------------------- Formas de tratamento --------------------
-  q(
-    `34) Segundo os slides (formas de tratamento), o inferior falando a um superior hierárquico deve designá-lo:`,
-    [
-      `Pelo posto/função, precedido de “Senhor” (podendo “Senhor” ser substituído por “Meu”)`,
-      `Apenas pelo primeiro nome para reduzir formalismo`,
-      `Pelo posto/função, mas sem qualquer forma de tratamento`,
-      `Pelo número (mesmo em oficiais), para uniformizar`
-    ],
-    0,
-    `Nos slides: inferior usa “Senhor” (ou “Meu”, tradicional) + posto/função do superior.`
-  ),
-  q(
-    `35) (V/F) Nos slides, refere-se que, no Exército, oficiais com curso de engenharia/medicina/farmácia podem ser tratados pelos títulos correspondentes.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só fora de serviço`, `Falso, porque é sempre apenas pelo posto`],
-    0,
-    `Afirmação presente nos slides (formas de tratamento).`
-  ),
-
-  // -------------------- Sentinela Honorífica / posições --------------------
-  q(
-    `36) Segundo os slides, a Sentinela Honorífica assume a posição de “perfilar-arma”, nomeadamente:`,
-    [
-      `Para os restantes oficiais (Armada/Exército/Força Aérea/GNR) e para condecorados Cavaleiro/Dama da OMTE`,
-      `Sempre que passe um féretro (civil ou militar)`,
-      `Em qualquer desfile de força, ao comandante da força`,
-      `Sempre que passe uma entidade civil sem direito a honras`
-    ],
-    0,
-    `Nos slides: perfilar-arma associado aos restantes oficiais e a condecorados Cavaleiro/Dama (exemplo).`
-  ),
-  q(
-    `37) Segundo os slides, a Sentinela Honorífica assume a posição de “sentido”, nomeadamente:`,
-    [
-      `Para sargentos das Forças Armadas e GNR; em cortejos religiosos; e em desfiles de forças (ao comandante)`,
-      `Para chefes de Estado estrangeiros, sempre em “apresentar-arma”`,
+      `Apenas à chegada/saída e passagem da entidade para a qual estão postadas (com exceção indicada)`,
+      `Sempre que qualquer convidado oficial entra no edifício`,
       `Apenas durante execução do Hino Nacional`,
-      `Apenas em atos fúnebres de Estado`
+      `Sempre que o comandante da força o entenda`
     ],
     0,
-    `Nos slides: “sentido” para sargentos, cortejos religiosos e desfile de forças (prestando continência ao comandante).`
+    `Slides: “apresentar-arma” só à chegada/saída/passagem da entidade (exceção: jantares oficiais do Chefe de Estado).`
   ),
   q(
-    `38) Segundo os slides, o movimento “funeral-arma” aplica-se:`,
+    `22) (V/F) Nos jantares oficiais do Chefe de Estado, a Guarda Honorífica faz “apresentar-arma” para o Chefe de Estado anfitrião e para o convidado.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só se houver banda`, `Falso, porque só para o anfitrião`],
+    0,
+    `Slides: exceção explícita para jantares oficiais.`
+  ),
+  q(
+    `23) Segundo os slides, sempre que possível, à entrada do local onde está postada uma Guarda Honorífica devem ser colocadas:`,
     [
-      `À passagem de qualquer féretro (civil ou militar)`,
-      `Apenas à passagem do Presidente da República`,
-      `Apenas em cerimónias com Estandarte Nacional`,
-      `Apenas em atos de condecoração`
+      `Duas Sentinelas Honoríficas`,
+      `Quatro Sentinelas Honoríficas`,
+      `Um cordão de honra de oficiais subalternos`,
+      `Um piquete de guarda de polícia`
     ],
     0,
-    `Nos slides: funeral-arma à passagem de qualquer féretro.`
+    `Slides: “serão colocadas duas Sentinelas Honoríficas”.`
   ),
 
-  // -------------------- Força militar / espada (continências) --------------------
+  // -------------------- Alas de honra (simples) --------------------
   q(
-    `39) Nos slides, quando a força está armada de espada, a posição “perfilar-arma” é usada quando:`,
-    [
-      `A força presta continência em “sentido” e em “perfilar-arma/ombro-arma”`,
-      `A força presta continência em “apresentar-arma”`,
-      `A força está em funeral-arma`,
-      `A força desfila em continência`
-    ],
+    `24) (V/F) A formatura em alas tem normalmente por fim prestar honras ao Presidente da República, a Chefes de Estado estrangeiros e honras fúnebres a altas entidades (quando indicado/determinado).`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas para Chefes de Governo`, `Falso, porque alas só se usam para estandartes`],
     0,
-    `Nos slides: armado de espada → perfilar-arma nas situações em que a força presta continência em sentido e perfilar/ombro-arma.`
+    `Slides: finalidades típicas da formatura em alas.`
   ),
   q(
-    `40) Nos slides, a ação “abater-espada” (armado de espada) ocorre quando:`,
+    `25) Segundo os slides (MOUGNR), o uniforme a utilizar numa Ala de Honra (simples) é:`,
     [
-      `A força presta continência (“sentido”) a entidades com precedência igual ou superior a oficial superior, e quando presta “apresentar-arma”`,
-      `A força executa funeral-arma em qualquer caso`,
-      `A força está em descanso`,
-      `A força acompanha estandartes nacionais`
+      `Grande Uniforme Honorífico`,
+      `Grande Uniforme Aligeirado`,
+      `Uniforme de Representação`,
+      `Uniforme de serviço diário`
     ],
     0,
-    `Nos slides: abater-espada em continência a entidades com precedência elevada e em situações de apresentar-arma.`
+    `Slides: Ala de Honra → GUH.`
   ),
   q(
-    `41) (V/F) Nos slides, durante a revista às forças, o militar armado de espada acompanha a entidade que preside na posição de “perfilar-arma”.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em exterior`, `Falso, porque acompanha em “apresentar-arma”`],
+    `26) (V/F) Nos slides, militares de cavalaria em Ala de Honra podem executar armados de espada ou lança.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em honras fúnebres`, `Falso, porque é sempre apenas pistola`],
     0,
-    `Afirmação presente nos slides (revista às forças).`
+    `Slides: cavalaria poderá executar armada de espada ou lança.`
+  ),
+  q(
+    `27) Nas Alas de Honra, depois de postadas, ficam em “sentido” para convidados oficiais e em “apresentar-arma”:`,
+    [
+      `Apenas à chegada/saída e passagem da entidade para a qual estão postadas`,
+      `Sempre que o séquito se movimenta`,
+      `Apenas durante o desfile final`,
+      `Apenas quando passa o comandante da unidade`
+    ],
+    0,
+    `Slides: regra geral de “apresentar-arma” na passagem/chegada/saída.`
+  ),
+  q(
+    `28) (V/F) Em honras fúnebres (Ala de Honra), a posição “funeral-arma” ocorre apenas e durante o trajeto do féretro.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só dentro de igrejas`, `Falso, porque funeral-arma é permanente desde a postagem`],
+    0,
+    `Slides: “funeral-arma” apenas durante o trajeto do féretro.`
+  ),
+  q(
+    `29) Em Honras Fúnebres de Estado / Honras de Panteão Nacional, os slides indicam que as Alas fazem:`,
+    [
+      `“apresentar-arma” à passagem do Presidente da República e durante o Hino Nacional; “funeral-arma” à passagem do féretro`,
+      `“sentido” à passagem do Presidente da República e “apresentar-arma” ao féretro`,
+      `“apresentar-arma” apenas ao féretro e nunca ao Presidente da República`,
+      `“funeral-arma” ao Presidente da República e “apresentar-arma” ao féretro`
+    ],
+    0,
+    `Slides: regra específica para Estado/Panteão.`
   ),
 
-  // -------------------- Guarda de Honra (definição / quando presta honras) --------------------
+  // -------------------- Escolta de honra --------------------
   q(
-    `42) A Guarda de Honra é descrita nos slides como uma força armada de efetivo variável para:`,
+    `30) Segundo os slides, a Escolta de Honra destina-se a:`,
     [
-      `Acompanhar estandartes nacionais; prestar honras em atos solenes; prestar honras fúnebres`,
-      `Acompanhar apenas altas entidades, nunca estandartes`,
-      `Executar apenas tarefas de segurança perimetral`,
-      `Substituir a escolta de honra em qualquer circunstância`
+      `Acompanhar estandartes nacionais; acompanhar altas entidades; acompanhar féretros em honras fúnebres`,
+      `Acompanhar apenas estandartes nacionais`,
+      `Substituir a Guarda de Honra em qualquer cerimónia`,
+      `Garantir segurança perimetral sem função cerimonial`
     ],
     0,
-    `Nos slides: funções-base da Guarda de Honra.`
+    `Slides: três finalidades da escolta de honra.`
   ),
   q(
-    `43) (V/F) Nos slides, depois de postada, a Guarda de Honra só tem de prestar honras à passagem do Estandarte Nacional, do Presidente da República e de entidades de categoria superior àquelas a quem se destina.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se estiver em recinto fechado`, `Falso, porque presta sempre a todas as entidades`],
+    `31) (V/F) Nos slides, as escoltas de honra destinadas a acompanhar altas entidades devem ser a cavalo ou motorizadas.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas fora de localidades`, `Falso, porque devem ser sempre apeadas`],
     0,
-    `Regra apresentada nos slides.`
-  ),
-  q(
-    `44) Nos slides, a Guarda de Honra toma, porém, a posição de “sentido” à passagem de:`,
-    [
-      `Forças militares, funerais, cortejos religiosos e entidades civis/militares com direito a honras`,
-      `Apenas do Presidente da República`,
-      `Apenas de ministros e secretários de Estado`,
-      `Apenas quando houver banda de música`
-    ],
-    0,
-    `Nos slides: lista de situações em que toma “sentido”.`
-  ),
-  q(
-    `45) Segundo os slides, quando a Guarda de Honra presta continência a uma entidade civil/militar que não preside à cerimónia, o Comandante deve dizer:`,
-    [
-      `“Vossa Excelência, (posto/função) dá licença, Guarda de Honra para Sua Excelência …”`,
-      `“Guarda de Honra, apresentar armas ao visitante” (sem mais formalidade)`,
-      `“Autorizo a passagem da entidade” (sem tratamento)`,
-      `“A cerimónia fica suspensa para cumprimentos”`
-    ],
-    0,
-    `Fórmula indicada nos slides para este caso.`
+    `Slides: escoltas para altas entidades → a cavalo ou motorizadas.`
   ),
 
-  // -------------------- Comandante de Guarda de Honra (sequência) --------------------
+  // -------------------- Dia de Unidade (sequência chegada AE) --------------------
   q(
-    `46) Na sequência descrita nos slides para o Comandante de Guarda de Honra: ao avistar a entidade, manda primeiro:`,
+    `32) Segundo os slides, quando a cerimónia (Dia de Unidade) tem lugar no interior do aquartelamento, qual a sequência correta após a chegada da AE?`,
     [
-      `“Firme” e “Sentido”`,
-      `“Ombro-arma/Perfilar-arma”`,
-      `“Apresentar-arma”`,
-      `“Descansar” e “Sentido”`
+      `Continência da Guarda de Polícia → Toque de Sentido à Unidade → Içar do galhardete → Toque de Descansar → Apresentação do Oficial/Sargento de Dia`,
+      `Toque de Sentido → Continência da Guarda de Polícia → Apresentação do Oficial/Sargento de Dia → Içar do galhardete → Descansar`,
+      `Içar do galhardete → Continência da Guarda de Polícia → Toque de Descansar → Toque de Sentido → Apresentação do Oficial/Sargento de Dia`,
+      `Apresentação do Oficial/Sargento de Dia → Continência da Guarda de Polícia → Toque de Sentido → Toque de Descansar → Içar do galhardete`
     ],
     0,
-    `Nos slides: ao avistar → “firme” e “sentido”.`
+    `Slides (Dia de Unidade): sequência indicada para interior do aquartelamento.`
   ),
   q(
-    `47) Ainda nessa sequência: quando a entidade e séquito se aproximam, o Comandante manda:`,
+    `33) No Dia de Unidade, após o deslocamento da AE para o local da formatura, os slides indicam que se seguem:`,
     [
-      `“Ombro-arma” / “Perfilar-arma”`,
-      `“Apresentar-arma”`,
-      `“Descansar”`,
-      `“Funeral-arma”`
+      `Honras militares pelas forças em parada (continência da Guarda de Honra com Maria da Fonte ou marcha) e revista, e depois início da cerimónia`,
+      `Início imediato da cerimónia sem honras, para poupar tempo`,
+      `Apenas revista, sem continência da Guarda de Honra`,
+      `Execução do Hino Nacional obrigatoriamente e fim das honras`
     ],
     0,
-    `Nos slides: na aproximação → “ombro-arma/perfilar-arma”.`
-  ),
-  q(
-    `48) Nos slides, o Comandante manda “apresentar-arma” apenas quando:`,
-    [
-      `A entidade se tiver colocado no ponto de continência`,
-      `A entidade entra no perímetro do quartel`,
-      `A banda começa o Hino Nacional`,
-      `A entidade termina a revista`
-    ],
-    0,
-    `Nos slides: “apenas quando a entidade se tiver colocado no ponto de continência”.`
+    `Slides: honras militares + revista, e depois início da cerimónia.`
   ),
 
-  // -------------------- Revista à Guarda de Honra / estandarte / acompanhamento --------------------
+  // -------------------- Imposição de condecorações (“levas”) --------------------
   q(
-    `49) Nos slides, se a Guarda de Honra tiver Estandarte Nacional, após a continência ser recebida e correspondida, a entidade:`,
-    [
-      `Aproxima-se a cerca de 5 m do Estandarte e saúda-o, passando depois à revista (se entender)`,
-      `Dirige-se diretamente ao palanque e inicia a intervenção`,
-      `Saúda o Estandarte apenas no final, após o desfile`,
-      `Ordena a desintegração do Estandarte antes da revista`
-    ],
+    `34) (V/F) Nos slides, a sequência das “levas” respeita a precedência das condecorações, as classes/graus, a antiguidade dos militares e a categoria dos funcionários civis agraciados.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só se houver mais de uma condecoração`, `Falso, porque respeita apenas a antiguidade`],
     0,
-    `Regra indicada nos slides.`
+    `Slides: critérios cumulativos para a sequência das levas.`
   ),
   q(
-    `50) Nos slides, a revista à Guarda de Honra é passada começando:`,
+    `35) Segundo os slides, uma “leva” pode impor uma determinada condecoração a vários militares com diferentes graus/classes. Nesse caso, deve:`,
     [
-      `Pelo flanco direito da primeira fileira até ao flanco esquerdo, contornando e seguindo pela frente das outras fileiras em sentidos alternados`,
-      `Pelo centro da formatura e depois para os flancos`,
-      `Pela retaguarda, avançando para a frente por fileiras`,
-      `Pelo flanco esquerdo, sempre no mesmo sentido, sem contornar`
+      `Fazer referência aos militares por graus/classes à medida que vão sendo chamados`,
+      `Chamar sempre por ordem alfabética, ignorando graus/classes`,
+      `Agrupar por unidade e só depois por graus/classes`,
+      `Repetir o mesmo grau/classe para todos, por simplificação`
     ],
     0,
-    `Descrição da revista nos slides.`
+    `Slides: referência por graus/classes à medida que são chamados.`
+  ),
+  q(
+    `36) (V/F) Nos slides, militares não pertencentes à Guarda e outras entidades civis podem ser convidados a impor condecorações.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas militares`, `Falso, porque só o Comandante pode impor`],
+    0,
+    `Slides: podem ser convidados (militares fora da Guarda e entidades civis).`
+  ),
+  q(
+    `37) Segundo os slides, apenas podem ser convidadas a impor condecorações militares as entidades civis que:`,
+    [
+      `Têm direito a honras militares`,
+      `Forem as mais antigas na função`,
+      `Pertencerem ao poder local do concelho`,
+      `Tenham participado na organização do evento`
+    ],
+    0,
+    `Slides: restrição explícita às entidades civis com direito a honras militares.`
+  ),
+
+  // -------------------- Homenagem aos mortos (sequência + posições) --------------------
+  q(
+    `38) Na homenagem aos mortos (slides), qual sequência está correta?`,
+    [
+      `Sentido à Unidade → (depósito de coroa, se existir) → Silêncio → Homenagem aos Mortos → Prece → Alvorada → Descansar à Unidade`,
+      `Silêncio → Sentido à Unidade → Alvorada → Prece → Homenagem aos Mortos → Descansar`,
+      `Sentido → Alvorada → Silêncio → Deposição de coroa → Prece → Descansar`,
+      `Descansar → Sentido → Homenagem aos Mortos → Silêncio → Alvorada → Prece`
+    ],
+    0,
+    `Slides: sequência indicada (inclui depósito de coroa se existir).`
+  ),
+  q(
+    `39) Nos slides, durante a homenagem aos mortos, a indicação de posições de arma associada aos toques é:`,
+    [
+      `Durante “depósito de coroa”: ombro-arma; “silêncio”: apresentar-arma; “homenagem aos mortos”: ombro-arma`,
+      `Durante “depósito de coroa”: apresentar-arma; “silêncio”: ombro-arma; “homenagem”: sentido`,
+      `Durante “depósito de coroa”: sentido; “silêncio”: funeral-arma; “homenagem”: apresentar-arma`,
+      `Não existe qualquer associação entre toques e posições`
+    ],
+    0,
+    `Slides: notas entre parênteses/aspas com “OMBRO-ARMA” e “APRESENTAR-ARMA” associadas aos momentos.`
+  ),
+
+  // -------------------- Estandartes heráldicos / guiões / flâmulas --------------------
+  q(
+    `40) (V/F) Nos slides, porta-estandartes de bandeiras heráldicas, guiões e flâmulas (subunidades) são armados de pistola, independentemente do fardamento, com exceção das forças de cavalaria armadas de espada.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só em cerimónias internas`, `Falso, porque são sempre desarmados`],
+    0,
+    `Slides: regra do armamento (pistola) + exceção cavalaria com espada.`
+  ),
+  q(
+    `41) Segundo os slides, os estandartes heráldicos, guiões e flâmulas das subunidades devem ser conduzidos, respetivamente, por:`,
+    [
+      `Sargento-Ajudante; Primeiro/Segundo-Sargento; Cabo`,
+      `Oficial subalterno; Sargento-Ajudante; Cabo`,
+      `Primeiro-Sargento; Segundo-Sargento; Guarda`,
+      `Cabo; Primeiro-Sargento; Sargento-Ajudante`
+    ],
+    0,
+    `Slides: hierarquia de condução (estandarte heráldico / guião / flâmula).`
+  ),
+  q(
+    `42) (V/F) Nos slides, estandartes heráldicos, guiões e flâmulas das subunidades têm escolta própria e recebem continência.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em dias festivos`, `Falso, porque só o Estandarte Nacional recebe`],
+    1,
+    `Slides: não têm escolta própria e não lhes é prestada qualquer continência (nem vão incorporados com o Estandarte Nacional).`
+  ),
+
+  // -------------------- Escolta ao Estandarte Nacional (composição / distâncias) --------------------
+  q(
+    `43) Segundo os slides, quando a unidade leva o Estandarte Nacional, ele é conduzido por:`,
+    [
+      `Um oficial subalterno`,
+      `Um sargento-ajudante`,
+      `Um cabo de elevada antiguidade`,
+      `O comandante da unidade`
+    ],
+    0,
+    `Slides: porta-estandarte do Estandarte Nacional é oficial subalterno.`
+  ),
+  q(
+    `44) A escolta do Estandarte Nacional indicada nos slides inclui:`,
+    [
+      `Dois sargentos e um cabo (além do porta-estandarte)`,
+      `Quatro sargentos e um cabo`,
+      `Dois cabos e um sargento`,
+      `Apenas um cabo à retaguarda`
+    ],
+    0,
+    `Slides: escoltado por dois sargentos e um cabo.`
+  ),
+  q(
+    `45) Nos slides, os dois sargentos da escolta do Estandarte Nacional colocam-se:`,
+    [
+      `A ladear o porta-estandarte a cerca de 1 m`,
+      `Em cunha à frente do porta-estandarte`,
+      `A 2 m, um à frente e outro atrás`,
+      `Na retaguarda, um a cada lado do cabo`
+    ],
+    0,
+    `Slides: sargentos ladeiam a cerca de 1 m (não vão em cunha).`
+  ),
+  q(
+    `46) Segundo os slides, o comandante da escolta do Estandarte Nacional fica:`,
+    [
+      `À direita do porta-estandarte`,
+      `À esquerda do porta-estandarte`,
+      `Sempre atrás do porta-estandarte`,
+      `Sempre à frente do porta-estandarte`
+    ],
+    0,
+    `Slides: comandante da escolta à direita.`
+  ),
+  q(
+    `47) Nos slides, o cabo da escolta do Estandarte Nacional fica à retaguarda do porta-estandarte a cerca de:`,
+    [
+      `1 m a pé e 1,5 m a cavalo`,
+      `1,5 m a pé e 1 m a cavalo`,
+      `2 m em qualquer situação`,
+      `0,5 m em qualquer situação`
+    ],
+    0,
+    `Slides: ~1 m a pé; ~1,5 m a cavalo.`
+  ),
+
+  // -------------------- Fardamento / RUGNR / identificação --------------------
+  q(
+    `48) (V/F) Nos slides, é referido que o regulamento de uniformes define artigos, símbolos identificativos, distintivos e insígnias, condições de utilização e normas de dotação/duração/confeção.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas para cerimónias`, `Falso, porque só define cores e modelos`],
+    0,
+    `Slides: objeto do regulamento de uniformes (conteúdo abrangente).`
+  ),
+  q(
+    `49) Segundo os slides, no desempenho diário da missão, o indicativo de identificação individual é constituído por:`,
+    [
+      `Nome e apelido`,
+      `Apenas o NIM`,
+      `Nome completo (todos os apelidos) obrigatório`,
+      `Grupo sanguíneo e função`
+    ],
+    0,
+    `Slides: placa com nome e apelido (indicativo de identificação individual).`
+  ),
+  q(
+    `50) Nos slides, sobre a placa de identificação individual, qual opção está correta?`,
+    [
+      `Dimensões em regra 7,5 cm × 2,5 cm; no total não mais de 17 letras (incluindo espaços); não pode conter símbolos/pontuação/grupo sanguíneo/abreviaturas`,
+      `Dimensões fixas 10 cm × 3 cm; pode incluir grupo sanguíneo e abreviaturas operacionais`,
+      `Dimensões livres; o importante é ser legível e pode incluir símbolos`,
+      `Apenas o apelido; pode ter pontuação e siglas da unidade`
+    ],
+    0,
+    `Slides: regras de dimensão, limites de letras e proibições de conteúdo.`
   ),
 ];
 
@@ -733,7 +754,7 @@ function exportTxt(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=`resultado_cerimonial_50_slides_cm1_cm2.txt`;
+  a.download=`resultado_cerimonial_50_slides_cm1_cm2_v2.txt`;
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
