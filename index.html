@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — Cerimonial Militar (50)</title>
+<title>Quiz — Cerimonial Militar (50 — Slides CM1+CM2)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -41,7 +41,7 @@
 <div class="wrap">
   <div class="card">
     <h1>Quiz — Cerimonial Militar (50)</h1>
-    <p class="sub">50 questões (matéria completa dos PDFs). Verdadeiro/Falso e escolha múltipla (4 opções). Opções erradas plausíveis. Só no fim vês a correção e a nota (/20). Progresso guardado localmente.</p>
+    <p class="sub">50 questões (apenas matéria dos slides CM1+CM2). Inclui V/F e escolha múltipla (4 opções). Opções erradas plausíveis. Só no fim vês a correção e a nota (/20). Progresso guardado localmente.</p>
 
     <div class="row" style="margin-bottom:12px">
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
@@ -93,444 +93,464 @@ const $start  = el('#startBtn');
 const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
 
-let CURRENT = { testId:'CM_50_CERIMONIAL', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+let CURRENT = { testId:'CM_50_SLIDES_CM1_CM2', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
 function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
 function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
 function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
 
 /* ==========================================================
-   CERIMONIAL MILITAR — 50 perguntas (baseadas nos PDFs)
-   - Inclui V/F e escolha múltipla (4 opções)
-   - Sem referência a leis pelo número
+   CERIMONIAL MILITAR — 50 perguntas (APENAS SLIDES CM1+CM2)
+   - Sem exigir números de leis
+   - Distratores plausíveis (sem “ao calhas”)
    ========================================================== */
 const TEST_CM_50 = [
-  // ---------- V/F (1–25) ----------
+  // -------------------- Protocolo / precedências / princípios --------------------
   q(
-    `1) No protocolo de precedências, a presidência do ato e a ordem de precedência não são sempre a mesma coisa.`,
-    [`Verdadeiro`, `Falso`, `Depende apenas do uniforme`, `Depende apenas do local`],
+    `1) (V/F) Em cerimónias oficiais e ocasiões de representação do Estado, deve ser assegurada a presença de titulares dos vários órgãos do âmbito correspondente à entidade organizadora, bem como do escalão imediatamente inferior.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas quando exista mesa de honra`, `Falso, porque basta o órgão superior`],
     0,
-    `A matéria distingue a ideia de “presidir ao ato” da ordem formal de precedências; há regras e exceções consoante o contexto.`
+    `Princípio apresentado nos slides: garantir pluralismo e representação dos órgãos, incluindo escalão inferior.`
   ),
   q(
-    `2) Em igualdade de categoria, a antiguidade pode influenciar a colocação (ex.: data de posse/eleição/nomeação, conforme o caso).`,
-    [`Verdadeiro`, `Falso`, `Só conta a idade`, `Só conta o posto militar`],
+    `2) (V/F) A representação de uma alta entidade por outra só pode ocorrer quando exista previsão legal expressa.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias militares`, `Falso, porque a representação é sempre livre`],
     0,
-    `Nos princípios de precedências, quando há igualdade de categoria, usa-se um critério de desempate indicado na matéria.`
+    `Nos slides: a representação só pode fazer-se ao abrigo de disposição legal expressa.`
   ),
   q(
-    `3) Em cerimónias de natureza militar, as honras/continências seguem regras próprias e não dependem apenas do estatuto protocolar civil.`,
-    [`Verdadeiro`, `Falso`, `Depende do tamanho do evento`, `Depende da música escolhida`],
+    `3) (V/F) A lista de precedências apresentada nos slides prevalece mesmo em cerimónias não oficiais, para as altas entidades públicas.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em atos do Governo`, `Falso, porque só vale em cerimónias oficiais`],
     0,
-    `A matéria separa “precedências” (protocolo) de “honras militares/continências” (regras militares).`
+    `Nos slides: regra de prevalência da lista de precedências para altas entidades públicas.`
   ),
   q(
-    `4) A existência de convite escrito é suficiente, por si só, para atribuir honras militares a uma entidade.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, se for um evento solene`, `Verdadeiro, se houver banda`],
-    1,
-    `Honras militares resultam de regras próprias e não de “convite” ou etiqueta social.`
-  ),
-  q(
-    `5) O tratamento e a forma de apresentação (ex.: “Meu Comandante”, “Senhor Comandante”, “Senhora Ministra”) devem adequar-se ao cargo e ao contexto formal.`,
-    [`Verdadeiro`, `Falso`, `Só se usa “tu” em qualquer caso`, `É sempre igual em todo o serviço`],
+    `4) Em termos de precedência absoluta, quem é indicado nos slides como presidindo em qualquer cerimónia oficial em que esteja presente?`,
+    [
+      `Presidente da República`,
+      `Presidente da Assembleia da República`,
+      `Primeiro-Ministro`,
+      `Presidente do Supremo Tribunal de Justiça`
+    ],
     0,
-    `A matéria de continências e fórmulas de tratamento prevê adequação ao cargo/contexto.`
+    `Nos slides (órgãos de soberania/precedências): o Presidente da República tem precedência absoluta.`
   ),
   q(
-    `6) Numa cerimónia com guarda de honra, a sequência de ações tende a ser padronizada: chegada, continência, eventual revista/saudação e encaminhamento.`,
-    [`Verdadeiro`, `Falso`, `Só acontece em visitas informais`, `Depende do clima`],
+    `5) Os “Órgãos de soberania” indicados nos slides são:`,
+    [
+      `Presidente da República, Assembleia da República, Governo e Tribunais`,
+      `Presidente da República, Governo, Forças Armadas e Autarquias`,
+      `Assembleia da República, Governo, Autarquias e Regiões Autónomas`,
+      `Presidente da República, Conselho de Estado, Governo e Tribunais`
+    ],
     0,
-    `A matéria apresenta sequências típicas para receção de altas entidades e atos solenes.`
+    `Nos slides: enunciação dos órgãos de soberania conforme a Constituição.`
   ),
   q(
-    `7) Numa receção formal, a “revista” (quando prevista) ocorre sempre antes de qualquer continência.`,
-    [`Verdadeiro`, `Falso`, `Só se houver estandarte`, `Só se houver viatura oficial`],
-    1,
-    `A ordem dos momentos varia consoante o tipo de cerimónia; não é “sempre” antes de tudo.`
-  ),
-  q(
-    `8) O Estandarte Nacional pode participar em formaturas e desfiles, com regras próprias de honra e respeito.`,
-    [`Verdadeiro`, `Falso`, `Só aparece em funerais`, `Só aparece em atos desportivos`],
+    `6) (V/F) A representação dos órgãos de composição pluripartidária deve incluir sempre membros da maioria e da oposição.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em sessões parlamentares`, `Falso, porque depende do anfitrião`],
     0,
-    `A matéria prevê presença do Estandarte Nacional e normas de enquadramento.`
+    `Nos slides: regra de presença de maioria e oposição na representação de órgãos pluripartidários.`
   ),
   q(
-    `9) Durante a execução do Hino Nacional em ato solene, a atitude exigida é de respeito e compostura, conforme o enquadramento do pessoal e das forças.`,
-    [`Verdadeiro`, `Falso`, `Depende do grau hierárquico`, `Depende do tipo de música`],
+    `7) (V/F) O luto nacional é declarado pelo Governo, que fixa a duração e o âmbito.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só por despacho interno`, `Falso, porque é declarado pelo Presidente da República`],
     0,
-    `A matéria de cerimonial/continências descreve o comportamento em momentos solenes.`
-  ),
-  q(
-    `10) Em continências, a iniciativa é sempre de quem é hierarquicamente superior.`,
-    [`Verdadeiro`, `Falso`, `Depende do armamento`, `Depende do clima`],
-    1,
-    `Regra geral: quem vê primeiro presta continência conforme as regras; a iniciativa não é “sempre” do superior.`
-  ),
-  q(
-    `11) A sentinela possui regras próprias de continência, distintas do militar isolado em deslocação.`,
-    [`Verdadeiro`, `Falso`, `Só conta a educação pessoal`, `Só conta a antiguidade`],
-    0,
-    `A matéria diferencia sentinela/guarda/postos e procedimentos.`
-  ),
-  q(
-    `12) Uma força formada presta continência de forma diferente do militar isolado (por voz de comando e execução coletiva).`,
-    [`Verdadeiro`, `Falso`, `Só se for em campo`, `Só se for à noite`],
-    0,
-    `A continência de força formada é coletiva e enquadrada por comandos.`
-  ),
-  q(
-    `13) “Apresentar armas” é um gesto/ato cerimonial que pode ser usado como forma solene de saudação militar.`,
-    [`Verdadeiro`, `Falso`, `Só serve para inspeção de armas`, `É apenas para tiro`],
-    0,
-    `A matéria inclui movimentos e atos cerimoniais como forma de homenagem/saudação.`
-  ),
-  q(
-    `14) “Perfilar armas” é sempre equivalente a “apresentar armas” e pode substituir-se livremente em qualquer contexto.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, se a unidade for pequena`, `Verdadeiro, se houver banda`],
-    1,
-    `São atos com finalidades e usos distintos; não são totalmente permutáveis.`
-  ),
-  q(
-    `15) Em atos fúnebres, a cobertura do féretro com a Bandeira Nacional segue uma orientação específica de colocação.`,
-    [`Verdadeiro`, `Falso`, `Depende da preferência da família`, `Depende do posto`],
-    0,
-    `A matéria define a colocação correta e a simbologia associada.`
-  ),
-  q(
-    `16) Em vigília/guarda de honra junto ao féretro, podem existir regras de rotação temporal para garantir solenidade e uniformidade.`,
-    [`Verdadeiro`, `Falso`, `Só em funerais civis`, `Só se houver estandarte`],
-    0,
-    `A matéria refere rotações periódicas em contexto cerimonial.`
-  ),
-  q(
-    `17) No protocolo de atos, a ordem de entrada/saída pode seguir critérios de precedência, mas também critérios funcionais (quem preside, quem intervém).`,
-    [`Verdadeiro`, `Falso`, `Só conta quem chegou primeiro`, `Só conta quem tem mais idade`],
-    0,
-    `A matéria aborda precedência e funcionalidade do ato (presidência/intervenções).`
-  ),
-  q(
-    `18) A colocação de bandeiras e símbolos (ex.: em palco) é irrelevante desde que “fique bonito”.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, se for evento interno`, `Verdadeiro, se for no quartel`],
-    1,
-    `A matéria trata regras de enquadramento/posição de símbolos nacionais e institucionais.`
-  ),
-  q(
-    `19) A “mesa de honra” pode ter uma regra de centro (quem preside ao ato) e distribuição lateral coerente com precedências.`,
-    [`Verdadeiro`, `Falso`, `Depende do tamanho da mesa`, `Depende do catering`],
-    0,
-    `A matéria descreve a lógica de presidência e distribuição de lugares.`
-  ),
-  q(
-    `20) Em cerimónias, o fardamento/vestuário deve ser coerente com o tipo de ato e o grau de solenidade.`,
-    [`Verdadeiro`, `Falso`, `Só conta a meteorologia`, `Só conta o conforto`],
-    0,
-    `A matéria reforça adequação do fardamento à cerimónia e uniformidade.`
-  ),
-  q(
-    `21) A banda/música de cerimónia pode ter momentos específicos: chegada da entidade, honras, homenagens e encerramento.`,
-    [`Verdadeiro`, `Falso`, `Só toca no fim`, `Só toca se houver desfile`],
-    0,
-    `A matéria apresenta o enquadramento musical (toques/peças) em momentos formais.`
-  ),
-  q(
-    `22) A saudação a altas entidades é sempre feita por aperto de mão em fila, mesmo em atos militares.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, se for à entrada`, `Verdadeiro, se houver fotógrafos`],
-    1,
-    `Em contexto militar existem procedimentos próprios; “sempre” aperto de mão não é regra.`
-  ),
-  q(
-    `23) A imposição de condecorações segue regras de quem pode impor e uma sequência típica do ato.`,
-    [`Verdadeiro`, `Falso`, `Qualquer militar pode impor`, `Só pode impor o adjunto`],
-    0,
-    `A matéria define competências e sequência cerimonial do ato.`
-  ),
-  q(
-    `24) A homenagem aos mortos pode incluir momentos solenes com toques específicos e atitudes de respeito da força.`,
-    [`Verdadeiro`, `Falso`, `Só acontece em cerimónias desportivas`, `Só acontece em visitas informais`],
-    0,
-    `A matéria prevê homenagem/evocação com enquadramento musical e postura.`
-  ),
-  q(
-    `25) A forma de conduzir a bandeira/estandarte em desfile é indiferente, desde que não caia.`,
-    [`Verdadeiro`, `Falso`, `Verdadeiro, se for curta distância`, `Verdadeiro, se estiver bom tempo`],
-    1,
-    `Há regras de respeito, posição e comportamento do porta-estandarte e escolta.`
+    `Nos slides: luto nacional é declarado pelo Governo, com duração e âmbito.`
   ),
 
-  // ---------- Escolha múltipla (26–50) ----------
+  // -------------------- Seating / galhardetes --------------------
   q(
-    `26) Numa mesa de honra, qual princípio é mais consistente com a matéria?`,
+    `8) Segundo os slides, o “seating” (ímpar) numa tribuna deve seguir a ordem:`,
     [
-      `Quem preside fica no centro; à direita e esquerda distribuem-se os restantes por precedência`,
-      `Quem preside senta-se sempre no lugar mais afastado do público`,
-      `A distribuição é aleatória para evitar “comparações”`,
-      `Quem tem maior altura fica sempre no centro`
+      `8–6–4–2–1–3–5–7–9`,
+      `9–7–5–3–1–2–4–6–8`,
+      `1–2–3–4–5–6–7–8–9`,
+      `2–4–6–8–1–3–5–7–9`
     ],
     0,
-    `Regra típica de presidência: centro para quem preside e distribuição lateral coerente.`
+    `Nos slides: seating ímpar na tribuna = 8–6–4–2–1–3–5–7–9.`
   ),
   q(
-    `27) Numa cerimónia militar com receção formal, qual opção descreve melhor o objetivo das honras?`,
+    `9) Segundo os slides, o “seating” (par) num palco deve seguir a ordem:`,
     [
-      `Prestar uma saudação solene, traduzindo respeito institucional e disciplina`,
-      `Testar a velocidade de execução de movimentos`,
-      `Criar um momento “informal” para socialização`,
-      `Substituir a necessidade de protocolo civil`
+      `9–7–5–3–1 | 2–4–6–8–10`,
+      `10–8–6–4–2 | 1–3–5–7–9`,
+      `1–3–5–7–9 | 2–4–6–8–10`,
+      `8–6–4–2–1 | 3–5–7–9–10`
     ],
     0,
-    `Honras/continências são expressão formal de respeito e disciplina institucional.`
+    `Nos slides: seating par no palco = 9–7–5–3–1 | 2–4–6–8–10.`
   ),
   q(
-    `28) Qual comportamento é mais adequado durante um momento solene (ex.: hino/evocação)?`,
+    `10) Nos slides, a posição das altas entidades num séquito deve ser:`,
     [
-      `Manter postura composta, silêncio e respeito; seguir o enquadramento da força`,
-      `Conversar em voz baixa para “não incomodar”`,
-      `Gravar vídeos e circular para melhor ângulo`,
-      `Aplaudir a meio para “motivar”`
+      `5–3–1–2–4`,
+      `1–2–3–4–5`,
+      `3–1–2–4–5`,
+      `2–4–1–3–5`
     ],
     0,
-    `Compostura e respeito são regra em momentos solenes.`
+    `Nos slides: posição num séquito = 5–3–1–2–4.`
   ),
   q(
-    `29) Numa guarda junto a um local/área delimitada (obstáculo, zona de cerimónia), qual prática é mais coerente?`,
+    `11) (V/F) O galhardete simboliza a presença de uma Alta Entidade e pode estar num mastro ou na tribuna.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só em mastros interiores`, `Falso, porque só pode estar na tribuna`],
+    0,
+    `Nos slides: galhardete simboliza presença e pode estar em mastro ou tribuna.`
+  ),
+  q(
+    `12) (V/F) Em caso de duas Altas Entidades com direito a galhardete, coloca-se apenas o galhardete da entidade com maior precedência.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas se for no exterior`, `Falso, porque se colocam sempre ambos`],
+    0,
+    `Nos slides: só é colocado o galhardete da entidade com maior precedência.`
+  ),
+  q(
+    `13) (V/F) O galhardete dos Ministros é igual ao dos Secretários de Estado, segundo os slides.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias da GNR`, `Falso, porque cada ministério tem padrão diferente`],
+    0,
+    `Nos slides: galhardete dos Ministros é igual ao dos Secretários de Estado.`
+  ),
+  q(
+    `14) (V/F) Segundo os slides, nunca se utiliza a Bandeira Nacional para descerrar placas.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em atos religiosos`, `Falso, pode usar-se se for em interior`],
+    0,
+    `Nos slides: “Nunca se utiliza a Bandeira Nacional para descerrar placas.”`
+  ),
+
+  // -------------------- Hinos / marchas / toques --------------------
+  q(
+    `15) O Hino Nacional indicado nos slides (símbolos nacionais) é:`,
+    [`A Portuguesa`, `A Maria da Fonte`, `O Hino da GNR`, `A Marcha do Combatente`],
+    0,
+    `Nos slides: o Hino Nacional é “A Portuguesa”.`
+  ),
+  q(
+    `16) O Hino da Maria da Fonte (nos slides) é associado, entre outros, a:`,
     [
-      `Manter alinhamento, disciplina de posto e cumprimento rigoroso do serviço`,
-      `Abandonar o posto se não houver público`,
-      `Improvisar postura para evitar cansaço`,
-      `Trocar de lugar sem coordenação`
+      `Presidente da Assembleia da República e Primeiro-Ministro`,
+      `Apenas ao Presidente da República`,
+      `Apenas a Chefes de Estado estrangeiros`,
+      `Apenas ao Comandante-Geral da GNR`
     ],
     0,
-    `A matéria reforça disciplina de posto e uniformidade em contexto cerimonial.`
+    `Nos slides: Hino da Maria da Fonte inclui, entre outros, PAR e PM.`
   ),
   q(
-    `30) Qual opção traduz melhor a distinção central ensinada na matéria?`,
+    `17) (V/F) Nos slides, refere-se que um Oficial General tem direito ao Hino da Maria da Fonte.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas se presidir ao ato`, `Falso, porque só ministros têm esse direito`],
+    0,
+    `Afirmação presente nos slides (bloco de hinos/marchas/toques).`
+  ),
+  q(
+    `18) (V/F) Nos slides, é referido que a Marcha de Continência substitui o Hino Nacional.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em desfiles`, `Falso, porque a marcha nunca substitui hinos`],
+    0,
+    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
+  ),
+  q(
+    `19) (V/F) Nos slides, é referido que a Marcha de Continência substitui o Hino da Maria da Fonte.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, apenas em recinto fechado`, `Falso, porque a Maria da Fonte tem sempre prioridade`],
+    0,
+    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
+  ),
+  q(
+    `20) (V/F) Entidades estrangeiras equiparadas a nacionais, com direito ao Hino da Maria da Fonte, têm direito aos respetivos Hinos Nacionais.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só se houver banda`, `Falso, porque em Portugal só se toca o Hino Nacional`],
+    0,
+    `Afirmação presente nos slides no bloco de hinos/marchas/toques.`
+  ),
+
+  // -------------------- Apito / Toque de Sentido à Unidade --------------------
+  q(
+    `21) Segundo os slides, o Comandante-Geral da GNR tem direito, pelo militar de atendimento, a:`,
+    [`4 sinais curtos seguidos`, `5 sinais curtos seguidos`, `3 sinais curtos seguidos`, `1 sinal prolongado`],
+    0,
+    `Nos slides: Comandante-Geral = 4 sinais curtos seguidos.`
+  ),
+  q(
+    `22) Segundo os slides, os Oficiais Generais da GNR têm direito, pelo militar de atendimento, a:`,
+    [`3 sinais curtos seguidos`, `4 sinais curtos seguidos`, `2 sinais curtos seguidos`, `1 sinal prolongado`],
+    0,
+    `Nos slides: Oficiais Generais = 3 sinais curtos seguidos.`
+  ),
+  q(
+    `23) (V/F) Nos slides, os militares da categoria profissional de Sargentos não têm direito aos toques de apito.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, exceto se forem de serviço ao posto`, `Falso, porque têm direito a 1 sinal curto`],
+    0,
+    `Afirmação expressa nos slides.`
+  ),
+  q(
+    `24) O Toque de Sentido à Unidade é descrito nos slides como:`,
     [
-      `Precedências definem colocação/ordem; continências/honras definem gestos e saudação militar`,
-      `Precedências e continências são sinónimos`,
-      `Continências servem apenas para desfiles, precedências apenas para funerais`,
-      `Precedências dependem do gosto do organizador`
+      `Conjunto de 4 toques (GNR + Unidade + Sentido + toque da Alta Entidade)`,
+      `Conjunto de 3 toques (GNR + Sentido + Alta Entidade)`,
+      `Conjunto de 2 toques (Unidade + Alta Entidade)`,
+      `Um único toque prolongado padronizado`
     ],
     0,
-    `Separação entre protocolo (ordem) e regras militares (honras/gestos).`
+    `Nos slides: Toque de Sentido à Unidade = 4 toques e varia consoante Unidade e AE.`
+  ),
+
+  // -------------------- Condecorações --------------------
+  q(
+    `25) (V/F) Nos slides, as condecorações devem ser colocadas pela sua precedência.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em farda de gala`, `Falso, porque a ordem é sempre cronológica`],
+    0,
+    `Afirmação presente nos slides.`
   ),
   q(
-    `31) Na colocação de entidades numa fila para cumprimentos/saudação formal, o critério mais correto é:`,
+    `26) (V/F) Nos slides, salvo algumas Ordens Honoríficas, as Medalhas Militares precedem as medalhas civis.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em cerimónias da GNR`, `Falso, porque civis precedem sempre`],
+    0,
+    `Afirmação presente nos slides.`
+  ),
+  q(
+    `27) (V/F) Nos slides, uma medalha de um País estrangeiro precede uma medalha de Organização Internacional.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se for condecoração militar`, `Falso, porque organizações internacionais precedem países`],
+    0,
+    `Afirmação presente nos slides.`
+  ),
+  q(
+    `28) Nos slides (exemplo com Ordem Militar da Torre e Espada), a Grã-Cruz/Grande-Colar corresponde, em honras militares, a:`,
     [
-      `Ordenar por precedência e função no ato, evitando inversões sem justificação`,
-      `Ordenar por ordem de chegada`,
-      `Ordenar por preferência pessoal do anfitrião`,
-      `Ordenar por ordem alfabética`
+      `General`,
+      `Coronel`,
+      `Tenente-Coronel`,
+      `Major`
     ],
     0,
-    `A matéria privilegia coerência com precedências e função/presidência do ato.`
+    `Nos slides: Grande-Colar e Grã-Cruz → honras correspondentes a General.`
   ),
   q(
-    `32) Qual cenário exige mais atenção ao detalhe cerimonial?`,
+    `29) Nos slides (mesmo exemplo), o grau “Grande-Oficial” corresponde, em honras militares, a:`,
     [
-      `Ato solene com alta entidade, guarda de honra e presença de símbolos nacionais`,
-      `Treino informal no ginásio da unidade`,
-      `Reunião técnica interna sem convidados`,
-      `Briefing rápido antes do patrulhamento`
+      `Coronel`,
+      `Tenente-Coronel`,
+      `Major`,
+      `Alferes`
     ],
     0,
-    `Quanto maior a solenidade e presença institucional, maior o rigor cerimonial.`
+    `Nos slides: Grande-Oficial → honras correspondentes a Coronel.`
   ),
   q(
-    `33) Qual opção é mais alinhada com a ideia de “receção” em cerimónia militar?`,
+    `30) Nos slides (mesmo exemplo), o grau “Cavaleiro/Dama” corresponde, em honras militares, a:`,
     [
-      `Acolhimento formal, com enquadramento da força e atos de saudação previstos`,
-      `Uma conversa livre sem qualquer estrutura`,
-      `Um lanche antes de qualquer formalidade`,
-      `Uma assinatura de presenças sem acompanhamento`
+      `Alferes`,
+      `Major`,
+      `Tenente-Coronel`,
+      `Coronel`
     ],
     0,
-    `Receção é estruturada e enquadrada pela força/organização do ato.`
+    `Nos slides: Cavaleiro/Dama → honras correspondentes a Alferes.`
+  ),
+
+  // -------------------- Entidades com honras / exemplos práticos --------------------
+  q(
+    `31) (V/F) Nos slides, é reforçado que as entidades civis com direito a honras militares carecem de normativo legal que o suporte.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só para entidades nacionais`, `Falso, porque o protocolo basta`],
+    0,
+    `Nos slides (casos práticos): necessidade de suporte normativo para honras militares.`
   ),
   q(
-    `34) Em contexto de honras fúnebres, qual prática é claramente inadequada?`,
+    `32) Num caso prático dos slides: numa Guarda de Honra a um Ministro do Interior estrangeiro (Espanha), a banda deve executar:`,
     [
-      `Manter solenidade, silêncio e coordenação nos movimentos`,
-      `Garantir respeito pelos símbolos e pela cerimónia`,
-      `Fazer piadas para “desanuviar” junto ao féretro`,
-      `Cumprir a rotação/ordenação prevista`
-    ],
-    2,
-    `O contexto fúnebre exige solenidade e respeito.`
-  ),
-  q(
-    `35) Na condução de um estandarte, a opção mais coerente é:`,
-    [
-      `Manter porte e estabilidade; seguir regras de escolta e respeito`,
-      `Usá-lo como apoio para descansar o braço`,
-      `Inclinar ao acaso conforme a música`,
-      `Alternar de mão sem coordenação`
+      `Os dois Hinos Nacionais`,
+      `O Hino da Maria da Fonte`,
+      `A Marcha de Continência apenas`,
+      `O Hino Nacional português e, em vez do outro, a Maria da Fonte`
     ],
     0,
-    `A matéria enfatiza porte, estabilidade e respeito pelos símbolos.`
+    `Nos slides (caso prático): para ministro estrangeiro, executam-se os dois hinos nacionais.`
   ),
   q(
-    `36) Numa cerimónia com formatura, a opção mais correta sobre comandos é:`,
+    `33) (V/F) Nos slides (caso prático), refere-se que Sua Santidade o Papa, por ser Chefe de Estado do Vaticano, tem direito a honras militares.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se visitar quartel`, `Falso, porque só chefes de Estado “laicos” têm direito`],
+    0,
+    `Nos slides: Papa enquanto Chefe de Estado tem direito a honras.`
+  ),
+
+  // -------------------- Formas de tratamento --------------------
+  q(
+    `34) Segundo os slides (formas de tratamento), o inferior falando a um superior hierárquico deve designá-lo:`,
     [
-      `Os movimentos coletivos são executados por voz de comando e uniformidade`,
-      `Cada militar escolhe o momento de executar para evitar rigidez`,
-      `Só o porta-estandarte obedece a comando`,
-      `Os comandos são dispensáveis se houver música`
+      `Pelo posto/função, precedido de “Senhor” (podendo “Senhor” ser substituído por “Meu”)`,
+      `Apenas pelo primeiro nome para reduzir formalismo`,
+      `Pelo posto/função, mas sem qualquer forma de tratamento`,
+      `Pelo número (mesmo em oficiais), para uniformizar`
     ],
     0,
-    `Força formada executa movimentos de forma coletiva e comandada.`
+    `Nos slides: inferior usa “Senhor” (ou “Meu”, tradicional) + posto/função do superior.`
   ),
   q(
-    `37) Qual opção descreve melhor um erro comum que a matéria procura evitar?`,
+    `35) (V/F) Nos slides, refere-se que, no Exército, oficiais com curso de engenharia/medicina/farmácia podem ser tratados pelos títulos correspondentes.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas só fora de serviço`, `Falso, porque é sempre apenas pelo posto`],
+    0,
+    `Afirmação presente nos slides (formas de tratamento).`
+  ),
+
+  // -------------------- Sentinela Honorífica / posições --------------------
+  q(
+    `36) Segundo os slides, a Sentinela Honorífica assume a posição de “perfilar-arma”, nomeadamente:`,
     [
-      `Misturar precedências civis com regras de continência como se fossem a mesma coisa`,
-      `Cumprir rigorosamente a sequência do ato`,
-      `Garantir uniformidade de postura e alinhamento`,
-      `Confirmar previamente a colocação de símbolos`
+      `Para os restantes oficiais (Armada/Exército/Força Aérea/GNR) e para condecorados Cavaleiro/Dama da OMTE`,
+      `Sempre que passe um féretro (civil ou militar)`,
+      `Em qualquer desfile de força, ao comandante da força`,
+      `Sempre que passe uma entidade civil sem direito a honras`
     ],
     0,
-    `É uma confusão típica: protocolo (ordem) vs honras (gestos).`
+    `Nos slides: perfilar-arma associado aos restantes oficiais e a condecorados Cavaleiro/Dama (exemplo).`
   ),
   q(
-    `38) Numa cerimónia, a colocação de símbolos (nacionais/institucionais) deve:`,
+    `37) Segundo os slides, a Sentinela Honorífica assume a posição de “sentido”, nomeadamente:`,
     [
-      `Respeitar regras e coerência visual e protocolar, evitando disposições arbitrárias`,
-      `Ser definida apenas pelo fotógrafo`,
-      `Ser feita depois do início do ato`,
-      `Ser sempre escondida para “não distrair”`
+      `Para sargentos das Forças Armadas e GNR; em cortejos religiosos; e em desfiles de forças (ao comandante)`,
+      `Para chefes de Estado estrangeiros, sempre em “apresentar-arma”`,
+      `Apenas durante execução do Hino Nacional`,
+      `Apenas em atos fúnebres de Estado`
     ],
     0,
-    `A matéria trata a colocação como elemento formal, não decorativo ao acaso.`
+    `Nos slides: “sentido” para sargentos, cortejos religiosos e desfile de forças (prestando continência ao comandante).`
   ),
   q(
-    `39) Em evento com várias intervenções, a regra mais coerente para ordem de fala é:`,
+    `38) Segundo os slides, o movimento “funeral-arma” aplica-se:`,
     [
-      `Considerar presidência do ato e função de cada interveniente, com coerência de precedência`,
-      `Quem fala melhor vai sempre primeiro`,
-      `Quem chegou por último fala primeiro`,
-      `Ordem alfabética dos nomes`
+      `À passagem de qualquer féretro (civil ou militar)`,
+      `Apenas à passagem do Presidente da República`,
+      `Apenas em cerimónias com Estandarte Nacional`,
+      `Apenas em atos de condecoração`
     ],
     0,
-    `A função no ato (presidência/intervenção) é essencial para ordenar intervenções.`
+    `Nos slides: funeral-arma à passagem de qualquer féretro.`
+  ),
+
+  // -------------------- Força militar / espada (continências) --------------------
+  q(
+    `39) Nos slides, quando a força está armada de espada, a posição “perfilar-arma” é usada quando:`,
+    [
+      `A força presta continência em “sentido” e em “perfilar-arma/ombro-arma”`,
+      `A força presta continência em “apresentar-arma”`,
+      `A força está em funeral-arma`,
+      `A força desfila em continência`
+    ],
+    0,
+    `Nos slides: armado de espada → perfilar-arma nas situações em que a força presta continência em sentido e perfilar/ombro-arma.`
   ),
   q(
-    `40) Qual opção é mais adequada para preparar uma cerimónia?`,
+    `40) Nos slides, a ação “abater-espada” (armado de espada) ocorre quando:`,
     [
-      `Ensaiar sequência, confirmar posições, comandos, símbolos e tempos`,
-      `Improvisar para parecer “mais natural”`,
-      `Eliminar ensaio para poupar tempo`,
-      `Confiar apenas no bom senso de cada elemento`
+      `A força presta continência (“sentido”) a entidades com precedência igual ou superior a oficial superior, e quando presta “apresentar-arma”`,
+      `A força executa funeral-arma em qualquer caso`,
+      `A força está em descanso`,
+      `A força acompanha estandartes nacionais`
     ],
     0,
-    `Preparação/ensaio e confirmação de detalhes é um ponto-chave da matéria.`
+    `Nos slides: abater-espada em continência a entidades com precedência elevada e em situações de apresentar-arma.`
   ),
   q(
-    `41) Quando existe “presidência do ato”, a posição de maior destaque é normalmente:`,
+    `41) (V/F) Nos slides, durante a revista às forças, o militar armado de espada acompanha a entidade que preside na posição de “perfilar-arma”.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas em exterior`, `Falso, porque acompanha em “apresentar-arma”`],
+    0,
+    `Afirmação presente nos slides (revista às forças).`
+  ),
+
+  // -------------------- Guarda de Honra (definição / quando presta honras) --------------------
+  q(
+    `42) A Guarda de Honra é descrita nos slides como uma força armada de efetivo variável para:`,
     [
-      `O centro (ou ponto focal) definido para quem preside, visível ao público/força`,
-      `Qualquer lugar desde que haja microfone`,
-      `O lugar mais próximo da saída`,
-      `O lugar mais longe do estandarte`
+      `Acompanhar estandartes nacionais; prestar honras em atos solenes; prestar honras fúnebres`,
+      `Acompanhar apenas altas entidades, nunca estandartes`,
+      `Executar apenas tarefas de segurança perimetral`,
+      `Substituir a escolta de honra em qualquer circunstância`
     ],
     0,
-    `Regra típica: centro/ponto focal para quem preside.`
+    `Nos slides: funções-base da Guarda de Honra.`
   ),
   q(
-    `42) Em continência individual, qual comportamento é mais correto?`,
-    [
-      `Executar a continência conforme o contexto e manter postura correta até ao termo adequado`,
-      `Executar e continuar a falar ao telemóvel`,
-      `Executar apenas se houver público`,
-      `Executar apenas se for filmado`
-    ],
+    `43) (V/F) Nos slides, depois de postada, a Guarda de Honra só tem de prestar honras à passagem do Estandarte Nacional, do Presidente da República e de entidades de categoria superior àquelas a quem se destina.`,
+    [`Verdadeiro`, `Falso`, `Verdadeiro, mas apenas se estiver em recinto fechado`, `Falso, porque presta sempre a todas as entidades`],
     0,
-    `A matéria reforça postura e momento de início/termo conforme a situação.`
+    `Regra apresentada nos slides.`
   ),
   q(
-    `43) No âmbito de um desfile/formatura, qual elemento tende a exigir especial rigor de alinhamento?`,
+    `44) Nos slides, a Guarda de Honra toma, porém, a posição de “sentido” à passagem de:`,
     [
-      `Frentes, intervalos, alinhamento e cadência, para uniformidade visual e disciplina`,
-      `A escolha de música no final`,
-      `A decoração do palco`,
-      `A cor das fitas nos crachás`
+      `Forças militares, funerais, cortejos religiosos e entidades civis/militares com direito a honras`,
+      `Apenas do Presidente da República`,
+      `Apenas de ministros e secretários de Estado`,
+      `Apenas quando houver banda de música`
     ],
     0,
-    `Alinhamento/cadência são aspetos-base de rigor e uniformidade.`
+    `Nos slides: lista de situações em que toma “sentido”.`
   ),
   q(
-    `44) Qual opção corresponde melhor ao propósito de uma guarda de honra?`,
+    `45) Segundo os slides, quando a Guarda de Honra presta continência a uma entidade civil/militar que não preside à cerimónia, o Comandante deve dizer:`,
     [
-      `Prestar homenagem/saudação solene, enquadrando a receção e a dignidade do ato`,
-      `Substituir a segurança do perímetro`,
-      `Servir apenas como “cenário” para fotografia`,
-      `Evitar a necessidade de convite`
+      `“Vossa Excelência, (posto/função) dá licença, Guarda de Honra para Sua Excelência …”`,
+      `“Guarda de Honra, apresentar armas ao visitante” (sem mais formalidade)`,
+      `“Autorizo a passagem da entidade” (sem tratamento)`,
+      `“A cerimónia fica suspensa para cumprimentos”`
     ],
     0,
-    `Guarda de honra tem função simbólica/cerimonial de homenagem e enquadramento.`
+    `Fórmula indicada nos slides para este caso.`
+  ),
+
+  // -------------------- Comandante de Guarda de Honra (sequência) --------------------
+  q(
+    `46) Na sequência descrita nos slides para o Comandante de Guarda de Honra: ao avistar a entidade, manda primeiro:`,
+    [
+      `“Firme” e “Sentido”`,
+      `“Ombro-arma/Perfilar-arma”`,
+      `“Apresentar-arma”`,
+      `“Descansar” e “Sentido”`
+    ],
+    0,
+    `Nos slides: ao avistar → “firme” e “sentido”.`
   ),
   q(
-    `45) Em cerimónias, o que faz uma opção errada ser “plausível” (e por isso perigosa em teste)?`,
+    `47) Ainda nessa sequência: quando a entidade e séquito se aproximam, o Comandante manda:`,
     [
-      `Confundir etiqueta social com regra militar (ex.: achar que aperto de mão substitui continência)`,
-      `Ser totalmente absurda e fora do tema`,
-      `Depender do horóscopo`,
-      `Não ter palavras técnicas`
+      `“Ombro-arma” / “Perfilar-arma”`,
+      `“Apresentar-arma”`,
+      `“Descansar”`,
+      `“Funeral-arma”`
     ],
     0,
-    `A matéria alerta para diferenças entre protocolo social e normas militares.`
+    `Nos slides: na aproximação → “ombro-arma/perfilar-arma”.`
   ),
   q(
-    `46) Qual atitude é mais correta ao circular numa área de cerimónia já organizada?`,
+    `48) Nos slides, o Comandante manda “apresentar-arma” apenas quando:`,
     [
-      `Evitar atravessar zonas formais, manter discrição e respeitar a disposição estabelecida`,
-      `Circular pelo meio para chegar mais rápido`,
-      `Mudar cadeiras para “melhorar a vista”`,
-      `Interromper para cumprimentar toda a gente`
+      `A entidade se tiver colocado no ponto de continência`,
+      `A entidade entra no perímetro do quartel`,
+      `A banda começa o Hino Nacional`,
+      `A entidade termina a revista`
     ],
     0,
-    `Respeito pela organização e discrição são princípios básicos em atos solenes.`
+    `Nos slides: “apenas quando a entidade se tiver colocado no ponto de continência”.`
+  ),
+
+  // -------------------- Revista à Guarda de Honra / estandarte / acompanhamento --------------------
+  q(
+    `49) Nos slides, se a Guarda de Honra tiver Estandarte Nacional, após a continência ser recebida e correspondida, a entidade:`,
+    [
+      `Aproxima-se a cerca de 5 m do Estandarte e saúda-o, passando depois à revista (se entender)`,
+      `Dirige-se diretamente ao palanque e inicia a intervenção`,
+      `Saúda o Estandarte apenas no final, após o desfile`,
+      `Ordena a desintegração do Estandarte antes da revista`
+    ],
+    0,
+    `Regra indicada nos slides.`
   ),
   q(
-    `47) Se houver dúvida sobre colocação (lugares/precedências), a prática mais adequada é:`,
+    `50) Nos slides, a revista à Guarda de Honra é passada começando:`,
     [
-      `Confirmar previamente com quem coordena o cerimonial/protocolo e manter coerência`,
-      `Decidir no momento para parecer confiante`,
-      `Perguntar ao público`,
-      `Adotar sempre a ordem de chegada`
+      `Pelo flanco direito da primeira fileira até ao flanco esquerdo, contornando e seguindo pela frente das outras fileiras em sentidos alternados`,
+      `Pelo centro da formatura e depois para os flancos`,
+      `Pela retaguarda, avançando para a frente por fileiras`,
+      `Pelo flanco esquerdo, sempre no mesmo sentido, sem contornar`
     ],
     0,
-    `A matéria favorece validação prévia e coerência, para evitar constrangimentos.`
-  ),
-  q(
-    `48) Qual opção descreve melhor “erro de cerimónia” típico?`,
-    [
-      `Trocar posições de entidades de forma visível, criando inversão de precedência sem justificação`,
-      `Ensaiar e cumprir a sequência`,
-      `Sinalizar claramente entradas e saídas`,
-      `Garantir pontualidade`
-    ],
-    0,
-    `Inversões visíveis e injustificadas são falhas clássicas de protocolo/cerimonial.`
-  ),
-  q(
-    `49) Em ato com condecorações, o objetivo da sequência cerimonial é:`,
-    [
-      `Garantir solenidade, clareza do momento e respeito institucional por quem recebe e por quem impõe`,
-      `Acelerar ao máximo para terminar cedo`,
-      `Permitir improviso para ser mais emotivo`,
-      `Evitar qualquer anúncio público`
-    ],
-    0,
-    `O ato é formal e procura solenidade e clareza.`
-  ),
-  q(
-    `50) Qual opção é mais consistente com a matéria para evitar falhas no dia do ato?`,
-    [
-      `Checklist de cerimónia: símbolos, lugares, sequência, comandos, horários e responsáveis`,
-      `Confiar que “alguém resolve”`,
-      `Eliminar o responsável por área para reduzir hierarquia`,
-      `Não informar ninguém do plano para evitar pressão`
-    ],
-    0,
-    `Planeamento com responsabilidades e verificação reduz falhas.`
+    `Descrição da revista nos slides.`
   ),
 ];
 
@@ -688,7 +708,7 @@ function evaluate(){
 
 function exportTxt(){
   const lines=[];
-  lines.push(`Cerimonial Militar — Resultados`);
+  lines.push(`Cerimonial Militar — Resultados (Slides CM1+CM2)`);
   lines.push(`Certas: ${$cRight.textContent}`);
   lines.push(`Erradas: ${$cWrong.textContent}`);
   lines.push(`Em branco: ${$cBlank.textContent}`);
@@ -713,7 +733,7 @@ function exportTxt(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=`resultado_cerimonial_50.txt`;
+  a.download=`resultado_cerimonial_50_slides_cm1_cm2.txt`;
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
