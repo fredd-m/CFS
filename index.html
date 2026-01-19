@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz — Cerimonial Militar (CM1+CM2)</title>
+<title>Quiz — Armamento e Tiro (50 — Matéria Completa)</title>
 <style>
   :root{
     --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --mute:#94a3b8; --acc:#22d3ee; --good:#22c55e; --bad:#ef4444;
@@ -13,9 +13,8 @@
   .card{background:linear-gradient(180deg,#0b1220 0,#0b1220ee 70%,#0b1220cc 100%),radial-gradient(1100px 500px at 110% -10%,#1f2937 0,#0b1220 60%);border:1px solid #1f2937;border-radius:18px;padding:20px 18px;box-shadow:0 10px 30px #0006}
   h1{font-size:1.6rem;margin:0 0 6px}
   .sub{color:var(--mute);margin:0 0 18px}
-  button,select{font:inherit;color:var(--ink);background:#0b1220;border:1px solid #1f2937;border-radius:12px;padding:10px 12px}
-  select{padding-right:34px}
-  button:focus,select:focus{outline:2px solid var(--acc);outline-offset:2px}
+  button{font:inherit;color:var(--ink);background:#0b1220;border:1px solid #1f2937;border-radius:12px;padding:10px 12px}
+  button:focus{outline:2px solid var(--acc);outline-offset:2px}
   button.primary{background:#0b1220;border-color:#334155}
   button.primary:hover{border-color:#475569}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -41,14 +40,10 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1 id="titleH">Quiz — Cerimonial Militar</h1>
-    <p class="sub" id="subP">Apenas matéria dos slides CM1+CM2. V/F + escolha múltipla (4 opções). Opções erradas plausíveis. Só no fim vês correção e nota (/20). Progresso guardado localmente.</p>
+    <h1>Quiz — Armamento e Tiro (50)</h1>
+    <p class="sub">50 questões (matéria completa dos PPT/PDF). Opções erradas plausíveis (dificuldade alta). Só no fim vês a correção e a nota (/20). Progresso guardado localmente.</p>
 
     <div class="row" style="margin-bottom:12px">
-      <select id="quizSel" title="Escolher quiz">
-        <option value="Q1">Quiz 1 — Cerimonial (50)</option>
-        <option value="Q2">Quiz 2 — Cerimonial (50) — Foco “sai no teste”</option>
-      </select>
       <button id="startBtn" class="primary">Começar / Reiniciar</button>
       <span class="pill">Progresso: <span id="prog">0/50</span></span>
       <span class="pill">Estado: <span id="state">Em resposta</span></span>
@@ -72,7 +67,7 @@
       </div>
     </div>
 
-    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada reinício. Progresso guardado localmente (separado por quiz).</p>
+    <p class="muted" style="margin-top:8px">As perguntas e opções baralham a cada reinício. Progresso guardado localmente.</p>
   </div>
 </div>
 
@@ -97,585 +92,567 @@ const $submit = el('#submitBtn');
 const $start  = el('#startBtn');
 const $export = el('#exportBtn');
 const $clear  = el('#clearBtn');
-const $sel    = el('#quizSel');
-const $titleH = el('#titleH');
-const $subP   = el('#subP');
+
+let CURRENT = { testId:'ATIR_50_COMPLETO', items:[], answers:{}, key:{}, locked:false, evaluated:false, seed:'' };
+function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
+function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
+function loadState(){ const raw=localStorage.getItem(storageKey()); if(!raw) return null; try{return JSON.parse(raw);}catch{return null;} }
+
+/* ==========================================================
+   TESTE ÚNICO — 50 perguntas (Armamento e Tiro)
+   - EM + V/F (V/F = opções Verdadeiro/Falso)
+   - Distratores plausíveis e numéricos
+   ========================================================== */
+const TEST_ATIR_50 = [
+  q(
+    `1) (Normas de Tiro) Na execução do Tiro de Manutenção, qual requisito está correto?`,
+    [
+      `1 Instrutor de Tiro da Unidade (CIT) por cada 10 atiradores em simultâneo na linha de tiro`,
+      `1 Instrutor (CIT) por cada 15 atiradores em simultâneo na linha de tiro`,
+      `1 Instrutor (CIT) por cada 8 atiradores em simultâneo na linha de tiro`,
+      `A presença de instrutor (CIT) é dispensável se houver enfermeiro`
+    ],
+    0,
+    `Normas de Tiro: presença de 1 instrutor (CIT) por cada 10 atiradores em simultâneo.`
+  ),
+  q(
+    `2) (Normas de Tiro) O tiro com pistola (pessoal afeto a funções operacionais) é realizado:`,
+    [
+      `Três sessões por ano, uma por quadrimestre, sendo obrigatoriamente uma em circuito dinâmico`,
+      `Duas sessões por ano, uma por semestre, sendo obrigatoriamente uma em circuito dinâmico`,
+      `Uma sessão anual, preferencialmente em circuito dinâmico`,
+      `Três sessões por ano, mas nenhuma pode ser em circuito dinâmico`
+    ],
+    0,
+    `Normas de Tiro: funções operacionais → 3 sessões/ano (1 por quadrimestre), 1 obrigatoriamente em circuito dinâmico.`
+  ),
+  q(
+    `3) (Normas de Tiro) O tiro com pistola-metralhadora é efetuado:`,
+    [
+      `Semestralmente por todos os militares afetos a funções operacionais nas quais façam uso deste armamento`,
+      `Anualmente por todos os militares, independentemente da função`,
+      `Trimestralmente por todo o efetivo operacional`,
+      `Apenas em fases de instrução; não existe periodicidade definida`
+    ],
+    0,
+    `Normas de Tiro: PM → semestral para funções operacionais que usem este tipo de armamento.`
+  ),
+  q(
+    `4) (Normas de Tiro) O tiro com espingarda é efetuado:`,
+    [
+      `Anualmente por militares afetos a funções operacionais nas quais façam uso deste armamento`,
+      `Semestralmente por todo o efetivo`,
+      `Trimestralmente por militares com CIT`,
+      `Apenas em contexto de missão no estrangeiro`
+    ],
+    0,
+    `Normas de Tiro: espingarda → anual para funções operacionais onde se utilize.`
+  ),
+  q(
+    `5) (V/F — Conceitos) “Arma de fogo carregada” significa que existe munição na câmara (ou carga/fulminante/projétil nas armas de carregar pela boca).`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    0,
+    `Definição legal: arma carregada → munição na câmara (ou carga+fulminante+projétil na câmara/câmaras em armas de carregar pela boca).`
+  ),
+  q(
+    `6) (V/F — Conceitos) “Arma de fogo municiada” significa que existe pelo menos uma munição introduzida no depósito ou carregador.`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    0,
+    `Definição legal: municiada → pelo menos 1 munição no depósito/carregador.`
+  ),
+  q(
+    `7) (Conceitos) “Percussão central” corresponde a:`,
+    [
+      `Percutor atua sobre o fulminante aplicado no centro da base do invólucro`,
+      `Percutor atua sobre um ponto periférico relativamente ao centro da base`,
+      `Ignição produzida por chama externa na boca do cano`,
+      `Sistema sem fulminante, apenas por fricção`
+    ],
+    0,
+    `Definição legal: percussão central → percutor atua no centro da base do invólucro (na escorva/fulminante).`
+  ),
+  q(
+    `8) (Conceitos) “Percussão anelar/lateral” corresponde a:`,
+    [
+      `Percutor atua sobre um ponto periférico relativamente ao centro da base`,
+      `Percutor atua sobre o fulminante no centro da base`,
+      `Sistema em que o fulminante está sempre no projétil`,
+      `Sistema exclusivo de munições de calibre 12`
+    ],
+    0,
+    `Definição legal: percussão anelar/lateral → percutor atua num ponto periférico relativamente ao centro da base.`
+  ),
+  q(
+    `9) (Conceitos) “Bala ou projétil” é:`,
+    [
+      `Parte componente da munição que se destina a ser lançada através do cano pelos gases da deflagração da carga`,
+      `O invólucro metálico que contém a carga e o fulminante`,
+      `A substância pirotécnica que torna visível a trajetória`,
+      `A peça que fixa a corrediça/culatra à retaguarda`
+    ],
+    0,
+    `Definição legal: bala/projétil → peça lançada pelo cano pelos gases da deflagração da carga.`
+  ),
+  q(
+    `10) (RAFAP / EMGNR) Segundo a matéria, o militar só deve recorrer ao uso de arma de fogo como:`,
+    [
+      `Medida extrema, quando absolutamente necessário, adequado e proporcional, existindo comprovadamente perigo para a vida (própria ou de terceiros)`,
+      `Medida regular, sempre que existam suspeitas de crime`,
+      `Medida preferencial, antes de esgotar meios de persuasão`,
+      `Medida adequada sempre que haja resistência passiva`
+    ],
+    0,
+    `EMGNR / princípios: arma de fogo como medida extrema e sob necessidade/adequação/proporcionalidade.`
+  ),
+  q(
+    `11) (V/F — RAFAP) O RAFAP aplica-se também à instrução, tiro desportivo, recreio, atos venatórios e demonstrações.`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    1,
+    `Matéria: RAFAP apenas para ação policial; exclui instrução/tiro desportivo/recreio/demonstrações/atos venatórios, etc.`
+  ),
+  q(
+    `12) (RAFAP) O princípio da necessidade (art. 2.º) é corretamente descrito como:`,
+    [
+      `O uso da força/arma de fogo só em casos extremos e quando outros meios menos gravosos estejam esgotados ou se mostrem ineficazes`,
+      `O uso da força é permitido sempre que exista vantagem tática`,
+      `A arma de fogo pode ser usada para impedir qualquer fuga, mesmo sem ameaça a vidas humanas`,
+      `A força deve manter-se mesmo quando o objetivo já foi alcançado`
+    ],
+    0,
+    `Art. 2.º: necessidade → casos extremos; outros meios menos perigosos ineficazes; cessar quando desnecessário.`
+  ),
+  q(
+    `13) (RAFAP) Na matéria, “titularidade dos bens jurídicos a defender” (art. 3.º/2/a) refere:`,
+    [
+      `Defesa da vida e/ou integridade física essencial/grave, própria ou de terceiros (colega/cidadão)`,
+      `Defesa exclusiva de bens patrimoniais (viaturas/edifícios)`,
+      `Defesa de qualquer bem jurídico, sem limites`,
+      `Apenas a defesa do próprio agente, nunca de terceiros`
+    ],
+    0,
+    `Matéria: defesa da vida/integridade física essencial, própria e de terceiros; legítima defesa própria/alheia.`
+  ),
+  q(
+    `14) (Segurança — PDF) Em que situações se executam operações/procedimentos de segurança (exemplo correto)?`,
+    [
+      `Antes e depois da limpeza; antes de desmontagem; imediatamente após execução de tiro; ao entregar/receber arma na arrecadação`,
+      `Apenas antes do tiro; depois não é necessário`,
+      `Somente quando há avarias`,
+      `Exclusivamente em instrução, nunca em serviço`
+    ],
+    0,
+    `PDF: lista de momentos em que se executam operações de segurança (receção/entrega, limpeza, desmontagem, após tiro, após serviço, etc.).`
+  ),
+  q(
+    `15) (Segurança — PDF) Na sequência tradicional, após retirar o carregador/munições, qual passo é correto?`,
+    [
+      `Fixar corrediça/culatra na posição mais recuada (ou abrir pela báscula/tambor)`,
+      `Premir imediatamente o gatilho`,
+      `Introduzir carregador para confirmar retenção`,
+      `Colocar comutador em fogo e disparar em seco sem verificação`
+    ],
+    0,
+    `Sequência tradicional: fixar culatra/corrediça à retaguarda (ou abrir báscula/tambor) antes das verificações.`
+  ),
+  q(
+    `16) (Segurança — PDF) A verificação da câmara deve ser feita por inspeção:`,
+    [
+      `Visual e pelo tato, quando possível (dupla verificação; na pistola inspecionar alojamento do carregador)`,
+      `Apenas visual (o tato é sempre proibido)`,
+      `Apenas pelo tato`,
+      `Sem necessidade de verificação se o carregador foi retirado`
+    ],
+    0,
+    `PDF: verificação por inspeção visual e tato, quando possível, incluindo alojamento do carregador (pistola).`
+  ),
+  q(
+    `17) (MP5) Qual conjunto de posições do comutador (modos) está correto?`,
+    [
+      `Segurança; Semi-automático (tiro a tiro); Automático controlado (3 tiros); Automático (contínuo)`,
+      `Segurança; Semi-automático; Automático controlado (2 tiros); Automático (contínuo)`,
+      `Segurança; Rajada (2 tiros); Rajada (3 tiros); Automático (contínuo)`,
+      `Segurança; Tiro a tiro; Automático (contínuo); “Burst” variável`
+    ],
+    0,
+    `MP5 A4: posições listadas na matéria incluem automático controlado (3 tiros).`
+  ),
+  q(
+    `18) (MP5) Dados numéricos: qual afirmação está correta?`,
+    [
+      `Carregador curto: 15 munições; carregador longo: 30 munições`,
+      `Carregador curto: 20 munições; carregador longo: 30 munições`,
+      `Carregador curto: 10 munições; carregador longo: 25 munições`,
+      `Carregador curto: 15 munições; carregador longo: 20 munições`
+    ],
+    0,
+    `MP5: capacidades curto 15 / longo 30.`
+  ),
+  q(
+    `19) (MP5) Vo (velocidade inicial) indicada é:`,
+    [
+      `400 m/s`,
+      `780/800 m/s`,
+      `850 m/s`,
+      `650 m/s`
+    ],
+    0,
+    `MP5: Vo 400 m/s.`
+  ),
+  q(
+    `20) (MP5) Cadência prática de tiro indicada é:`,
+    [
+      `800 tpm`,
+      `550/600 tpm`,
+      `750 tpm`,
+      `40 tpm`
+    ],
+    0,
+    `MP5: cadência prática 800 tpm.`
+  ),
+  q(
+    `21) (MP5) Alcances indicados:`,
+    [
+      `Prático: 25/50 m; Útil: 100 m; Máximo: 1600 m`,
+      `Prático: 100 m; Útil: 200 m; Máximo: 3800 m`,
+      `Prático: 400 m; Útil: 800 m; Máximo: 3800 m`,
+      `Prático: 50/100 m; Útil: 300 m; Máximo: 4000 m`
+    ],
+    0,
+    `MP5: prático 25/50; útil 100; máximo 1600.`
+  ),
+  q(
+    `22) (MP5) Operações de segurança: após puxar o punho do manobrador à retaguarda e fixar no entalhe, deve-se:`,
+    [
+      `Verificar visualmente e pelo tato se há algo na câmara ou alojamento do carregador`,
+      `Executar disparo em seco de imediato`,
+      `Municiar o carregador e introduzi-lo`,
+      `Colocar automaticamente em tiro automático`
+    ],
+    0,
+    `MP5: passo inclui verificação visual e pelo tato (câmara e alojamento do carregador).`
+  ),
+  q(
+    `23) (G3) Tipo de funcionamento (característica correta):`,
+    [
+      `Arma automática, cano fixo, ação indireta dos gases; culatra de bloco com roletes de apoio`,
+      `Arma automática, ação direta dos gases (short-stroke piston); culatra rotativa com 7 ressaltos`,
+      `Arma semiautomática apenas; culatra rotativa com 7 ressaltos`,
+      `Arma de repetição manual; cano basculante`
+    ],
+    0,
+    `G3: ação indireta; culatra de bloco com roletes.`
+  ),
+  q(
+    `24) (G3) Aparelho de pontaria — alça tambor rotativo:`,
+    [
+      `Ranhura em “V” para 100 m e três furos dióptricos para 200, 300 e 400 m`,
+      `Ranhura em “V” para 200 m e três furos dióptricos para 300, 400 e 500 m`,
+      `Ranhura em “V” para 50 m e três furos dióptricos para 100, 200 e 300 m`,
+      `Quatro furos dióptricos para 100, 200, 300 e 400 m (sem ranhura em V)`
+    ],
+    0,
+    `G3: V 100 m + dióptricos 200/300/400.`
+  ),
+  q(
+    `25) (G3) Capacidade do carregador e dotação:`,
+    [
+      `20 munições; dotação 5 carregadores (100 munições)`,
+      `30 munições; dotação 5 carregadores (150 munições)`,
+      `20 munições; dotação 2 carregadores (45 munições)`,
+      `15 munições; dotação 2 carregadores (30 munições)`
+    ],
+    0,
+    `G3: 20 munições; 5 carregadores = 100 munições.`
+  ),
+  q(
+    `26) (G3) Velocidade inicial (Vo) indicada:`,
+    [
+      `780/800 m/s`,
+      `400 m/s`,
+      `850 m/s`,
+      `900 m/s`
+    ],
+    0,
+    `G3: Vo 780/800 m/s.`
+  ),
+  q(
+    `27) (G3) Distância de segurança no plano de tiro e alcance máximo:`,
+    [
+      `Segurança: 4000 m; Máximo: 3800 m`,
+      `Segurança: 3800 m; Máximo: 4000 m`,
+      `Segurança: 1600 m; Máximo: 3800 m`,
+      `Segurança: 1700 m; Máximo: 4000 m`
+    ],
+    0,
+    `G3: segurança 4000; máximo 3800.`
+  ),
+  q(
+    `28) (G3) Alcances eficaz, prático e útil indicados:`,
+    [
+      `Eficaz: 1700 m; Prático: 400 m; Útil: 400 m`,
+      `Eficaz: 800 m; Prático: 400 m; Útil: 800 m`,
+      `Eficaz: 1700 m; Prático: 100 m; Útil: 200 m`,
+      `Eficaz: 1600 m; Prático: 25/50 m; Útil: 100 m`
+    ],
+    0,
+    `G3: eficaz 1700; prático 400; útil 400.`
+  ),
+  q(
+    `29) (G3) Cadência prática de tiro indicada:`,
+    [
+      `Semiautomático: 40 tpm; Automático (rajada): 550/600 tpm`,
+      `Semiautomático: 40 tpm; Automático livre: 750 tpm`,
+      `Semiautomático: 800 tpm; Automático: 40 tpm`,
+      `Semiautomático: 550/600 tpm; Automático: 40 tpm`
+    ],
+    0,
+    `G3: 40 tpm (tiro a tiro) e 550/600 tpm (rajada).`
+  ),
+  q(
+    `30) (G3) “Segurança” é conseguida por:`,
+    [
+      `Imobilização do gatilho através do eixo do comutador de tiro (posições S, E e F)`,
+      `Bloqueio do cano por báscula manual`,
+      `Retardo por roletes (sem comutador)`,
+      `Imobilização do manobrador em 3 posições`
+    ],
+    0,
+    `G3: segurança por imobilização do gatilho via comutador (S/E/F).`
+  ),
+  q(
+    `31) (G36KV) Tipo de funcionamento (conjunto correto):`,
+    [
+      `Ação direta dos gases (short-stroke piston); culatra rotativa com 7 ressaltos; tiro semi-auto, automático controlado (2 tiros) e automático livre`,
+      `Ação indireta dos gases; culatra de bloco com roletes; tiro semi-auto e automático`,
+      `Ação direta; culatra de bloco com roletes; automático controlado (3 tiros)`,
+      `Ação indireta; culatra rotativa com 7 ressaltos; só tiro semi-auto`
+    ],
+    0,
+    `G36KV: ação direta; culatra rotativa 7 ressaltos; modos incluem 2 tiros controlados.`
+  ),
+  q(
+    `32) (G36KV) Dados numéricos: capacidade e dotação de munições`,
+    [
+      `Carregador 30 munições; dotação 5 carregadores; 150 munições`,
+      `Carregador 20 munições; dotação 5 carregadores; 100 munições`,
+      `Carregador 15 munições; dotação 2 carregadores; 45 munições`,
+      `Carregador 30 munições; dotação 2 carregadores; 60 munições`
+    ],
+    0,
+    `G36KV: 30 munições; 5 carregadores; 150 munições.`
+  ),
+  q(
+    `33) (G36KV) Vo, alcance útil e cadência em automático livre:`,
+    [
+      `Vo 850 m/s; útil 800 m; automático livre 750 tpm`,
+      `Vo 780/800 m/s; útil 400 m; automático 550/600 tpm`,
+      `Vo 400 m/s; útil 100 m; automático 800 tpm`,
+      `Vo 850 m/s; útil 1700 m; automático 550/600 tpm`
+    ],
+    0,
+    `G36KV: Vo 850; útil 800; auto livre 750.`
+  ),
+  q(
+    `34) (G36KV) Alcances máximo e eficaz indicados:`,
+    [
+      `Máximo 3800 m; eficaz 1700 m`,
+      `Máximo 1600 m; eficaz 800 m`,
+      `Máximo 4000 m; eficaz 3800 m`,
+      `Máximo 3800 m; eficaz 800 m`
+    ],
+    0,
+    `G36KV: máximo 3800; eficaz 1700.`
+  ),
+  q(
+    `35) (G36KV) Mira Red Dot (ponto vermelho) destina-se a ser utilizado até:`,
+    [
+      `200 metros`,
+      `100 metros`,
+      `400 metros`,
+      `800 metros`
+    ],
+    0,
+    `G36KV: Red Dot até 200 m (quando se exige rapidez).`
+  ),
+  q(
+    `36) (G36KV) No sistema ótico 3x, a “mira circular equivalente a um homem 1,75 m” corresponde a:`,
+    [
+      `400 m`,
+      `200 m`,
+      `600 m`,
+      `800 m`
+    ],
+    0,
+    `G36KV: mira circular ≈ homem 1,75 m a 400 m.`
+  ),
+  q(
+    `37) (G36KV) Cada traço altera cerca de:`,
+    [
+      `2,3 cm a 100 metros`,
+      `1,0 cm a 100 metros`,
+      `2,3 cm a 200 metros`,
+      `5,0 cm a 100 metros`
+    ],
+    0,
+    `G36KV: cada traço ≈ 2,3 cm a 100 m.`
+  ),
+  q(
+    `38) (G36KV) A mira convencional (alça/ponto de mira) permite tiro até:`,
+    [
+      `100 m`,
+      `200 m`,
+      `400 m`,
+      `800 m`
+    ],
+    0,
+    `G36KV: mira convencional até 100 m (apenas se não estiver instalada a Red Dot).`
+  ),
+  q(
+    `39) (G36KV) Operações de segurança (pormenor que distingue da MP5): a verificação da câmara é feita:`,
+    [
+      `Visualmente (não verificar pelo tato)`,
+      `Visual e pelo tato (sempre obrigatório)`,
+      `Apenas pelo tato`,
+      `Sem qualquer verificação se o carregador foi retirado`
+    ],
+    0,
+    `G36KV: na sequência indicada, refere “verificar visualmente (não verificar pelo tato)”.`
+  ),
+  q(
+    `40) (Munições — GNR) Para calibre 5,56 mm (G36KV), quais tipos aparecem listados?`,
+    [
+      `Encamisada / Perfurante / Tracejante / Salva`,
+      `Encamisada / Expansiva / Instrução / Madeira`,
+      `Chumbo nº4 / Zagalote borracha / CS / 1 bola`,
+      `Baton único / Baton tripartido / Gás CS / Instrução`
+    ],
+    0,
+    `Munições (GNR): 5,56 → encamisada, perfurante, tracejante, salva.`
+  ),
+  q(
+    `41) (Munições — GNR) Para G3 (7,62x51), quais tipos aparecem listados?`,
+    [
+      `Encamisada / Perfurante / Tracejante / Salva / Lançamento Granadas`,
+      `Encamisada / Tracejante / Zagalote borracha / Chumbo nº4`,
+      `Instrução / Gás CS / 1 bola / 9 bagos`,
+      `Apenas encamisada e salva`
+    ],
+    0,
+    `Munições (GNR): G3 → inclui lançamento de granadas além de encamisada/perfurante/tracejante/salva.`
+  ),
+  q(
+    `42) (Munições — Calibre 12/70) Para espingardas caçadeiras indicadas, quais tipos aparecem listados?`,
+    [
+      `Zagalote de borracha / Chumbo nº 4 / Lançamento granadas`,
+      `Encamisada / Perfurante / Tracejante / Salva`,
+      `Baton único / Baton tripartido / Gás CS`,
+      `Instrução / Gás lacrimogénio CS / 1 bola / 9 bagos`
+    ],
+    0,
+    `Calibre 12/70: zagalote borracha, chumbo nº4, lançamento granadas.`
+  ),
+  q(
+    `43) (Conceitos — FMJ) Qual definição corresponde à munição com projétil encamisado (FMJ)?`,
+    [
+      `Camisa metálica que cobre o núcleo em toda a sua extensão, com exceção, ou não, da base`,
+      `Projétil concebido para perfurar blindagens (armor piercing)`,
+      `Projétil com substância pirotécnica para produzir chama/fumo e tornar visível a trajetória`,
+      `Projétil de madeira/plástico destinado a munição salva`
+    ],
+    0,
+    `Definição legal FMJ: camisa metálica cobre o núcleo em toda a extensão (exceto ou não a base).`
+  ),
+  q(
+    `44) (Conceitos — Tracejante) Uma munição com projétil tracejante contém substância pirotécnica destinada a:`,
+    [
+      `Produzir chama, ou chama e fumo, tornando visível a trajetória`,
+      `Aumentar a velocidade inicial para tiro tenso`,
+      `Reduzir o ricochete por deformação controlada`,
+      `Substituir a carga propulsora por ignição elétrica`
+    ],
+    0,
+    `Definição legal: tracejante → substância pirotécnica para tornar visível a trajetória (chama/fumo).`
+  ),
+  q(
+    `45) (DOA/DO/DOE/DM/DT/VT) Dotação Operacional (DO) é:`,
+    [
+      `Dotação permanente de reserva atribuída às Unidades, correspondendo à DOA + 20% de munições`,
+      `Dotação equivalente a 80% da DOA (mínimo)`,
+      `Dotação atribuída anualmente para todos efetuarem tiro (tabelas)`,
+      `Fluxo anual de reabastecimento para constituir a DT`
+    ],
+    0,
+    `NEP: DO = DOA + 20% (reserva permanente).`
+  ),
+  q(
+    `46) (DOA/DO/DOE/DM/DT/VT) Dotação Mínima (DM) é:`,
+    [
+      `Equivalente a 80% da DOA e não pode apresentar valores inferiores`,
+      `Equivalente a 20% da DOA e não pode apresentar valores superiores`,
+      `Equivalente à DOA + 20%`,
+      `Idêntica à DT`
+    ],
+    0,
+    `NEP: DM = 80% da DOA (mínimo).`
+  ),
+  q(
+    `47) (DOA/DO/DOE/DM/DT/VT) Atingida a DM, considera-se atingido o:`,
+    [
+      `Ponto de Reabastecimento Crítico (PRC)`,
+      `Volante de Tiro (VT)`,
+      `Dotação Operacional Extraordinária (DOE)`,
+      `Dotação de Tiro (DT)`
+    ],
+    0,
+    `NEP: DM atingida → PRC (reabastecimento prioritário para repor DOA).`
+  ),
+  q(
+    `48) (V/F — NEP) “Por questões de segurança, é proibido manter nas armas os respetivos carregadores.”`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    0,
+    `NEP: proibido manter carregadores nas armas.`
+  ),
+  q(
+    `49) (V/F — Custódia) Segundo a matéria, armamento em arrecadação que não seja utilizado/distribuído deve ser mantido devidamente lubrificado e regularmente limpo.`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    0,
+    `NEP: armamento não utilizado/distribuído em arrecadação → lubrificado e regularmente limpo para garantir operacionalidade.`
+  ),
+  q(
+    `50) (V/F — Munições) As trajetórias de ricochete são completamente irregulares e não obedecem a quaisquer leis.`,
+    [
+      `Verdadeiro`,
+      `Falso`
+    ],
+    0,
+    `Munições: ricochete descrito como irregular e sem obedecer a leis.`
+  ),
+];
 
 let quizChangeHandler=null;
 
-let CURRENT = {
-  quizCode:'Q1',
-  testId:'CM_Q1_SLIDES_CM1_CM2',
-  items:[],
-  answers:{},
-  key:{},
-  locked:false,
-  evaluated:false,
-  seed:'',
-  meta:{ title:'', sub:'' }
-};
-
-function storageKey(){ return `be_quiz_${CURRENT.testId}`; }
-function saveState(){ localStorage.setItem(storageKey(), JSON.stringify({ answers:CURRENT.answers, seed:CURRENT.seed })); }
-function loadState(){
-  const raw=localStorage.getItem(storageKey());
-  if(!raw) return null;
-  try{return JSON.parse(raw);}catch{return null;}
-}
-
-/* ==========================================================
-   QUIZ 1 — 50 perguntas (VERSÃO 2, as que tinhas agora)
-   ========================================================== */
-const TEST_Q1_50 = [
-  q(`1) (V/F) Quando duas altas entidades têm a mesma posição protocolar, precede a que resulta de eleição popular (se aplicável).`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias locais`,`Falso, porque vale sempre a antiguidade primeiro`],0,
-    `Slides: entre entidades de idêntica posição, precede a cujo título resultar de eleição popular.`
-  ),
-  q(`2) (V/F) Entre entidades com igual título, a regra geral é preceder quem tiver mais antiguidade no exercício do cargo, salvo exceções indicadas nos slides.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em atos não oficiais`,`Falso, porque a precedência é aleatória entre iguais`],0,
-    `Slides: “igual título” → antiguidade no cargo, salvo regra em contrário.`
-  ),
-  q(`3) Nos slides, “igual título” é apresentado como diferente de:`,
-    [`“estar na mesma posição protocolar”`,`“ter o mesmo posto militar”`,`“ser da mesma área ministerial”`,`“integrar o mesmo órgão de soberania”`],0,
-    `Slides: “igual título” ≠ estar na mesma posição protocolar.`
-  ),
-  q(`4) (V/F) Segundo os slides, o Presidente da República não se pode fazer representar por ninguém, e um delegado pessoal não goza de precedência sobre entidades mais categorizadas.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas fora do território nacional`,`Falso, porque pode delegar em qualquer oficial`],0,
-    `Slides: PR não pode fazer-se representar; delegado pessoal não “herda” precedência.`
-  ),
-  q(`5) Em caso de substituição constitucional, quem assume o estatuto protocolar de Presidente da República interino (nos slides)?`,
-    [`Presidente da Assembleia da República`,`Primeiro-Ministro`,`Presidente do Supremo Tribunal de Justiça`,`Chefe do Estado-Maior-General das Forças Armadas`],0,
-    `Slides: PR é substituído, nos termos constitucionais, pelo Presidente da AR.`
-  ),
-  q(`6) Segundo os slides, num ato realizado na Assembleia da República, quem preside sempre, mesmo com o Presidente da República presente?`,
-    [`Presidente da Assembleia da República`,`Presidente da República`,`Primeiro-Ministro`,`Presidente do Tribunal Constitucional`],0,
-    `Slides: na AR, o Presidente da AR preside sempre.`
-  ),
-  q(`7) (V/F) Nos slides, o Primeiro-Ministro pode fazer-se representar por um ministro da sua escolha, que passa a gozar do respetivo estatuto protocolar.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias militares`,`Falso, porque só pode ser por Secretário de Estado`],0,
-    `Slides: PM pode ser representado por ministro da sua escolha.`
-  ),
-  q(`8) Numa cerimónia de natureza diplomática, qual ministro precede os outros, segundo os slides?`,
-    [`Ministro dos Negócios Estrangeiros`,`Ministro da Defesa Nacional`,`Ministro da Administração Interna`,`Ministro da Justiça`],0,
-    `Slides: em cerimónias diplomáticas, MNE precede todos os outros.`
-  ),
-  q(`9) (V/F) Nos slides, os Secretários e Subsecretários de Estado podem representar os respetivos ministros na ausência ou impedimento destes.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas se houver despacho do Protocolo`,`Falso, porque só vice-ministros podem`],0,
-    `Slides: podem representar os respetivos ministros.`
-  ),
-  q(`10) No respetivo concelho, os Presidentes de Câmara Municipal gozam de estatuto protocolar equivalente a:`,
-    [`Ministros`,`Secretários de Estado`,`Chefes de Gabinete`,`Presidentes de Junta de Freguesia`],0,
-    `Slides: no concelho, PCM goza do estatuto protocolar dos ministros.`
-  ),
-  q(`11) Segundo os slides, os Presidentes de Câmara Municipal presidem a todos os atos:`,
-    [`Realizados nos Paços do Concelho ou organizados pela respetiva Câmara (com exceções indicadas)`,
-     `Que ocorram em espaço público no concelho, independentemente do organizador`,
-     `Sempre que exista mesa de honra, mesmo fora do concelho`,
-     `Apenas quando não haja presença de qualquer membro do Governo`],0,
-    `Slides: presidência em Paços do Concelho ou atos organizados pela Câmara, salvo exceções.`
-  ),
-  q(`12) (V/F) No respetivo concelho, o Presidente da Assembleia Municipal segue imediatamente o Presidente da Câmara.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias militares`,`Falso, porque segue o Comandante-Geral da GNR`],0,
-    `Slides: PAM segue imediatamente o PCM no concelho.`
-  ),
-  q(`13) (V/F) Se o cônjuge (ou união de facto) de uma alta entidade for convidado e estiver a acompanhá-la, é-lhe atribuído lugar equiparado à mesma.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só em cerimónias nacionais`,`Falso, porque acompanhantes nunca têm equiparação`],0,
-    `Slides: cônjuge/união de facto convidado → lugar equiparado quando acompanha.`
-  ),
-  q(`14) Nos slides, as altas entidades públicas não mencionadas explicitamente na lista são enquadradas por:`,
-    [`Aproximação de competências (material e territorial) às entidades listadas`,`Ordem alfabética do cargo`,`Antiguidade do próprio organismo`,`Decisão discricionária do chefe do protocolo local`],0,
-    `Slides: equiparações por competências material/territorial.`
-  ),
-  q(`15) (V/F) Nos slides, o luto nacional é declarado pelo Governo sob a forma de decreto, definindo duração e âmbito.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas por despacho`,`Falso, porque é sempre declarado pelo Presidente da República`],0,
-    `Slides: Governo declara por decreto, fixando duração e âmbito.`
-  ),
-  q(`16) Segundo os slides, o luto nacional é declarado, entre outros casos, pelo falecimento de:`,
-    [`Presidente da República, Presidente da Assembleia da República e Primeiro-Ministro (e ainda antigos PR)`,
-     `Qualquer Ministro em exercício, sempre`,
-     `Qualquer Chefe de Estado-Maior, automaticamente`,
-     `Qualquer presidente de câmara, no respetivo concelho`],0,
-    `Slides: enumeração base + antigos Presidentes da República.`
-  ),
-  q(`17) (V/F) Nos slides, o luto nacional também pode ser declarado por falecimento de personalidade ou ocorrência de evento de excecional relevância.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em território continental`,`Falso, porque só por falecimentos de titulares`],0,
-    `Slides: admite-se por personalidade ou evento de excecional relevância.`
-  ),
-  q(`18) (V/F) Nos slides, as Guardas Honoríficas são forças armadas de cavalaria presentes em atos solenes ou cerimónias de grande representatividade.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias internas`,`Falso, porque são forças apeadas`],0,
-    `Slides: definição de guardas honoríficas (cavalaria).`
-  ),
-  q(`19) Segundo os slides, o serviço de Guarda Honorífica é normalmente restrito a edifícios do Estado, nomeadamente:`,
-    [`Palácio Presidencial, Palácio Nacional da Ajuda, Palácio Nacional de Queluz, Palácio Nacional de São Bento, MAI e Comando-Geral da Guarda`,
-     `Qualquer quartel da GNR e qualquer sede de câmara municipal`,
-     `Apenas Palácio Presidencial e MAI`,
-     `Apenas edifícios militares (academias e escolas)`],0,
-    `Slides: lista exemplificativa de locais.`
-  ),
-  q(`20) (V/F) Nos slides, a Guarda Honorífica é expressamente autorizada pelo General Comandante-Geral.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas quando existir Chefe de Estado estrangeiro`,`Falso, porque é autorizada pelo chefe do protocolo`],0,
-    `Slides: autorização pelo General Comandante-Geral.`
-  ),
-  q(`21) Nas Guardas Honoríficas, depois de postadas, em regra ficam em “sentido” para convidados oficiais e fazem “apresentar-arma”:`,
-    [`Apenas à chegada/saída e passagem da entidade para a qual estão postadas (com exceção indicada)`,
-     `Sempre que qualquer convidado oficial entra no edifício`,
-     `Apenas durante execução do Hino Nacional`,
-     `Sempre que o comandante da força o entenda`],0,
-    `Slides: “apresentar-arma” só na chegada/saída/passagem (exceção: jantares oficiais).`
-  ),
-  q(`22) (V/F) Nos jantares oficiais do Chefe de Estado, a Guarda Honorífica faz “apresentar-arma” para o Chefe de Estado anfitrião e para o convidado.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só se houver banda`,`Falso, porque só para o anfitrião`],0,
-    `Slides: exceção explícita.`
-  ),
-  q(`23) Segundo os slides, sempre que possível, à entrada do local onde está postada uma Guarda Honorífica devem ser colocadas:`,
-    [`Duas Sentinelas Honoríficas`,`Quatro Sentinelas Honoríficas`,`Um cordão de honra de oficiais subalternos`,`Um piquete de guarda de polícia`],0,
-    `Slides: duas Sentinelas Honoríficas.`
-  ),
-  q(`24) (V/F) A formatura em alas tem normalmente por fim prestar honras ao Presidente da República, a Chefes de Estado estrangeiros e honras fúnebres a altas entidades (quando indicado/determinado).`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas para Chefes de Governo`,`Falso, porque alas só se usam para estandartes`],0,
-    `Slides: finalidades típicas.`
-  ),
-  q(`25) Segundo os slides (MOUGNR), o uniforme a utilizar numa Ala de Honra (simples) é:`,
-    [`Grande Uniforme Honorífico`,`Grande Uniforme Aligeirado`,`Uniforme de Representação`,`Uniforme de serviço diário`],0,
-    `Slides: Ala de Honra → GUH.`
-  ),
-  q(`26) (V/F) Nos slides, militares de cavalaria em Ala de Honra podem executar armados de espada ou lança.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em honras fúnebres`,`Falso, porque é sempre apenas pistola`],0,
-    `Slides: cavalaria poderá executar armada de espada ou lança.`
-  ),
-  q(`27) Nas Alas de Honra, depois de postadas, ficam em “sentido” para convidados oficiais e em “apresentar-arma”:`,
-    [`Apenas à chegada/saída e passagem da entidade para a qual estão postadas`,`Sempre que o séquito se movimenta`,`Apenas durante o desfile final`,`Apenas quando passa o comandante da unidade`],0,
-    `Slides: regra geral.`
-  ),
-  q(`28) (V/F) Em honras fúnebres (Ala de Honra), a posição “funeral-arma” ocorre apenas e durante o trajeto do féretro.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só dentro de igrejas`,`Falso, porque funeral-arma é permanente desde a postagem`],0,
-    `Slides: apenas durante o trajeto do féretro.`
-  ),
-  q(`29) Em Honras Fúnebres de Estado / Honras de Panteão Nacional, os slides indicam que as Alas fazem:`,
-    [`“apresentar-arma” à passagem do Presidente da República e durante o Hino Nacional; “funeral-arma” à passagem do féretro`,
-     `“sentido” à passagem do Presidente da República e “apresentar-arma” ao féretro`,
-     `“apresentar-arma” apenas ao féretro e nunca ao Presidente da República`,
-     `“funeral-arma” ao Presidente da República e “apresentar-arma” ao féretro`],0,
-    `Slides: regra específica para Estado/Panteão.`
-  ),
-  q(`30) Segundo os slides, a Escolta de Honra destina-se a:`,
-    [`Acompanhar estandartes nacionais; acompanhar altas entidades; acompanhar féretros em honras fúnebres`,
-     `Acompanhar apenas estandartes nacionais`,
-     `Substituir a Guarda de Honra em qualquer cerimónia`,
-     `Garantir segurança perimetral sem função cerimonial`],0,
-    `Slides: três finalidades.`
-  ),
-  q(`31) (V/F) Nos slides, as escoltas de honra destinadas a acompanhar altas entidades devem ser a cavalo ou motorizadas.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas fora de localidades`,`Falso, porque devem ser sempre apeadas`],0,
-    `Slides: a cavalo ou motorizadas.`
-  ),
-  q(`32) Segundo os slides, quando a cerimónia (Dia de Unidade) tem lugar no interior do aquartelamento, qual a sequência correta após a chegada da AE?`,
-    [`Continência da Guarda de Polícia → Toque de Sentido à Unidade → Içar do galhardete → Toque de Descansar → Apresentação do Oficial/Sargento de Dia`,
-     `Toque de Sentido → Continência da Guarda de Polícia → Apresentação do Oficial/Sargento de Dia → Içar do galhardete → Descansar`,
-     `Içar do galhardete → Continência da Guarda de Polícia → Toque de Descansar → Toque de Sentido → Apresentação do Oficial/Sargento de Dia`,
-     `Apresentação do Oficial/Sargento de Dia → Continência da Guarda de Polícia → Toque de Sentido → Toque de Descansar → Içar do galhardete`],0,
-    `Slides: sequência indicada.`
-  ),
-  q(`33) No Dia de Unidade, após o deslocamento da AE para o local da formatura, os slides indicam que se seguem:`,
-    [`Honras militares pelas forças em parada (continência da Guarda de Honra com Maria da Fonte ou marcha) e revista, e depois início da cerimónia`,
-     `Início imediato da cerimónia sem honras, para poupar tempo`,
-     `Apenas revista, sem continência da Guarda de Honra`,
-     `Execução do Hino Nacional obrigatoriamente e fim das honras`],0,
-    `Slides: honras + revista + início.`
-  ),
-  q(`34) (V/F) Nos slides, a sequência das “levas” respeita a precedência das condecorações, as classes/graus, a antiguidade dos militares e a categoria dos funcionários civis agraciados.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só se houver mais de uma condecoração`,`Falso, porque respeita apenas a antiguidade`],0,
-    `Slides: critérios cumulativos.`
-  ),
-  q(`35) Segundo os slides, uma “leva” pode impor uma determinada condecoração a vários militares com diferentes graus/classes. Nesse caso, deve:`,
-    [`Fazer referência aos militares por graus/classes à medida que vão sendo chamados`,
-     `Chamar sempre por ordem alfabética, ignorando graus/classes`,
-     `Agrupar por unidade e só depois por graus/classes`,
-     `Repetir o mesmo grau/classe para todos, por simplificação`],0,
-    `Slides: referência por graus/classes.`
-  ),
-  q(`36) (V/F) Nos slides, militares não pertencentes à Guarda e outras entidades civis podem ser convidados a impor condecorações.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas militares`,`Falso, porque só o Comandante pode impor`],0,
-    `Slides: podem ser convidados.`
-  ),
-  q(`37) Segundo os slides, apenas podem ser convidadas a impor condecorações militares as entidades civis que:`,
-    [`Têm direito a honras militares`,`Forem as mais antigas na função`,`Pertencerem ao poder local do concelho`,`Tenham participado na organização do evento`],0,
-    `Slides: restrição explícita.`
-  ),
-  q(`38) Na homenagem aos mortos (slides), qual sequência está correta?`,
-    [`Sentido à Unidade → (depósito de coroa, se existir) → Silêncio → Homenagem aos Mortos → Prece → Alvorada → Descansar à Unidade`,
-     `Silêncio → Sentido à Unidade → Alvorada → Prece → Homenagem aos Mortos → Descansar`,
-     `Sentido → Alvorada → Silêncio → Deposição de coroa → Prece → Descansar`,
-     `Descansar → Sentido → Homenagem aos Mortos → Silêncio → Alvorada → Prece`],0,
-    `Slides: sequência indicada.`
-  ),
-  q(`39) Nos slides, durante a homenagem aos mortos, a indicação de posições de arma associada aos toques é:`,
-    [`Durante “depósito de coroa”: ombro-arma; “silêncio”: apresentar-arma; “homenagem aos mortos”: ombro-arma`,
-     `Durante “depósito de coroa”: apresentar-arma; “silêncio”: ombro-arma; “homenagem”: sentido`,
-     `Durante “depósito de coroa”: sentido; “silêncio”: funeral-arma; “homenagem”: apresentar-arma`,
-     `Não existe qualquer associação entre toques e posições`],0,
-    `Slides: notas associadas aos momentos.`
-  ),
-  q(`40) (V/F) Nos slides, porta-estandartes de bandeiras heráldicas, guiões e flâmulas (subunidades) são armados de pistola, independentemente do fardamento, com exceção das forças de cavalaria armadas de espada.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só em cerimónias internas`,`Falso, porque são sempre desarmados`],0,
-    `Slides: regra + exceção.`
-  ),
-  q(`41) Segundo os slides, os estandartes heráldicos, guiões e flâmulas das subunidades devem ser conduzidos, respetivamente, por:`,
-    [`Sargento-Ajudante; Primeiro/Segundo-Sargento; Cabo`,`Oficial subalterno; Sargento-Ajudante; Cabo`,`Primeiro-Sargento; Segundo-Sargento; Guarda`,`Cabo; Primeiro-Sargento; Sargento-Ajudante`],0,
-    `Slides: hierarquia de condução.`
-  ),
-  q(`42) (V/F) Nos slides, estandartes heráldicos, guiões e flâmulas das subunidades têm escolta própria e recebem continência.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em dias festivos`,`Falso, porque só o Estandarte Nacional recebe`],1,
-    `Slides: não têm escolta própria e não lhes é prestada continência.`
-  ),
-  q(`43) Segundo os slides, quando a unidade leva o Estandarte Nacional, ele é conduzido por:`,
-    [`Um oficial subalterno`,`Um sargento-ajudante`,`Um cabo de elevada antiguidade`,`O comandante da unidade`],0,
-    `Slides: porta-estandarte é oficial subalterno.`
-  ),
-  q(`44) A escolta do Estandarte Nacional indicada nos slides inclui:`,
-    [`Dois sargentos e um cabo (além do porta-estandarte)`,`Quatro sargentos e um cabo`,`Dois cabos e um sargento`,`Apenas um cabo à retaguarda`],0,
-    `Slides: dois sargentos e um cabo.`
-  ),
-  q(`45) Nos slides, os dois sargentos da escolta do Estandarte Nacional colocam-se:`,
-    [`A ladear o porta-estandarte a cerca de 1 m`,`Em cunha à frente do porta-estandarte`,`A 2 m, um à frente e outro atrás`,`Na retaguarda, um a cada lado do cabo`],0,
-    `Slides: ladeiam a ~1 m.`
-  ),
-  q(`46) Segundo os slides, o comandante da escolta do Estandarte Nacional fica:`,
-    [`À direita do porta-estandarte`,`À esquerda do porta-estandarte`,`Sempre atrás do porta-estandarte`,`Sempre à frente do porta-estandarte`],0,
-    `Slides: comandante à direita.`
-  ),
-  q(`47) Nos slides, o cabo da escolta do Estandarte Nacional fica à retaguarda do porta-estandarte a cerca de:`,
-    [`1 m a pé e 1,5 m a cavalo`,`1,5 m a pé e 1 m a cavalo`,`2 m em qualquer situação`,`0,5 m em qualquer situação`],0,
-    `Slides: ~1 m a pé; ~1,5 m a cavalo.`
-  ),
-  q(`48) (V/F) Nos slides, é referido que o regulamento de uniformes define artigos, símbolos identificativos, distintivos e insígnias, condições de utilização e normas de dotação/duração/confeção.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas para cerimónias`,`Falso, porque só define cores e modelos`],0,
-    `Slides: objeto do regulamento de uniformes.`
-  ),
-  q(`49) Segundo os slides, no desempenho diário da missão, o indicativo de identificação individual é constituído por:`,
-    [`Nome e apelido`,`Apenas o NIM`,`Nome completo (todos os apelidos) obrigatório`,`Grupo sanguíneo e função`],0,
-    `Slides: nome e apelido.`
-  ),
-  q(`50) Nos slides, sobre a placa de identificação individual, qual opção está correta?`,
-    [`Dimensões em regra 7,5 cm × 2,5 cm; no total não mais de 17 letras (incluindo espaços); não pode conter símbolos/pontuação/grupo sanguíneo/abreviaturas`,
-     `Dimensões fixas 10 cm × 3 cm; pode incluir grupo sanguíneo e abreviaturas operacionais`,
-     `Dimensões livres; o importante é ser legível e pode incluir símbolos`,
-     `Apenas o apelido; pode ter pontuação e siglas da unidade`],0,
-    `Slides: dimensões, limites e proibições.`
-  ),
-];
-
-/* ==========================================================
-   QUIZ 2 — 50 perguntas NOVAS (FOCO “SAI NO TESTE”)
-   - sem repetir perguntas do Quiz 1
-   - distratores plausíveis
-   - apenas matéria dos slides CM1+CM2
-   ========================================================== */
-const TEST_Q2_50 = [
-  // ---- Símbolos nacionais / hinos / marchas / toques (foco forte) ----
-  q(`1) (V/F) Nos slides, os símbolos nacionais apresentados incluem a Bandeira Nacional e o Hino Nacional.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só em cerimónias militares`,`Falso, porque símbolos nacionais são apenas heráldicos`],0,
-    `Slides: símbolo nacional → Bandeira e Hino.`
-  ),
-  q(`2) Em cerimónias, a opção correta para identificar o Hino Nacional (segundo os slides) é:`,
-    [`A Portuguesa`,`Marcha de Continência`,`A Maria da Fonte`,`Marcha da Unidade`],0,
-    `Slides: Hino Nacional = “A Portuguesa”.`
-  ),
-  q(`3) (V/F) Nos slides, é referido que entidades estrangeiras equiparadas a nacionais (com direito ao enquadramento indicado) têm direito ao respetivo Hino Nacional.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas se houver guarda de honra`,`Falso, porque em Portugal só se executa o Hino Nacional`],0,
-    `Slides: regra de execução de hinos para entidades estrangeiras equiparadas.`
-  ),
-  q(`4) Em termos do que “vai soar”, qual opção está mais de acordo com os slides quando a entidade tem direito ao Hino da Maria da Fonte mas não se executa o hino?`,
-    [`Marcha de Continência (como substituição indicada nos slides)`,`Hino Nacional “A Portuguesa”`,`Marcha do Estandarte Nacional`,`Silêncio (sem música)`],0,
-    `Slides: Marcha de Continência pode substituir (conforme indicado).`
-  ),
-  q(`5) (V/F) Nos slides, a Marcha de Continência é mencionada como substituindo o Hino Nacional.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias diplomáticas`,`Falso, porque nenhuma marcha substitui hinos`],0,
-    `Afirmação do bloco hinos/marchas/toques nos slides.`
-  ),
-  q(`6) (V/F) Nos slides, a Marcha de Continência é mencionada como substituindo o Hino da Maria da Fonte.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em recinto fechado`,`Falso, porque a Maria da Fonte tem sempre prioridade`],0,
-    `Afirmação do bloco hinos/marchas/toques nos slides.`
-  ),
-  q(`7) Em caso prático equivalente ao dos slides (ministro estrangeiro), a opção correta sobre música é:`,
-    [`Executar os dois Hinos Nacionais`,`Executar apenas o Hino Nacional português`,`Executar apenas a Maria da Fonte`,`Executar Marcha de Continência e depois o Hino Nacional português`],0,
-    `Slides: para ministro estrangeiro, executam-se ambos os hinos nacionais.`
-  ),
-  q(`8) O “Toque de Sentido à Unidade” é composto, nos slides, por:`,
-    [`4 toques: GNR + Unidade + Sentido + toque da Alta Entidade`,`3 toques: Unidade + Sentido + Alta Entidade`,`2 toques: GNR + Alta Entidade`,`1 toque prolongado padronizado`],0,
-    `Slides: Toque de Sentido à Unidade = 4 toques.`
-  ),
-  q(`9) No apito (militar de atendimento), qual opção corresponde aos Oficiais Generais da GNR (slides)?`,
-    [`3 sinais curtos seguidos`,`4 sinais curtos seguidos`,`2 sinais curtos seguidos`,`1 sinal curto seguido de 1 prolongado`],0,
-    `Slides: Oficiais Generais = 3 sinais curtos.`
-  ),
-  q(`10) (V/F) Nos slides, militares da categoria de Sargentos não têm direito a toques de apito.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas fora de serviço`,`Falso, porque têm sempre 1 sinal curto`],0,
-    `Afirmação expressa nos slides.`
-  ),
-
-  // ---- Formas de tratamento (inclui “Excelência” p/ generais) ----
-  q(`11) (V/F) Nos slides, é referido que os Oficiais Generais são tratados por “Vossa Excelência”.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias com guarda de honra`,`Falso, porque é sempre “Senhor (posto)”`],0,
-    `Slides: formas de tratamento — generais por “Vossa Excelência”.`
-  ),
-  q(`12) Qual forma está mais alinhada com os slides quando um inferior se dirige a um superior hierárquico?`,
-    [`“Senhor” (ou “Meu”) + posto/função`,`Apenas o primeiro nome + posto`,`Apenas “Comandante” sem tratamento`,`“Camarada” + posto`],0,
-    `Slides: inferior usa “Senhor” (ou “Meu”) + posto/função.`
-  ),
-  q(`13) (V/F) Os slides admitem, em contexto específico, tratamento por título profissional (ex.: engenheiro/médico/farmacêutico) em determinados ramos.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só para civis`,`Falso, porque títulos profissionais nunca se usam`],0,
-    `Slides: nota sobre Exército e títulos em certos cursos.`
-  ),
-
-  // ---- Tipos de continência (aplicação, sem repetir as do Q1) ----
-  q(`14) (V/F) Nos slides, “tipos de continência” incluem regras diferentes para militar isolado, força formada e serviço de sentinela/guarda.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas para forças a cavalo`,`Falso, porque é sempre igual para todos`],0,
-    `Slides: tipos/situações distintas.`
-  ),
-  q(`15) Na lógica dos slides, uma força formada tende a executar continência:`,
-    [`Por voz de comando e execução coletiva`,`Sempre individualmente para evitar rigidez`,`Apenas se existir banda`,`Somente quando a entidade para`],0,
-    `Slides: força formada — execução coletiva, comandada.`
-  ),
-  q(`16) Em contexto de sentinela honorífica, qual atitude é mais coerente com os slides quando passa um féretro (civil ou militar)?`,
-    [`Executar “funeral-arma” durante a passagem do féretro`,`Manter “sentido” e só perfilar se for militar`,`Executar “apresentar-arma” sempre`,`Não executar qualquer movimento`],0,
-    `Slides: “funeral-arma” à passagem de qualquer féretro.`
-  ),
-  q(`17) (V/F) Nos slides, “perfilar-arma” e “apresentar-arma” são atos distintos e não são livremente permutáveis em qualquer situação.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em serviços de guardas honoríficas`,`Falso, porque qualquer um serve para saudação`],0,
-    `Slides: atos com usos próprios (implícito no bloco de continências).`
-  ),
-
-  // ---- Continência – Guarda de Honra (sequência / fórmulas, mas NOVO) ----
-  q(`18) (V/F) Nos slides, a Guarda de Honra, depois de postada, presta honras ao Estandarte Nacional, ao Presidente da República e a entidades de categoria superior àquela a quem se destina.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só em cerimónias internas`,`Falso, porque presta sempre a qualquer entidade`],0,
-    `Slides: regra indicada.`
-  ),
-  q(`19) Nos slides, a Guarda de Honra toma “sentido” à passagem de forças militares, funerais, cortejos religiosos e entidades com direito a honras. Isto significa que:`,
-    [`Não executa “apresentar-arma” em todas essas situações, mas adota a atitude de respeito prevista`,
-     `Executa “apresentar-arma” em todas essas situações, sem exceção`,
-     `Executa “funeral-arma” em qualquer cortejo religioso`,
-     `Ignora a passagem se não houver música`],0,
-    `Slides: “toma sentido” (não equivale automaticamente a “apresentar-arma”).`
-  ),
-  q(`20) Quando a entidade que passa não preside à cerimónia, a fórmula do comandante (slides) inclui:`,
-    [`“Vossa Excelência… dá licença, Guarda de Honra para Sua Excelência…”`,
-     `“Senhores, apresentar armas ao visitante”`,
-     `“Autorizada a passagem do visitante”`,
-     `“Guarda de Honra, sentido, sem continência”`],0,
-    `Slides: fórmula verbal indicada.`
-  ),
-  q(`21) No esquema dos slides, o “apresentar-arma” só é mandado pelo comandante da Guarda de Honra quando:`,
-    [`A entidade se coloca no ponto de continência`,
-     `A entidade entra no aquartelamento`,
-     `A entidade se aproxima a 10 m do estandarte`,
-     `O séquito termina a revista`],0,
-    `Slides: “apenas quando a entidade se tiver colocado no ponto de continência”.`
-  ),
-
-  // ---- Guardas Honoríficas (cavalaria) ----
-  q(`22) (V/F) Nos slides, as Guardas Honoríficas são sempre forças de cavalaria.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em Lisboa`,`Falso, porque podem ser sempre apeadas`],0,
-    `Slides: guardas honoríficas (cavalaria).`
-  ),
-  q(`23) Nos slides, a regra geral após a Guarda Honorífica estar postada é:`,
-    [`“Sentido” para convidados oficiais e “apresentar-arma” só na chegada/saída/passagem da entidade (com exceção indicada)`,
-     `“Apresentar-arma” sempre que entra qualquer convidado`,
-     `“Perfilar-arma” permanentemente`,
-     `“Descansar” se o ato se atrasar`],0,
-    `Slides: regra geral + exceção.`
-  ),
-  q(`24) (V/F) Nos slides, nos jantares oficiais do Chefe de Estado, a Guarda Honorífica faz “apresentar-arma” para anfitrião e convidado.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas só se houver duas bandas`,`Falso, porque só para o convidado`],0,
-    `Slides: exceção.`
-  ),
-
-  // ---- Honras fúnebres / Câmara Ardente / rotação 30 min ----
-  q(`25) (V/F) Nos slides, na Câmara Ardente, a Guarda de Honra na vela junto ao féretro faz rotação de 30 em 30 minutos.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas durante a noite`,`Falso, porque a rotação é por turno de 1 hora`],0,
-    `Slides: rotação de 30 minutos.`
-  ),
-  q(`26) Em honras fúnebres, a colocação correta da Bandeira Nacional no féretro, segundo os slides, é:`,
-    [`Verde sobre a cabeça do féretro; transporte no sentido dos pés; em igrejas, cabeça voltada para o altar`,
-     `Vermelho sobre a cabeça; transporte no sentido da cabeça; em igrejas, pés voltados para o altar`,
-     `Verde sobre os pés; transporte no sentido da cabeça; em igrejas, cabeça voltada para a porta`,
-     `Indiferente, desde que o escudo fique ao centro`],0,
-    `Slides: regra de colocação/transporte + orientação em igrejas.`
-  ),
-  q(`27) (V/F) Nos slides, a cobertura do féretro com a Bandeira Nacional é acompanhada de regras sobre direção de transporte e posicionamento em igreja.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em honras fúnebres de Estado`,`Falso, porque essas regras são apenas “tradição”`],0,
-    `Slides: regras descritas.`
-  ),
-  q(`28) (V/F) Nos slides, a “funeral-arma” (em contexto de alas) é executada durante todo o tempo, desde a postagem até ao fim da cerimónia.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas se houver banda`,`Falso, porque é apenas durante o trajeto do féretro`],1,
-    `Slides: “funeral-arma” apenas durante o trajeto do féretro.`
-  ),
-  q(`29) Em Honras Fúnebres de Estado / Panteão, os slides indicam que as Alas fazem:`,
-    [`“apresentar-arma” à passagem do Presidente da República e durante o Hino Nacional; “funeral-arma” à passagem do féretro`,
-     `“sentido” ao Presidente da República e “apresentar-arma” ao féretro`,
-     `“apresentar-arma” apenas ao féretro, nunca ao Presidente da República`,
-     `“funeral-arma” ao Presidente da República e “apresentar-arma” ao féretro`],0,
-    `Slides: regra específica (aqui em formato de “recordar”, mas diferente do Q1 por focar a aplicação ao cenário).`
-  ),
-
-  // ---- “Cerimónias fúnebres do Estado”: quem executa (GNR) — sem número de artigo ----
-  q(`30) (V/F) Nos slides, é referido que, nas cerimónias fúnebres do Estado, a execução prevista é assegurada pela GNR.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas na ausência das Forças Armadas`,`Falso, porque é sempre assegurada pela PSP`],0,
-    `Slides: nota indicada para o tema “Cerimónias fúnebres do Estado”.`
-  ),
-
-  // ---- Representante da República (Regiões Autónomas) / honras por território ----
-  q(`31) (V/F) Nos slides, o Representante da República das Regiões Autónomas tem direito a honras no respetivo território/região, nos termos indicados.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas em qualquer ponto do país`,`Falso, porque não existe direito a honras`],0,
-    `Slides: enquadramento do representante da República e âmbito territorial.`
-  ),
-
-  // ---- Seating (palco, igrejas, mesas) + “mesa refeição francesa” ----
-  q(`32) No “seating par” no palco (slides), a ordem correta é:`,
-    [`9–7–5–3–1 | 2–4–6–8–10`,
-     `10–8–6–4–2 | 1–3–5–7–9`,
-     `1–3–5–7–9 | 2–4–6–8–10`,
-     `8–6–4–2–1 | 3–5–7–9–10`],0,
-    `Slides: seating par no palco.`
-  ),
-  q(`33) (V/F) Nos slides, existem regras de “seating” para palco/tribuna e também para contextos como igrejas e mesas.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas para tribunas exteriores`,`Falso, porque seating só se aplica a palco`],0,
-    `Slides: seating em vários contextos.`
-  ),
-  q(`34) Sobre “seating à mesa” em refeição francesa (slides), qual opção está mais alinhada com a lógica apresentada?`,
-    [`Presidência e precedência definem o centro/ponto de honra e a distribuição lateral coerente, evitando inversões`,
-     `A ordem deve ser sempre pela idade, para reduzir conflitos`,
-     `A distribuição deve priorizar afinidades pessoais para facilitar conversa`,
-     `A ordem deve seguir o cargo, mas pode inverter-se para equilibrar fotografia`],0,
-    `Slides: seating à mesa (refeição francesa) segue presidência/precedência e distribuição coerente.`
-  ),
-  q(`35) (V/F) Nos slides, o “seating ímpar” na tribuna é 8–6–4–2–1–3–5–7–9.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias locais`,`Falso, porque a ordem começa sempre no 1 e segue`],0,
-    `Slides: seating ímpar na tribuna.`
-  ),
-  q(`36) Nos slides, a posição num séquito indicada é:`,
-    [`5–3–1–2–4`,`1–2–3–4–5`,`3–1–2–4–5`,`2–4–1–3–5`],0,
-    `Slides: posição num séquito.`
-  ),
-
-  // ---- Condecorações (base das medalhas de peito / precedência) ----
-  q(`37) (V/F) Nos slides, as condecorações devem ser colocadas pela sua precedência.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em farda de gala`,`Falso, porque é por ordem cronológica de atribuição`],0,
-    `Slides: regra de precedência.`
-  ),
-  q(`38) (V/F) Nos slides, salvo algumas ordens honoríficas, as medalhas militares precedem as medalhas civis.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em cerimónias da Guarda`,`Falso, porque as civis precedem sempre`],0,
-    `Slides: regra indicada.`
-  ),
-  q(`39) (V/F) Nos slides, uma medalha de um país estrangeiro precede uma medalha de organização internacional.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas se a medalha for militar`,`Falso, porque organizações internacionais precedem países`],0,
-    `Slides: ordem indicada.`
-  ),
-  q(`40) Em base de colocação (medalhas de peito), qual opção reflete melhor a preocupação dos slides?`,
-    [`Respeitar precedência e uniformidade de colocação; evitar combinações que contrariem a hierarquia indicada`,
-     `Colocar por tamanho/estética desde que o conjunto esteja “direito”`,
-     `Colocar por ordem de preferência pessoal para facilitar identificação`,
-     `Colocar por ordem de antiguidade do militar, independentemente da medalha`],0,
-    `Slides: foco em precedência e regras de colocação.`
-  ),
-
-  // ---- Dia de Unidade (execução) + função do sargento/cerimonial ----
-  q(`41) (V/F) Nos slides, no interior do aquartelamento, após a chegada da Alta Entidade, há continência da Guarda de Polícia e depois toque de Sentido à Unidade, içar do galhardete e toque de Descansar antes da apresentação do Oficial/Sargento de Dia.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas a apresentação do Oficial/Sargento de Dia ocorre antes do galhardete`,`Falso, porque o galhardete é içado antes de qualquer continência`],0,
-    `Slides: sequência indicada (formulada aqui como V/F).`
-  ),
-  q(`42) Na sequência do Dia de Unidade, depois de “toque de Descansar à Unidade”, segue-se:`,
-    [`Apresentação do Oficial/Sargento de Dia`,`Início imediato da cerimónia`,`Execução obrigatória do Hino Nacional`,`Revista às forças sem continência prévia`],0,
-    `Slides: segue-se a apresentação do Oficial/Sargento de Dia.`
-  ),
-  q(`43) (V/F) Nos slides, o Oficial/Sargento de Dia apresenta-se após os momentos de continência/toques e do içar do galhardete (quando aplicável).`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas se a entidade presidir ao ato`,`Falso, porque se apresenta sempre antes de qualquer toque`],0,
-    `Slides: sequência.`
-  ),
-
-  // ---- Continência: sargento em função cerimonial (aplicação) ----
-  q(`44) Em função cerimonial (ex.: escolta/organização), um sargento deve privilegiar, segundo a lógica dos slides:`,
-    [`Rigor na execução dos atos previstos (toques, comandos, posições) e coerência entre protocolo e continências`,
-     `Flexibilidade total para adaptar “no momento”`,
-     `Prioridade ao ritmo do público, mesmo que quebre a sequência prevista`,
-     `Alterar comandos para encurtar a cerimónia`],0,
-    `Slides: cerimonial baseia-se em sequência/rigor (pergunta de aplicação).`
-  ),
-
-  // ---- Bandeira: usos e restrições (descerrar placas) ----
-  q(`45) (V/F) Nos slides, é referido que a Bandeira Nacional não deve ser usada para descerrar placas.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em exterior`,`Falso, porque pode usar-se se estiver limpa`],0,
-    `Slides: “Nunca se utiliza a Bandeira Nacional para descerrar placas.”`
-  ),
-
-  // ---- Galhardetes (presença AE, maior precedência) ----
-  q(`46) (V/F) Nos slides, se estiverem presentes duas Altas Entidades com direito a galhardete, coloca-se apenas o galhardete da de maior precedência.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas em mastros exteriores`,`Falso, porque se colocam sempre ambos`],0,
-    `Slides: só o da maior precedência.`
-  ),
-  q(`47) (V/F) Nos slides, o galhardete simboliza a presença de uma Alta Entidade e pode estar num mastro ou na tribuna.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas apenas no exterior`,`Falso, porque só pode estar em mastros`],0,
-    `Slides: simboliza presença; mastro ou tribuna.`
-  ),
-
-  // ---- Continência e estandarte nacional (composição da escolta; NOVO ângulo) ----
-  q(`48) (V/F) Nos slides, a escolta do Estandarte Nacional integra dois sargentos e um cabo, e o comandante da escolta posiciona-se à direita do porta-estandarte.`,
-    [`Verdadeiro`,`Falso`,`Verdadeiro, mas o comandante fica à esquerda`,`Falso, porque a escolta é apenas de cabos`],0,
-    `Slides: composição + posição do comandante.`
-  ),
-
-  // ---- Câmara ardente / vela (reforço prático) ----
-  q(`49) Numa vela em Câmara Ardente (slides), a rotação de 30 minutos visa principalmente:`,
-    [`Manter solenidade e uniformidade do serviço de honra, evitando desgaste prolongado e quebras de postura`,
-     `Aumentar o número de participantes para fotografias`,
-     `Permitir que a família escolha quem fica no posto`,
-     `Ajustar a rotação ao ritmo musical`],0,
-    `Slides: rotação definida; pergunta de aplicação sem “ratoeira”.`
-  ),
-
-  // ---- Cerimónias fúnebres do Estado: execução GNR (aplicação) ----
-  q(`50) Num item de estudo do professor (“vai sair”), a formulação mais alinhada com os slides é:`,
-    [`Em cerimónias fúnebres do Estado, a execução prevista é assegurada pela GNR (conforme indicado nos slides)`,
-     `Em cerimónias fúnebres do Estado, a execução prevista é sempre assegurada pela PSP`,
-     `Em cerimónias fúnebres do Estado, a execução prevista depende da câmara municipal`,
-     `Em cerimónias fúnebres do Estado, não há execução por força militar`],0,
-    `Slides: referência indicada para este tema (sem pedir número de artigo).`
-  ),
-];
-
-const QUIZZES = {
-  Q1: {
-    testId: 'CM_Q1_SLIDES_CM1_CM2',
-    title: 'Quiz — Cerimonial Militar (50) — Quiz 1',
-    sub:   'Apenas matéria dos slides CM1+CM2. V/F + escolha múltipla (4 opções). Opções erradas plausíveis. Só no fim vês correção e nota (/20). Progresso guardado localmente.',
-    items: TEST_Q1_50
-  },
-  Q2: {
-    testId: 'CM_Q2_SAI_NO_TESTE',
-    title: 'Quiz — Cerimonial Militar (50) — Quiz 2 (Foco “sai no teste”)',
-    sub:   'Foco reforçado: honras fúnebres (Estado/Câmara Ardente/rotação), seating, hinos/marchas/toques, condecorações, tratamento de generais, tipos de continência, guarda de honra, guardas honoríficas, dia de unidade, símbolos nacionais. (Tudo apenas dos slides CM1+CM2.)',
-    items: TEST_Q2_50
-  }
-};
-
-function setQuiz(code, keepProgress=true){
-  CURRENT.quizCode = code;
-  CURRENT.testId   = QUIZZES[code].testId;
-  CURRENT.meta     = { title: QUIZZES[code].title, sub: QUIZZES[code].sub };
-  $titleH.textContent = CURRENT.meta.title;
-  $subP.textContent   = CURRENT.meta.sub;
-  build(keepProgress);
-}
-
-/* =========================
-   BUILD / RENDER / LOGIC
-   ========================= */
 function build(keepProgress=false){
   const seed=uid();
   CURRENT.seed=seed;
 
-  const base = QUIZZES[CURRENT.quizCode].items;
+  const base=TEST_ATIR_50;
 
+  // baralhar perguntas e opções (mantendo a correta)
   const items = shuffle(base).map((qItem,i)=>{
     const idxMap = Array.from({length:qItem.options.length}, (_,k)=>k);
     const shuffledIdxs = shuffle(idxMap);
@@ -821,7 +798,7 @@ function evaluate(){
 
 function exportTxt(){
   const lines=[];
-  lines.push(`${CURRENT.meta.title} — Resultados`);
+  lines.push(`Armamento e Tiro — Resultados`);
   lines.push(`Certas: ${$cRight.textContent}`);
   lines.push(`Erradas: ${$cWrong.textContent}`);
   lines.push(`Em branco: ${$cBlank.textContent}`);
@@ -846,22 +823,14 @@ function exportTxt(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;
-  a.download=`resultado_${CURRENT.testId.toLowerCase()}.txt`;
+  a.download=`resultado_atir_50.txt`;
   a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
 
 function clearProgress(){ localStorage.removeItem(storageKey()); build(false); }
 
-/* =========================
-   EVENTS
-   ========================= */
-$sel.addEventListener('change', ()=>{
-  setQuiz($sel.value, true);
-});
-
 $start.addEventListener('click', ()=>build(false));
-
 $submit.addEventListener('click', ()=>{
   const answered=Object.keys(CURRENT.answers).length;
   if(answered<CURRENT.items.length){
@@ -870,14 +839,11 @@ $submit.addEventListener('click', ()=>{
   }
   evaluate();
 });
-
 $export.addEventListener('click', exportTxt);
 $clear.addEventListener('click', clearProgress);
 
-/* =========================
-   INIT
-   ========================= */
-setQuiz('Q1', true);
+// iniciar
+build(true);
 </script>
 </body>
 </html>
